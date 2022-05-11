@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ development_backend, development_frontend ]
   pull_request:
-    branches: [ master ]
+    branches: [ development_backend, development_frontend ]
 
 jobs:
   build:
@@ -13,8 +13,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9]
-
+        python-version: [ 3.8 ]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
