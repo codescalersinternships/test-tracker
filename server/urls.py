@@ -6,7 +6,9 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('auth/', include('server.testlodge.routs.auth'))
+    path('api/', include([
+        path('auth/', include('server.test_tracker.routs.auth'))
+    ])),
 ]
 
 
