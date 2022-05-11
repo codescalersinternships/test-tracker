@@ -7,7 +7,7 @@ from django.contrib.auth.models import (
     PermissionsMixin, AnonymousUser, 
 )
 
-from server.testlodge.models.abstracts import (
+from server.test_tracker.models.abstracts import (
     TimeStampedModel,
     BaseUserInfo
 )

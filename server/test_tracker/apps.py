@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class TestlodgeConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'server.testlodge'
+    name = 'server.test_tracker'

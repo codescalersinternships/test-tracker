@@ -14,8 +14,8 @@ def autoregister(*app_list : str) -> None:
                 else :
                     admin.site.register(model)
 
-admin.site.site_header = "Testlodge administration"
-admin.site.site_title = "Testlodge administration"
-admin.site.index_title = "Testlodge administration"
+admin.site.site_header = "Test Tracker administration"
+admin.site.site_title = "Test Tracker administration"
+admin.site.index_title = "Test Tracker administration"
 
-autoregister('testlodge')
+autoregister('test_tracker')

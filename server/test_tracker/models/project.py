@@ -2,7 +2,7 @@
 from django.db import models
 from enum import Enum
 
-from server.testlodge.models.abstracts import TimeStampedModel
+from server.test_tracker.models.abstracts import TimeStampedModel
 
 
 

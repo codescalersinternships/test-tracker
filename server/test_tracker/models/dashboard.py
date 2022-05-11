@@ -1,10 +1,10 @@
 from django.db import models
 from enum import Enum
 
-from server.testlodge.models.abstracts import (
+from server.test_tracker.models.abstracts import (
     TimeStampedModel, BaseUserInfo
 )
-from server.testlodge.models.users import User
+from server.test_tracker.models.users import User
 
 
 

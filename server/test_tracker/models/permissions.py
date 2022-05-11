@@ -1,8 +1,8 @@
 """This file contains user permissions"""
 
 from django.db import models
-from server.testlodge.models.abstracts import TimeStampedModel
-from server.testlodge.models.users import User
+from server.test_tracker.models.abstracts import TimeStampedModel
+from server.test_tracker.models.users import User
 
 
 class Administrator(TimeStampedModel):

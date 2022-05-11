@@ -1,6 +1,6 @@
 from pyini_parser.configure.parser import ConfigParser
 from typing import Dict
-from server.testlodge.models.project import TestPlan, TestPlanDetail
+from server.test_tracker.models.project import TestPlan, TestPlanDetail
 
 
 class TestPlanTemp():
