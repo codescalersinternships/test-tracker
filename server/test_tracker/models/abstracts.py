@@ -19,7 +19,7 @@ class BaseUserInfo(models.Model):
     """
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=70)
+    email = models.EmailField(max_length=70, unique=True)
 
     @property
     def full_name(self) -> str:
