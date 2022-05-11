@@ -1,4 +1,13 @@
 asgiref==3.5.1
+attrs==21.4.0
 backports.zoneinfo==0.2.1
 Django==4.0.4
+iniconfig==1.1.1
+packaging==21.3
+pluggy==1.0.0
+py==1.11.0
+pyini-parser==0.9.0
+pyparsing==3.0.9
+pytest==7.1.2
 sqlparse==0.4.2
+tomli==2.0.1
