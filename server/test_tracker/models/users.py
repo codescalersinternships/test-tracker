@@ -3,8 +3,8 @@ from typing import Any, Union
 
 from django.db import models
 from django.contrib.auth.models import (
-    AbstractBaseUser, BaseUserManager, 
-    PermissionsMixin, AnonymousUser, 
+    AbstractBaseUser, BaseUserManager,
+    AnonymousUser, 
 )
 
 from server.test_tracker.models.abstracts import (
@@ -43,7 +43,6 @@ class TestlodgeBaseUserManger(BaseUserManager):
 class User(AbstractBaseUser, TimeStampedModel, BaseUserInfo):
     """Main user model"""
     phone = models.CharField(max_length=20, null=True, blank=True)
-    Notification = models.ForeignKey('Notification', on_delete=models.CASCADE)
 
     is_admin = models.BooleanField(default = False)
     is_staff = models.BooleanField(default = False)
@@ -63,7 +62,10 @@ class User(AbstractBaseUser, TimeStampedModel, BaseUserInfo):
         """Does this user have permission to view this app? (ALWAYS YES FOR SIMPLICITY)"""
         return True
 
-
 class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     email_when_assigned_tests = models.BooleanField(default=True)
     email_when_my_test_running = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.user.email
