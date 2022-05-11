@@ -239,3 +239,4 @@ artifacts/
 .ipython/
 .vscode
 .kite-installer
+db.sqlite3
