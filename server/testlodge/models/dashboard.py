@@ -8,9 +8,9 @@ from server.testlodge.models.users import User
 
 
 
-class PERMISSION_CHOICES(Enum):
-    FULL_ACCESS = "full access", "full access"
-    ADMIN_ACCESS = "admin access", "admin access"
+class PERMISSION_CHOICES(models.TextChoices):
+    FULL_ACCESS = "full_access", "Full access"
+    ADMIN_ACCESS = "admin_access", "Admin access"
 
 
 class Project(TimeStampedModel):
@@ -29,7 +29,7 @@ class People(TimeStampedModel, BaseUserInfo):
     """
     permission = models.CharField(
         max_length=100,
-        choices=PERMISSION_CHOICES,
+        choices=PERMISSION_CHOICES.choices,
         default=PERMISSION_CHOICES.FULL_ACCESS
     )
 

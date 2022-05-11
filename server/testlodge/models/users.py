@@ -40,10 +40,10 @@ class TestlodgeBaseUserManger(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin, TimeStampedModel, BaseUserInfo):
+class User(AbstractBaseUser, TimeStampedModel, BaseUserInfo):
     """Main user model"""
     phone = models.CharField(max_length=20, null=True, blank=True)
-    Notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
+    Notification = models.ForeignKey('Notification', on_delete=models.CASCADE)
 
     is_admin = models.BooleanField(default = False)
     is_staff = models.BooleanField(default = False)

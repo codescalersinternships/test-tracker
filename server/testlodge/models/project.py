@@ -6,7 +6,7 @@ from server.testlodge.models.abstracts import TimeStampedModel
 
 
 
-class PLAN_CHOICES(Enum):
+class PLAN_CHOICES(models.TextChoices):
     TEMPLATE = "template", "template"
     BLANK = "blank", "blank"
 
@@ -19,7 +19,7 @@ class TestPlan(TimeStampedModel):
     name = models.CharField(max_length=150)
     type = models.CharField(
         max_length=100,
-        choices=PLAN_CHOICES,
+        choices=PLAN_CHOICES.choices,
         default=PLAN_CHOICES.TEMPLATE
     )
 
