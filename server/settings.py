@@ -9,7 +9,9 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG") == "ON"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'http://localhost:8080/'
+]
 
 
 # Application definition
@@ -178,3 +180,5 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "server", "test_tracker", "static"),)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'test_tracker.User'
+# CORS_ORIGIN_ALLOW_ALL = True
+# APPEND_SLASH = True
