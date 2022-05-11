@@ -14,7 +14,7 @@ from server.test_tracker.models.abstracts import (
 
 
 
-class TestlodgeBaseUserManger(BaseUserManager):
+class TestTrackerBaseUserManger(BaseUserManager):
     """This is the main class for user manger"""
     def create_user(self, email: str, password: str) -> 'User':
         """DMC method to create user"""
@@ -49,7 +49,7 @@ class User(AbstractBaseUser, TimeStampedModel, BaseUserInfo):
     is_superuser = models.BooleanField(default = False)
     is_active = models.BooleanField(default = True)
     
-    objects = TestlodgeBaseUserManger()
+    objects = TestTrackerBaseUserManger()
     USERNAME_FIELD = 'email'
 
 
