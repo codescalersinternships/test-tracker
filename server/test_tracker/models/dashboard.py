@@ -46,11 +46,3 @@ class People(TimeStampedModel):
 
     def __str__(self):
         return self.full_name
-
-
-class Settings(TimeStampedModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    logo = models.ImageField(upload_to='media/logo')
-
-    def __str__(self):
-        return self.user.full_name

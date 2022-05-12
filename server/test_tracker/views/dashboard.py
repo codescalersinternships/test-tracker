@@ -7,8 +7,9 @@ from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import People
 from server.test_tracker.models.users import User
-from server.test_tracker.serializers.dashboard import PeopleSerializer, ProjectsSerializer
+from server.test_tracker.serializers.dashboard import PeopleSerializer, ProjectsSerializer, UpdateProfileSerializers
 from server.test_tracker.services.dashboard import *
+from server.test_tracker.services.users import get_user_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
 
@@ -214,4 +215,23 @@ class ADMINACCESSPermissionAPIView(GenericAPIView):
         return CustomResponse.success(
             data=PeopleSerializer(people, many=True).data,
             message="People found successfully",
+        )
+
+class ProfileAPIView(GenericAPIView):
+    """This class to update profile info"""
+    serializer_class = UpdateProfileSerializers
+    permission_classes = (UserIsAuthenticated,)
+
+    def put(self, request: Request) -> Response:
+        user = get_user_by_id(request.user.id)
+        serializer = self.get_serializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return CustomResponse.success(
+                data=serializer.data,
+                message="Profile updated successfully",
+            )
+        return CustomResponse.bad_request(
+            error=serializer.errors,
+            message="Profile update failed",
         )
