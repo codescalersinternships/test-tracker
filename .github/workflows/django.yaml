@@ -21,6 +21,9 @@ jobs:
           touch .env
           echo DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> .env
           echo DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }} >> .env
+          echo EMAIL=${{ secrets.EMAIL }} >> .env
+          echo EPASSWORD=${{ secrets.EPASSWORD }} >> .env
+          echo EMAIL_HOST=${{ secrets.EMAIL_HOST }} >> .env
           cat .env
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
