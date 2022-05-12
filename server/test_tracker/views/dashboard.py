@@ -187,3 +187,31 @@ class PeopleDetailAPIView(GenericAPIView):
         return CustomResponse.not_found(
             message="User not found",
         )
+
+class FULLACCESSPermissionAPIView(GenericAPIView):
+    """
+        Class PeoplePermissionAPIView have all the functionality based on the people added
+    """
+    serializer_class = PeopleSerializer
+    permission_classes = (UserIsAuthenticated,)
+
+    def get(self, request: Request) -> Response:
+        people = get_full_access_permission_based_on_user(request.user)
+        return CustomResponse.success(
+            data=PeopleSerializer(people, many=True).data,
+            message="People found successfully",
+        )
+
+class ADMINACCESSPermissionAPIView(GenericAPIView):
+    """
+        Class PeoplePermissionAPIView have all the functionality based on the people added
+    """
+    serializer_class = PeopleSerializer
+    permission_classes = (UserIsAuthenticated,)
+
+    def get(self, request: Request) -> Response:
+        people = get_admin_access_permission_based_on_user(request.user)
+        return CustomResponse.success(
+            data=PeopleSerializer(people, many=True).data,
+            message="People found successfully",
+        )

@@ -8,5 +8,7 @@ urlpatterns = [
     path('projects/<str:project_id>/', ProjectsDetailAPIView.as_view()),
 
     path('people/', PeopleAPIView.as_view()),
+    path('people/full_access/', FULLACCESSPermissionAPIView.as_view()),
+    path('people/admin_access/', ADMINACCESSPermissionAPIView.as_view()),
     path('people/<str:person_email>/', PeopleDetailAPIView.as_view()),
 ]
