@@ -124,7 +124,7 @@ class PeopleAPIView(GenericAPIView):
             first_name:str = serializer.validated_data.get('first_name')
             user:User = request.user
             send_email(first_name, user, invited_user_email)
-            serializer.save(user = request.user)
+            serializer.save(user = request.user, invited=True)
             return CustomResponse.success(
                 data=serializer.data,
                 message="Person added successfully",

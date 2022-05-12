@@ -12,4 +12,4 @@ class PeopleSerializer(ModelSerializer):
     """class PeopleSerializer to serialize the people obj"""
     class Meta:
         model = People
-        exclude = ('user',)
+        exclude = ('user','invited','accepted',)
