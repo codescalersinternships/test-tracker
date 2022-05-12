@@ -28,3 +28,10 @@ def get_people_based_on_user(user: User) -> People:
         return People.objects.filter(user=user)
     except:
         return None
+    
+def get_person_by_user_and_person_email(user: User, person_email: str) -> People or None:
+    """Return a single person based on the user and person email"""
+    try:
+        return People.objects.get(user=user, email=person_email)
+    except People.DoesNotExist:
+        return None

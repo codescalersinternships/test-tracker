@@ -1,5 +1,4 @@
 """Everything related to dashboard."""
-from django.forms import PasswordInput
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -9,7 +8,7 @@ from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import People
 from server.test_tracker.models.users import User
 from server.test_tracker.serializers.dashboard import PeopleSerializer, ProjectsSerializer
-from server.test_tracker.services.dashboard import find_project_name_based_on_user, get_people_based_on_user, get_project_by_id
+from server.test_tracker.services.dashboard import *
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
 
@@ -154,4 +153,37 @@ class PeopleDetailAPIView(GenericAPIView):
         Class PeopleDetailAPIView has all the functionality based on the people added
         Methods [GET, PUT, DELETE]
     """
-    PasswordInput
+    serializer_class = PeopleSerializer
+    permission_classes = (UserIsAuthenticated,)
+
+    def get(self, request: Request, person_email: str) -> Response:
+        """Return a single person based on the request user, person_email"""
+        person: People = get_person_by_user_and_person_email(
+            request.user, person_email
+        )
+        if person is not None:
+            return CustomResponse.success(
+                data=PeopleSerializer(person).data,
+                message="User found successfully",
+            )
+        return CustomResponse.not_found(
+            message="User not found",
+        )
+
+    def delete(self, request: Request, person_email: str) -> Response:
+        """
+            The host can delete the person, 
+            but it will not deleted from the whole system (only from access)
+        """
+        person: People = get_person_by_user_and_person_email(
+            request.user, person_email
+        )
+        if person is not None:
+            person.delete()
+            return CustomResponse.success(
+                message="User deleted successfully",
+                status_code=204
+            )
+        return CustomResponse.not_found(
+            message="User not found",
+        )
