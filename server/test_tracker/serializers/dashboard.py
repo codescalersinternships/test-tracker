@@ -21,7 +21,7 @@ class PeopleSerializer(ModelSerializer):
         model = People
         exclude = ('user','invited','accepted',)
 
-class UpdateProfileSerializers(ModelSerializer):
+class ProfileSerializers(ModelSerializer):
     class Meta:
         model = User
         fields = [
