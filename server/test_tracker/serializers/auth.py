@@ -2,6 +2,8 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.state import token_backend
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer,TokenRefreshSerializer
+from rest_framework import fields
+
 from typing import Dict, Any
 
 
@@ -37,3 +39,10 @@ class RegisterSerializer(ModelSerializer):
             'first_name', 'last_name',
             'email', 'password'
         )
+
+class LoginSerializer(ModelSerializer):
+    """employers, job-seekers serializer class"""
+    email = fields.CharField()
+    class Meta:
+        model = User
+        fields = ['email', 'password']
