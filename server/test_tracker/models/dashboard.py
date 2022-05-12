@@ -15,6 +15,7 @@ class PERMISSION_CHOICES(models.TextChoices):
 
 class Project(TimeStampedModel):
     """Class project model for adding a new project to the database"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_projects")
     name = models.CharField(max_length=100)
 
     def __str__(self):

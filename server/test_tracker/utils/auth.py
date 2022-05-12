@@ -28,9 +28,3 @@ def get_tokens_for_user(user):
         "refresh_token": f"{refresh}"
     }
     return response
-
-def validate_email(email: str):
-    """Validate email method that confirms if this valid email or not"""
-    import re
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-    return email if(re.fullmatch(regex, email)) else None

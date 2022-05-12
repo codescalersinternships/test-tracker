@@ -1,3 +1,4 @@
+"""Everything related to authentication."""
 from ast import Dict
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
@@ -7,7 +8,8 @@ from server.test_tracker.models.users import User
 
 from server.test_tracker.serializers.auth import LoginSerializer, RegisterSerializer
 from server.test_tracker.services.users import get_user_by_email_for_login
-from server.test_tracker.utils.auth import get_tokens_for_user, validate_email
+from server.test_tracker.utils.auth import get_tokens_for_user
+from server.test_tracker.utils.validations import Validator
 
 
 class RegisterAPIView(GenericAPIView):
@@ -20,7 +22,8 @@ class RegisterAPIView(GenericAPIView):
             serializer.save()
             return CustomResponse.success(
                 data = serializer.data,
-                message = "User created successfully"
+                message = "User created successfully",
+                status_code=201
             )
         return CustomResponse.bad_request(
             error = serializer.errors,
@@ -35,7 +38,7 @@ class LoginByTokenAPIView(GenericAPIView):
         """Method to login a user by jwt token"""
         serializer: Dict = self.get_serializer(data=request.data)
         email: str = request.data.get('email')
-        if serializer.is_valid() and validate_email(email):
+        if serializer.is_valid() and Validator().validate_email(email):
             password: str = serializer.validated_data.get('password')
             user: User = get_user_by_email_for_login(email)
             if user is not None:
