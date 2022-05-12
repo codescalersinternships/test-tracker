@@ -1,13 +1,15 @@
 """Everything related to dashboard."""
+from django.forms import PasswordInput
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
+from server.test_tracker.models.dashboard import People
 from server.test_tracker.models.users import User
 from server.test_tracker.serializers.dashboard import PeopleSerializer, ProjectsSerializer
-from server.test_tracker.services.dashboard import find_project_name_based_on_user, get_project_by_id
+from server.test_tracker.services.dashboard import find_project_name_based_on_user, get_people_based_on_user, get_project_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
 
@@ -49,7 +51,7 @@ class ProjectsAPIView(GenericAPIView):
 class ProjectsDetailAPIView(GenericAPIView):
     """
         Class ProjectsAPIView have all the functionality based on the project
-        Methods [GET, POST, PUT, DELETE]
+        Methods [GET, PUT, DELETE]
     """
     serializer_class = ProjectsSerializer
     permission_classes = (UserIsAuthenticated,)
@@ -133,3 +135,23 @@ class PeopleAPIView(GenericAPIView):
             error=serializer.errors,
             message="Person creation failed",
         )
+
+    def get(self, request: Request) -> Response:
+        """Use this method to get all of people based on request user"""
+        people: People = get_people_based_on_user(request.user)
+        if len(people) > 0:
+            return CustomResponse.success(
+                data=PeopleSerializer(people, many=True).data,
+                message="People found successfully",
+            )
+        return CustomResponse.success(
+            [],
+            message="There are no people yet, try tp add one",
+        )
+
+class PeopleDetailAPIView(GenericAPIView):
+    """
+        Class PeopleDetailAPIView has all the functionality based on the people added
+        Methods [GET, PUT, DELETE]
+    """
+    PasswordInput

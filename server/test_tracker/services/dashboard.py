@@ -1,4 +1,4 @@
-from server.test_tracker.models.dashboard import Project
+from server.test_tracker.models.dashboard import People, Project
 from server.test_tracker.models.users import User
 
 
@@ -21,3 +21,10 @@ def find_project_name_based_on_user(user: User, project_name: str):
         return False
     except Project.DoesNotExist:
         return True
+
+def get_people_based_on_user(user: User) -> People:
+    """Return all of people based on the request user"""
+    try:
+        return People.objects.filter(user=user)
+    except:
+        return None
