@@ -12,6 +12,6 @@ urlpatterns = [
     path('people/admin_access/', ADMINACCESSPermissionAPIView.as_view()),
     path('people/<str:person_email>/', PeopleDetailAPIView.as_view()),
 
-    path('profile/', ProfileAPIView.as_view()),
-
+    path('profile/', UpdateProfileAPIView.as_view()),
+    path('profile/<str:user_id>/', GetProfileAPIView.as_view()),
 ]

@@ -239,6 +239,7 @@ class UpdateProfileAPIView(GenericAPIView):
             error=serializer.errors,
             message="Profile update failed",
         )
+
 class GetProfileAPIView(GenericAPIView):
     """This class to update profile info"""
     serializer_class = ProfileSerializers
