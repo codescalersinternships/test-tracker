@@ -1,8 +1,7 @@
 from django.db import models
-from enum import Enum
 
 from server.test_tracker.models.abstracts import (
-    TimeStampedModel, BaseUserInfo
+    TimeStampedModel
 )
 from server.test_tracker.models.users import User
 
@@ -22,12 +21,16 @@ class Project(TimeStampedModel):
         return self.name
 
 
-class People(TimeStampedModel, BaseUserInfo):
+class People(TimeStampedModel):
     """
     Class people model to add a new person to accessing the project
     based on the permission type
     - To use this model you need to have already project
     """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=70, unique=True)
     permission = models.CharField(
         max_length=100,
         choices=PERMISSION_CHOICES.choices,

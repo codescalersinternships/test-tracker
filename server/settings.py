@@ -180,3 +180,12 @@ AUTH_USER_MODEL = 'test_tracker.User'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
 ]
+
+
+# SMTP Mail service with decouple
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL')
+EMAIL_HOST_PASSWORD = config('EPASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

@@ -5,8 +5,10 @@ from rest_framework.response import Response
 
 from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.serializers.dashboard import ProjectsSerializer
+from server.test_tracker.models.users import User
+from server.test_tracker.serializers.dashboard import PeopleSerializer, ProjectsSerializer
 from server.test_tracker.services.dashboard import find_project_name_based_on_user, get_project_by_id
+from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
 
 
@@ -106,4 +108,28 @@ class ProjectsDetailAPIView(GenericAPIView):
             )
         return CustomResponse.not_found(
             message="Project not found",
+        )
+
+class PeopleAPIView(GenericAPIView):
+    """
+        Class PeopleAPIView have all the functionality based on the user
+    """
+    serializer_class = PeopleSerializer
+    permission_classes = (UserIsAuthenticated,)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            invited_user_email:str = serializer.validated_data.get('email')
+            first_name:str = serializer.validated_data.get('first_name')
+            user:User = request.user
+            send_email(first_name, user, invited_user_email)
+            serializer.save(user = request.user)
+            return CustomResponse.success(
+                data=serializer.data,
+                message="Person added successfully",
+            )
+        return CustomResponse.bad_request(
+            error=serializer.errors,
+            message="Person creation failed",
         )

@@ -9,7 +9,6 @@ from django.contrib.auth.models import (
 
 from server.test_tracker.models.abstracts import (
     TimeStampedModel,
-    BaseUserInfo
 )
 
 
@@ -40,8 +39,11 @@ class TestTrackerBaseUserManger(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, TimeStampedModel, BaseUserInfo):
+class User(AbstractBaseUser, TimeStampedModel):
     """Main user model"""
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=70, unique=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
 
     is_admin = models.BooleanField(default = False)
@@ -52,6 +54,10 @@ class User(AbstractBaseUser, TimeStampedModel, BaseUserInfo):
     objects = TestTrackerBaseUserManger()
     USERNAME_FIELD = 'email'
 
+    @property
+    def full_name(self) -> str:
+        """Normal method to concatonate first_name and last_name"""
+        return f'{self.first_name} {self.last_name}'
 
     def has_perm(self, perm : str , obj:Union[models.Model, AnonymousUser, None]=None) -> bool:
         """For checking permissions. to keep it simple all admin have ALL permissions"""
