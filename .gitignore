@@ -207,11 +207,6 @@ crashlytics-build.properties
 fabric.properties
 
 
-#####=== Custom ===#####
-# Directories:
-media/
-
-
 # Configuration file with private data:
 *.env
 .env
