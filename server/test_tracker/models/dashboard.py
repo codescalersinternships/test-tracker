@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 
 from server.test_tracker.models.abstracts import (
@@ -16,6 +17,7 @@ class Project(TimeStampedModel):
     """Class project model for adding a new project to the database"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_projects")
     name = models.CharField(max_length=100)
+    activity = models.JSONField(default=dict)
 
     def __str__(self):
         return self.name

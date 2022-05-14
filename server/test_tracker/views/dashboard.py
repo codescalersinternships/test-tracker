@@ -1,4 +1,5 @@
 """Everything related to dashboard."""
+import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -8,6 +9,7 @@ from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import People
 from server.test_tracker.models.users import InviteSignature, User
 from server.test_tracker.services.dashboard import *
+from server.test_tracker.services.project import update_activity
 from server.test_tracker.services.users import get_user_by_email_for_login, get_user_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
@@ -92,7 +94,11 @@ class ProjectsDetailAPIView(GenericAPIView):
                 if validate_name:
                     no_project = find_project_name_based_on_user(request.user, project_name)
                     if no_project:
-                        serializer.save(user = request.user)
+                        project = serializer.save(user = request.user)
+                        update_activity(
+                            datetime.datetime.now(), request.user, project,
+                            "Create", "Project", project.name
+                        )
                         return CustomResponse.success(
                             data=serializer.data,
                             message="Project updated successfully",

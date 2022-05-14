@@ -1,5 +1,7 @@
 """Everything related to the project."""
-from rest_framework.serializers import ModelSerializer, CharField
+from datetime import datetime
+from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
+from server.test_tracker.models.dashboard import Project
 
 from server.test_tracker.models.project import TestPlan
 
@@ -15,6 +17,11 @@ class TestPlanDetailSerializer(ModelSerializer):
         model = TestPlan
         exclude = ('project',)
 
+class UpdateTestPlanSerializer(ModelSerializer):
+    class Meta:
+        model = TestPlan
+        fields = ('name',)
+
 class AddOrUpdateTempsSerializer(ModelSerializer):
     title = CharField()
     content = CharField()
@@ -22,3 +29,8 @@ class AddOrUpdateTempsSerializer(ModelSerializer):
     class Meta:
         model = TestPlan
         fields = ('title','content')
+
+class ActivitySerializer(ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ('activity',)
