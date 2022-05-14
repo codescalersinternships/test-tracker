@@ -21,7 +21,7 @@ class TestPlan(TimeStampedModel):
         Project, related_name="project_test_plans",
         on_delete=models.CASCADE, null=True
     )
-    name = models.CharField(max_length=150, unique=True)
+    name = models.CharField(max_length=150)
     type = models.CharField(
         max_length=100,
         choices=PLAN_CHOICES.choices,
