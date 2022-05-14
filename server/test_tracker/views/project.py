@@ -6,7 +6,8 @@ from server.test_tracker.api.response import CustomResponse
 
 
 from server.test_tracker.models.project import PLAN_CHOICES
-from server.test_tracker.serializers.project import TestPlanSerializer
+from server.test_tracker.serializers.project import TestPlanDetailSerializer, TestPlanSerializer
+from server.test_tracker.services.project import get_test_plan_by_id
 from server.test_tracker.utils.testplan_temp import TestPlanTemp
 from server.test_tracker.services.dashboard import get_plans_based_on_project, get_project_by_id
 
@@ -35,7 +36,8 @@ class TestPlansAPIView(GenericAPIView):
             )
         return CustomResponse.bad_request(
             data=serializer.errors,
-            message="Test plan not created"
+            message="Test plan not created",
+            status_code=201
         )
 
     def get(self, request: Request, project_id: str) -> Response:
@@ -50,3 +52,49 @@ class TestPlansAPIView(GenericAPIView):
             data = serializer.data
         )
 
+
+class TestPlansDetailAPIView(GenericAPIView):
+    """This class for [GET, UPDATE, DELETE] test plans methods"""
+    serializer_class = TestPlanDetailSerializer
+
+
+    def get(self, request: Request, project_id:str, test_plan_id: str) -> Response:
+        project = get_project_by_id(project_id)
+        test_plan = get_test_plan_by_id(test_plan_id)
+        if project is None:
+            return CustomResponse.not_found(
+                    message="There are no test plan with this id"
+                )
+        if test_plan is None:
+            return CustomResponse.not_found(
+                message="There are no test plan with this id"
+            )
+        if test_plan.project != project:
+            return CustomResponse.bad_request(
+                message="You don't have permission to access this test plan"
+            )
+        return CustomResponse.success(
+            message="Test plan found successfully",
+            data=TestPlanDetailSerializer(test_plan).data
+        )
+
+    def delete(self, request: Request, project_id:str, test_plan_id: str) -> Response:
+        project = get_project_by_id(project_id)
+        test_plan = get_test_plan_by_id(test_plan_id)
+        if project is None:
+            return CustomResponse.not_found(
+                    message="There are no test plan with this id"
+                )
+        if test_plan is None:
+            return CustomResponse.not_found(
+                message="There are no test plan with this id"
+            )
+        if test_plan.project != project:
+            return CustomResponse.bad_request(
+                message="You don't have permission to access this test plan"
+            )
+        test_plan.delete()
+        return CustomResponse.success(
+            message="DELETED",
+            status_code=204
+        )
