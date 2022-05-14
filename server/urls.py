@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/', include([
         path('auth/', include('server.test_tracker.routs.auth')),
         path('dashboard/', include('server.test_tracker.routs.dashboard')),
+        path('project/', include('server.test_tracker.routs.project')),
     ])),
 ]
 

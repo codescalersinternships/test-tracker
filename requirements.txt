@@ -22,7 +22,7 @@ packaging==21.3
 Pillow==9.1.0
 pluggy==1.0.0
 py==1.11.0
-pyini-parser==0.9.0
+pyini-parser==0.1.2
 PyJWT==2.3.0
 pyparsing==3.0.9
 pytest==7.1.2
