@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer, CharField, EmailField, SerializerMethodField
 from server.test_tracker.models.dashboard import People, Project
 from server.test_tracker.models.users import Notification, User
+from server.test_tracker.services.dashboard import get_signature
 
 
 class ProjectsSerializer(ModelSerializer):
@@ -34,6 +35,9 @@ class GetPersonSerializer(ModelSerializer):
         fields = ('permission','person')
 
     def get_person(self, obj):
+        person = obj.invited_user
+        if person is None:
+            return PeopleSerializer(obj.signature.json_data).data
         return ProfileSerializers(obj.invited_user).data
 
 class ProfileSerializers(ModelSerializer):

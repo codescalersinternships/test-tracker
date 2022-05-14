@@ -8,7 +8,7 @@ from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import People
 from server.test_tracker.models.users import InviteSignature, User
 from server.test_tracker.services.dashboard import *
-from server.test_tracker.services.users import get_user_by_id
+from server.test_tracker.services.users import get_user_by_email_for_login, get_user_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
 from server.test_tracker.serializers.dashboard import (
@@ -141,18 +141,23 @@ class PeopleAPIView(GenericAPIView):
             )
             first_name:str = serializer.validated_data.get('first_name')
             email:str = serializer.validated_data.get('email')
-            send_email(
-                first_name, request.user, email, 
-                redirect_link=f"http://localhost:8080/auth/register/?signature={new_signature.signature}"
-            )
-            People.objects.create(
-                host_user=request.user,
-                invited=True,
-                signature = new_signature
-            )
-            return CustomResponse.success(
-                data=serializer.data,
-                message="Person added successfully",
+            if get_user_by_email_for_login(email):
+                send_email(
+                    first_name, request.user, email, 
+                    redirect_link=f"http://localhost:8080/auth/register/?signature={new_signature.signature}"
+                )
+                People.objects.create(
+                    host_user=request.user,
+                    invited=True,
+                    signature = new_signature
+                )
+                return CustomResponse.success(
+                    data=serializer.data,
+                    message="Person added successfully",
+                )
+            return CustomResponse.bad_request(
+                message="Person already exists",
+                status_code=400
             )
         return CustomResponse.bad_request(
             error=serializer.errors,
