@@ -11,6 +11,8 @@ from server.test_tracker.models.abstracts import (
     TimeStampedModel,
 )
 
+import uuid
+
 
 
 class TestTrackerBaseUserManger(BaseUserManager):
@@ -75,3 +77,10 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.user.email
+
+class InviteSignature(TimeStampedModel):
+    signature = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    json_data = models.JSONField(default=dict)
+
+    def __str__(self):
+        return str(self.signature)

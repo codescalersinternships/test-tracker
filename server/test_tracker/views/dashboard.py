@@ -6,14 +6,15 @@ from rest_framework.response import Response
 from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import People
-from server.test_tracker.models.users import User
+from server.test_tracker.models.users import InviteSignature, User
 from server.test_tracker.services.dashboard import *
 from server.test_tracker.services.users import get_user_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
 from server.test_tracker.serializers.dashboard import (
-    PeopleSerializer, ProjectsSerializer, ProfileSerializers
+    GetPersonSerializer, PeopleSerializer, ProjectsSerializer, ProfileSerializers
 )
+from server.components import config
 
 
 
@@ -49,6 +50,15 @@ class ProjectsAPIView(GenericAPIView):
         return CustomResponse.bad_request(
             error = serializer.errors,
             message = "Project creation failed"
+        )
+    
+    def get(self, request: Request) -> Response:
+        projects = get_project_by_user_id(request.user.id)
+        serializer = ProjectsSerializer(projects, many=True)
+        return CustomResponse.success(
+            data = serializer.data,
+            message = "Projects retrieved successfully",
+            status_code = 200
         )
 class ProjectsDetailAPIView(GenericAPIView):
     """
@@ -125,11 +135,21 @@ class PeopleAPIView(GenericAPIView):
     def post(self, request: Request) -> Response:
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            invited_user_email:str = serializer.validated_data.get('email')
+            serializer.data['host_user'] = request.user
+            new_signature = InviteSignature.objects.create(
+                json_data = serializer.data
+            )
             first_name:str = serializer.validated_data.get('first_name')
-            user:User = request.user
-            send_email(first_name, user, invited_user_email)
-            serializer.save(user = request.user, invited=True)
+            email:str = serializer.validated_data.get('email')
+            send_email(
+                first_name, request.user, email, 
+                redirect_link=f"http://localhost:8080/auth/register/?signature={new_signature.signature}"
+            )
+            People.objects.create(
+                host_user=request.user,
+                invited=True,
+                signature = new_signature
+            )
             return CustomResponse.success(
                 data=serializer.data,
                 message="Person added successfully",
@@ -139,12 +159,20 @@ class PeopleAPIView(GenericAPIView):
             message="Person creation failed",
         )
 
+class GetPersonApiView(GenericAPIView):
+    """
+        You may have to use this class when you want to get all of your people
+        You must be authenticated to access this view
+    """
+    serializer_class = GetPersonSerializer
+    permission_classes = (UserIsAuthenticated,)
+
     def get(self, request: Request) -> Response:
         """Use this method to get all of people based on request user"""
         people: People = get_people_based_on_user(request.user)
         if len(people) > 0:
             return CustomResponse.success(
-                data=PeopleSerializer(people, many=True).data,
+                data=GetPersonSerializer(people, many=True).data,
                 message="People found successfully",
             )
         return CustomResponse.success(

@@ -7,7 +7,7 @@ from rest_framework import fields
 from typing import Dict, Any
 
 
-from server.test_tracker.models.users import User
+from server.test_tracker.models.users import  User
 from server.test_tracker.services.users import get_user_by_id
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

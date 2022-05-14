@@ -3,7 +3,7 @@ from django.db import models
 from server.test_tracker.models.abstracts import (
     TimeStampedModel
 )
-from server.test_tracker.models.users import User
+from server.test_tracker.models.users import InviteSignature, User
 
 
 
@@ -27,22 +27,20 @@ class People(TimeStampedModel):
     based on the permission type
     - To use this model you need to have already project
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=70, unique=True)
+    host_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='host_user')
+    invited_user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='invited_user',
+        null=True
+    )
     permission = models.CharField(
         max_length=100,
         choices=PERMISSION_CHOICES.choices,
         default=PERMISSION_CHOICES.FULL_ACCESS
     )
+    signature = models.ForeignKey(InviteSignature, on_delete=models.SET_NULL, null=True)
     invited = models.BooleanField(default=False)
     accepted = models.BooleanField(default=False)
 
-    @property
-    def full_name(self) -> str:
-        """Normal method to concatonate first_name and last_name"""
-        return f'{self.first_name} {self.last_name}'
-
     def __str__(self):
-        return self.full_name
+        return str("{} -> {}".format(self.host_user , self.invited_user))

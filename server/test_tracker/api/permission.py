@@ -6,9 +6,19 @@ from rest_framework.views import APIView
 
 class UserIsAuthenticated(permissions.BasePermission):
     """
-    return this endpoint only for all of Job-Seekers
+        only who login can pass
     """
     def has_permission(self, request: Request, view: APIView) -> bool:
         if request.user.is_authenticated:
+            return True
+        raise PermissionDenied
+
+class HasProjectAccess(permissions.BasePermission):
+    """
+        Only who have project or have a full access can pass
+    """
+    def has_permission(self, request: Request, view: APIView) -> bool:
+        if request.user.is_authenticated:
+            project = None
             return True
         raise PermissionDenied

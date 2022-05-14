@@ -1,37 +1,25 @@
 <script>
-    import Alert from "./Alert.svelte";
-    import Button from "./Btn.svelte";
-    import Spiner from "./Spiner.svelte";
-    
-    let registerPromise;
+  import axios from '../healpers/axios'
+  import Button from "./Button.svelte";
 
-    async function Register(){
-        let data = stashData()
-        const response = await fetch("http://127.0.0.1:8000/api/auth/signup/", {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        if (!response.status === 201) {
-            throw new Error(response.statusText);
-        }
+
+  async function RegisterApi(){
+      let data = {
+        first_name: document.getElementById('f_name').value,
+        last_name: document.getElementById('l_name').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      };
+    try {
+      const response = await axios.post("auth/signup/", data)
+      if (response.status === 201) {
+        window.location.href = '/'
+      }
+    } 
+    catch(err) {
+      console.log(err.response.data.error);
     }
-
-    const handleClick = () => {
-        registerPromise = Register();
-    }
-
-    function stashData() {
-        let data = {}
-        data['first_name'] = document.getElementById("f_name").value
-        data['last_name'] = document.getElementById("l_name").value
-        data['email'] = document.getElementById("email").value
-        data['password'] = document.getElementById("password").value
-        return data
-    }
-
+  }
 </script>
 
 <main>
@@ -77,21 +65,14 @@
                             <label class="form-label" for="password">Password</label>
                           </div>
                         </div> 
-                        <Button Class="primary" Function={handleClick} text="Register" />
+                        <Button Class="primary" Function={RegisterApi} text="Register" />
                       </form>
       
                     </div>
                     <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-                        <img src="../register.webp" class="img-fluid" alt="Registerimage" />
+                        <img src="../../register.webp" class="img-fluid" alt="Registerimage" />
                     </div>
                   </div>
-                  {#await registerPromise}
-                      <Spiner />
-                  {:then apiResponse}
-                      <p>{apiResponse ? `${apiResponse.full_name} is written in ${apiResponse.language}` : ''}</p>
-                  {:catch error}
-                      <Alert message={error} />
-                  {/await}
                 </div>
               </div>
             </div>

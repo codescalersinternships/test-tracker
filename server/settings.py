@@ -1,6 +1,5 @@
 from datetime import timedelta
 from server.components import config, BASE_DIR
-import os
 
 
 SECRET_KEY = config('DJANGO_SECRET_KEY')
@@ -9,7 +8,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 DEBUG = config("DJANGO_DEBUG") == "ON"
 
 ALLOWED_HOSTS = [
-    '127.0.0.1'
+    '127.0.0.1',
 ]
 
 
@@ -48,7 +47,7 @@ ROOT_URLCONF = 'server.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['test_tracker/templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
