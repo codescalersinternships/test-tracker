@@ -7,9 +7,10 @@ from server.test_tracker.api.response import CustomResponse
 
 from server.test_tracker.models.project import PLAN_CHOICES
 from server.test_tracker.serializers.project import AddOrUpdateTempsSerializer, TestPlanDetailSerializer, TestPlanSerializer
-from server.test_tracker.services.project import get_test_plan_by_id
+from server.test_tracker.utils.testplan_handle import TestPlanHandeling
 from server.test_tracker.utils.testplan_temp import TestPlanTemp
 from server.test_tracker.services.dashboard import get_plans_based_on_project, get_project_by_id
+
 
 
 class TestPlansAPIView(GenericAPIView):
@@ -59,40 +60,16 @@ class TestPlansDetailAPIView(GenericAPIView):
 
 
     def get(self, request: Request, project_id:str, test_plan_id: str) -> Response:
-        project = get_project_by_id(project_id)
-        test_plan = get_test_plan_by_id(test_plan_id)
-        if project is None:
-            return CustomResponse.not_found(
-                    message="There are no test plan with this id"
-                )
-        if test_plan is None:
-            return CustomResponse.not_found(
-                message="There are no test plan with this id"
-            )
-        if test_plan.project != project:
-            return CustomResponse.bad_request(
-                message="You don't have permission to access this test plan"
-            )
+        """Get a test plan from the specified project"""
+        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
         return CustomResponse.success(
             message="Test plan found successfully",
             data=TestPlanDetailSerializer(test_plan).data
         )
 
     def delete(self, request: Request, project_id:str, test_plan_id: str) -> Response:
-        project = get_project_by_id(project_id)
-        test_plan = get_test_plan_by_id(test_plan_id)
-        if project is None:
-            return CustomResponse.not_found(
-                    message="There are no test plan with this id"
-                )
-        if test_plan is None:
-            return CustomResponse.not_found(
-                message="There are no test plan with this id"
-            )
-        if test_plan.project != project:
-            return CustomResponse.bad_request(
-                message="You don't have permission to access this test plan"
-            )
+        """Delete a test plan from the specified project"""
+        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
         test_plan.delete()
         return CustomResponse.success(
             message="DELETED",
@@ -105,20 +82,7 @@ class AddOrUpdateTempsAPIView(GenericAPIView):
 
     def post (self, request: Request, project_id:str, test_plan_id: str) -> Response:
         """Add custom content area to test plan"""
-        project = get_project_by_id(project_id)
-        test_plan = get_test_plan_by_id(test_plan_id)
-        if project is None:
-            return CustomResponse.not_found(
-                    message="There are no test plan with this id"
-                )
-        if test_plan is None:
-            return CustomResponse.not_found(
-                message="There are no test plan with this id"
-            )
-        if test_plan.project != project:
-            return CustomResponse.bad_request(
-                message="You don't have permission to access this test plan"
-            )
+        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
 
         serializer = self.get_serializer(data = request.data)
         if serializer.is_valid():
@@ -139,20 +103,7 @@ class AddOrUpdateTempsAPIView(GenericAPIView):
 class DeleteContentAreaAPIView(GenericAPIView):
     """Delete content area from test plan"""
     def delete(self, request: Request, project_id:str, test_plan_id: str, title:str) -> Response:
-        project = get_project_by_id(project_id)
-        test_plan = get_test_plan_by_id(test_plan_id)
-        if project is None:
-            return CustomResponse.not_found(
-                    message="There are no test plan with this id"
-                )
-        if test_plan is None:
-            return CustomResponse.not_found(
-                message="There are no test plan with this id"
-            )
-        if test_plan.project != project:
-            return CustomResponse.bad_request(
-                message="You don't have permission to access this test plan"
-            )
+        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
         deleted = test_plan.delete_temp(title)
         if deleted:
             return CustomResponse.success(
