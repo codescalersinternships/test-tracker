@@ -8,7 +8,7 @@ from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.project import PLAN_CHOICES
 from server.test_tracker.serializers.project import TestPlanSerializer
 from server.test_tracker.utils.testplan_temp import TestPlanTemp
-from server.test_tracker.services.dashboard import get_project_by_id
+from server.test_tracker.services.dashboard import get_plans_based_on_project, get_project_by_id
 
 
 class TestPlansAPIView(GenericAPIView):
@@ -36,5 +36,17 @@ class TestPlansAPIView(GenericAPIView):
         return CustomResponse.bad_request(
             data=serializer.errors,
             message="Test plan not created"
+        )
+
+    def get(self, request: Request, project_id: str) -> Response:
+        """Method get to get all of test plans based on the project"""
+        project = get_project_by_id(project_id)
+        if project is None:
+            return CustomResponse.not_found(message = "Project not found")
+        plans = get_plans_based_on_project(project)
+        serializer = TestPlanSerializer(plans, many=True)
+        return CustomResponse.success(
+            message = "Success plans found.",
+            data = serializer.data
         )
 

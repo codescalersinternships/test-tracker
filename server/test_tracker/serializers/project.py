@@ -8,4 +8,4 @@ from server.test_tracker.models.project import TestPlan
 class TestPlanSerializer(ModelSerializer):
     class Meta:
         model = TestPlan
-        fields = ('name','type',)
+        exclude = ('temps','project')

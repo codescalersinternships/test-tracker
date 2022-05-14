@@ -1,5 +1,6 @@
 from uuid import UUID
 from server.test_tracker.models.dashboard import PERMISSION_CHOICES, People, Project
+from server.test_tracker.models.project import TestPlan
 from server.test_tracker.models.users import InviteSignature, User
 
 
@@ -60,3 +61,7 @@ def get_people_based_on_signature(signature: UUID):
         )
     except People.DoesNotExist:
         return None
+
+def get_plans_based_on_project(project: Project) -> TestPlan:
+    """Return all of test plans based on project"""
+    return TestPlan.objects.filter(project=project)
