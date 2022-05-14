@@ -11,4 +11,7 @@ class TestPlanTemp():
     def create_temps():
         config = ConfigParser()
         with open(f'{BASE_DIR}/server/temps.ini', 'r') as file:
-            return config.read(file)
+            temps = config.read(file)
+            for section in list(temps):
+                temps[section.replace('_', ' ')] = temps.pop(section)
+        return temps

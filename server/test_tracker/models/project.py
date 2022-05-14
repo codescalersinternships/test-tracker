@@ -31,6 +31,23 @@ class TestPlan(TimeStampedModel):
 
     def __str__(self):
         return self.name
+    
+    def add_or_update_temps(self, title: str, content: str) -> None:
+        """
+        This method adds or updates the temps of the test plan
+        """
+        self.temps[title] = content
+        self.save()
+
+    def delete_temp(self, title: str) -> None:
+        """
+        This method delete_content of the temps of the test plan
+        """
+        if self.temps.get(title):
+            del self.temps[title]
+            self.save()
+            return True
+        return False
 
 class Requirement(TimeStampedModel):
     """
