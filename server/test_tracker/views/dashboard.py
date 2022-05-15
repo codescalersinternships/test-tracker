@@ -7,17 +7,14 @@ from rest_framework.response import Response
 from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import People
-from server.test_tracker.models.users import InviteSignature, User
 from server.test_tracker.services.dashboard import *
-from server.test_tracker.services.project import update_activity
-from server.test_tracker.services.users import get_user_by_email_for_login, get_user_by_id
+from server.test_tracker.services.people import get_person_by_email
+from server.test_tracker.services.users import get_user_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
 from server.test_tracker.serializers.dashboard import (
     GetPersonSerializer, PeopleSerializer, ProjectsSerializer, ProfileSerializers
 )
-from server.components import config
-
 
 
 class ProjectsAPIView(GenericAPIView):
@@ -74,22 +71,12 @@ class PeopleAPIView(GenericAPIView):
     def post(self, request: Request) -> Response:
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.data['host_user'] = request.user
-            new_signature = InviteSignature.objects.create(
-                json_data = serializer.data
-            )
-            first_name:str = serializer.validated_data.get('first_name')
-            email:str = serializer.validated_data.get('email')
-            if not get_user_by_email_for_login(email):
-
+            email: str = serializer.validated_data.get('email')
+            if not get_person_by_email(email):
+                person = serializer.save(host_user=request.user, invited = True)
                 send_email(
-                    first_name, request.user, email, 
-                    redirect_link=f"http://localhost:8080/auth/register/?signature={new_signature.signature}"
-                )
-                People.objects.create(
-                    host_user=request.user,
-                    invited=True,
-                    signature = new_signature
+                    person.first_name, request.user, person.email, 
+                    redirect_link=f"http://localhost:8080/auth/register/?signature={person.signature}"
                 )
                 return CustomResponse.success(
                     data=serializer.data,

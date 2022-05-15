@@ -61,8 +61,15 @@ class DecodeAndVerifySignatureAPIView(APIView):
     def get(self, request: Request) -> Response:
         """Method to decode signature of a person invited"""
         try:
+            signature = get_signature(request.query_params.get('signature'))
+            data = {
+                'email': signature.email,
+                'first_name': signature.first_name,
+                'last_name': signature.last_name,
+            }
+            print(signature)
             return CustomResponse.success(
-                data=get_signature(request.query_params.get('signature')).json_data
+                data = data
             )
         except:
             return CustomResponse.not_found(
@@ -70,29 +77,14 @@ class DecodeAndVerifySignatureAPIView(APIView):
             )
 
     def put(self, request: Request) -> Response:
-        """This endpoint to create a new user into database after success registration invited"""
-        # Get the new user by his signature and 
-        # put on people table to have access on the projects based on his permission.
-        signature = get_signature(request.query_params.get('signature'))
-        if signature is not None:
-            invited_user_email = signature.json_data.get('email')
-            user = get_user_by_email_for_login(invited_user_email)
-            if user is not None:
-                people = get_people_based_on_signature(signature)
-                if people is not None:
-                    people.invited_user = user
-                    people.accepted = True
-                    people.signature = None
-                    people.save()
-                    signature.delete() # We dont want to use this signature anymore
-                    return CustomResponse.success(
-                        message = 'Person added successfully',
-                    )
-                return CustomResponse.not_found(
-                    message = 'There are no people related by this signature'
-                )
-            return CustomResponse.not_found(
-                message = f"signature '{signature}' not found"
+        """Update person obj"""
+        person_signature = get_signature(request.query_params.get('signature'))
+        if person_signature is not None:
+            person_signature.accepted = True
+            person_signature.signature = None # Remove signature from db
+            person_signature.save()
+            return CustomResponse.success(
+                message = 'Person updated successfully',
             )
         return CustomResponse.not_found(
             message = 'Signature could not be decoded, Make sure that you have a valid signature'

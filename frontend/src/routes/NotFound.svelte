@@ -1,2 +1,6 @@
+<script>
+    import NotFound from 'components/NotFound.svelte';
+</script>
 
-<h1>Not Found Page</h1>
+
+<NotFound />

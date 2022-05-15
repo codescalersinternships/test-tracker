@@ -1,7 +1,7 @@
 from uuid import UUID
 from server.test_tracker.models.dashboard import PERMISSION_CHOICES, People, Project
 from server.test_tracker.models.project import TestPlan
-from server.test_tracker.models.users import InviteSignature, User
+from server.test_tracker.models.users import User
 
 
 
@@ -46,11 +46,11 @@ def get_admin_access_permission_based_on_user(user: User) -> People or None:
     """Returns the full permission based on the user"""
     return People.objects.filter(host_user=user, permission=PERMISSION_CHOICES.ADMIN_ACCESS)
 
-def get_signature(signature: UUID) -> InviteSignature:
+def get_signature(signature: UUID) -> People:
     """Try to return user data based on invitation signature"""
     try:
-        return InviteSignature.objects.get(signature=signature)
-    except InviteSignature.DoesNotExist:
+        return People.objects.get(signature=signature)
+    except People.DoesNotExist:
         return None
 
 def get_people_based_on_signature(signature: UUID):

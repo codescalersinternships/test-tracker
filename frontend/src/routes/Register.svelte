@@ -11,8 +11,12 @@
 
     if (signatureParam){
         onMount(async () => {
-            const response = await axios.get(`auth/invitation/?signature=${signature}`, data)
-            data = response.data.data
+            try {
+                const response = await axios.get(`auth/invitation/?signature=${signature}`, data)
+            if (response.status === 200) { data = response.data.data }} 
+            catch(err) {
+                window.location.href = '/not-found'
+            }
         });
     }
 

@@ -1,7 +1,6 @@
-from rest_framework.serializers import ModelSerializer, CharField, EmailField, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from server.test_tracker.models.dashboard import People, Project
 from server.test_tracker.models.users import Notification, User
-from server.test_tracker.services.dashboard import get_signature
 
 
 class ProjectsSerializer(ModelSerializer):
@@ -18,10 +17,6 @@ class NotificationSerializer(ModelSerializer):
 
 class PeopleSerializer(ModelSerializer):
     """class PeopleSerializer to serialize the people obj"""
-    first_name = CharField()
-    last_name = CharField()
-    email = EmailField()
-
     class Meta:
         model = People
         fields = ('first_name', 'last_name', 'email','permission')

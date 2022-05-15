@@ -3,6 +3,9 @@
     import Button from "./Button.svelte";
     export let data;
 
+    const urlParams = new URLSearchParams(window.location.search);
+    let signature = urlParams.get('signature');
+
     async function RegisterApi(){
         const password1 = document.getElementById('password1').value;
         const password2 = document.getElementById('password2').value;
@@ -10,17 +13,14 @@
             alert("Passwords do not match");
             return;
         }
-        data.password = password1
         try {
-            const response = await axios.post("auth/signup/", data)
-        if (response.status === 201) { await InviteSuccess() }} 
+            const response = await axios.put(`people/set_password/?signature=${signature}`, {password:password1})
+        if (response.status === 203) { await InviteSuccess() }} 
         catch(err) {
-            console.log(err.response.data.error);
+            console.log(err.response);
         }
     }
     async function InviteSuccess() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let signature = urlParams.get('signature');
         try {
             const success = await axios.put(`auth/invitation/?signature=${signature}`, data)
         if (success.status === 200) { window.location.href = '/' }} 

@@ -1,8 +1,5 @@
 """This file contains all sub tables based on the project table on 'models/dashboard' """
-from email.policy import default
 from django.db import models
-from enum import Enum
-
 from server.test_tracker.models.abstracts import TimeStampedModel
 from server.test_tracker.models.dashboard import Project
 
