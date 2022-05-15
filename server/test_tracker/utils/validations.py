@@ -15,3 +15,10 @@ class Validator():
         """Validate string method that confirms if this valid string or not"""
         regex = re.compile('[@!#$%^&*()<>?/\|}{-~: "]')
         return True if (regex.search(string) == None) else False
+    
+    @staticmethod
+    def validate_password(password: str) -> bool:
+        """Validate password method that confirms if this valid password or not"""
+        if re.fullmatch(r'[A-Za-z0-9@#$%^&+=]{8,}', password):
+            return True
+        return False

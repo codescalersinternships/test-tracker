@@ -10,9 +10,11 @@ from server.test_tracker.models.users import User
 
 from server.test_tracker.serializers.auth import LoginSerializer, RegisterSerializer
 from server.test_tracker.services.dashboard import get_people_based_on_signature, get_signature
-from server.test_tracker.services.users import get_user_by_email_for_login
+from server.test_tracker.services.users import get_user_by_email_for_login, success_login_user
 from server.test_tracker.utils.auth import get_tokens_for_user
 from server.test_tracker.utils.validations import Validator
+from django.contrib.auth.hashers import make_password
+
 
 
 class RegisterAPIView(GenericAPIView):
@@ -20,7 +22,6 @@ class RegisterAPIView(GenericAPIView):
     serializer_class = RegisterSerializer
     def post(self, request: Request) -> Response:
         """Method to register a new user"""
-        print(request.query_params)
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -44,16 +45,22 @@ class LoginByTokenAPIView(GenericAPIView):
         email: str = request.data.get('email')
         if serializer.is_valid() and Validator().validate_email(email):
             password: str = serializer.validated_data.get('password')
-            user: User = get_user_by_email_for_login(email)
-            if user is not None:
-                if user.check_password(password) or user.password == password:
-                    return CustomResponse.success(
-                        message="Valid email in our system.",
-                        data=get_tokens_for_user(user)
-                    )
-                return CustomResponse.bad_request(message = 'Wrong Credential!')
-            return CustomResponse.not_found(message = 'There are no user with this email.')
-        return CustomResponse.bad_request(error=serializer.errors)
+            user: User = success_login_user(email, password)
+            if user:
+                tokens: Dict = get_tokens_for_user(user)
+                return CustomResponse.success(
+                    data = tokens,
+                    message = "User logged in successfully",
+                    status_code = 200
+                )
+            return CustomResponse.bad_request(
+                message = "User not found",
+                status_code = 400
+            )
+        return CustomResponse.bad_request(
+            message = "Please make sure your email is valid",
+            error=serializer.errors
+        )
 
 class DecodeAndVerifySignatureAPIView(APIView):
     """Decode signature of a person invited"""

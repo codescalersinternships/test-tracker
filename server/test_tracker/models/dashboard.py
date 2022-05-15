@@ -43,7 +43,7 @@ class People(TimeStampedModel):
     )
 
     signature = models.UUIDField(default=uuid.uuid4, null=True)
-    password = models.CharField(max_length=50, null=True)
+    password = models.CharField(max_length=90, null=True)
 
     invited = models.BooleanField(default=False)
     accepted = models.BooleanField(default=False)
