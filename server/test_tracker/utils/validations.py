@@ -13,7 +13,7 @@ class Validator():
     @staticmethod
     def validate_string(string: str) -> bool:
         """Validate string method that confirms if this valid string or not"""
-        regex = re.compile('[@!#$%^&*()<>?/\|}{-~: "]')
+        regex = re.compile('[@!#$%^&*()<>?/\|}{-~:"]')
         return True if (regex.search(string) == None) else False
     
     @staticmethod

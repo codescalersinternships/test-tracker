@@ -10,6 +10,7 @@ urlpatterns = [
         path('dashboard/', include('server.test_tracker.routs.dashboard')),
         path('project/', include('server.test_tracker.routs.project')),
         path('test_plan/', include('server.test_tracker.routs.test_plan')),
+        path('requirements/', include('server.test_tracker.routs.requirement')),
         path('people/', include('server.test_tracker.routs.people')),
     ])),
 ]

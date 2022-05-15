@@ -46,12 +46,30 @@ class TestPlan(TimeStampedModel):
             return True
         return False
 
-class Requirement(TimeStampedModel):
+class Requirements(TimeStampedModel):
+    """
+    Class test requirements model for adding a new requirements to the database
+    based on the project
+    """
+    project = models.ForeignKey(Project, related_name="project_requirements", on_delete=models.CASCADE)
+    title = models.CharField(max_length=150)
+
+    class Meta:
+        verbose_name = "Requirement"
+        verbose_name_plural = "Requirements"
+    
+    def __str__(self):
+        return self.title
+    
+
+class ProjectRequirement(TimeStampedModel):
     """
     Class test requirement model for adding a new requirement to the database
-    based on the testplan
+    based on the project
     """
+    requirement = models.ForeignKey(Requirements, related_name="project_requirement", on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
+    description = models.TextField(default="")
 
     def __str__(self):
         return self.title

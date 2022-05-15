@@ -3,6 +3,8 @@ from django.core.exceptions import PermissionDenied
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
+from server.test_tracker.models.dashboard import Project
+
 
 class UserIsAuthenticated(permissions.BasePermission):
     """
@@ -19,6 +21,7 @@ class HasProjectAccess(permissions.BasePermission):
     """
     def has_permission(self, request: Request, view: APIView) -> bool:
         if request.user.is_authenticated:
-            project = None
-            return True
-        raise PermissionDenied
+            projects = Project.objects.filter(user=request.user)
+        #     from server.test_tracker.models.dashboard import People
+        # print(project.user)
+        # print(People.objects.filter(host_user=project.user).u)
