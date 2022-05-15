@@ -1,169 +1,90 @@
 """Everything related to the project."""
+import datetime
+from server.test_tracker.api.permission import UserIsAuthenticated
+from server.test_tracker.api.response import CustomResponse
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from server.test_tracker.api.response import CustomResponse
+from server.test_tracker.serializers.dashboard import ProjectsSerializer
+from server.test_tracker.serializers.project import ActivitySerializer
 
-
-from server.test_tracker.models.project import PLAN_CHOICES, TestPlan
-from server.test_tracker.serializers.project import ActivitySerializer, AddOrUpdateTempsSerializer, TestPlanDetailSerializer, TestPlanSerializer, UpdateTestPlanSerializer
+from server.test_tracker.services.dashboard import find_project_name_based_on_user, get_project_by_id
 from server.test_tracker.services.project import update_activity
-from server.test_tracker.utils.testplan_handle import TestPlanHandeling
-from server.test_tracker.utils.testplan_temp import TestPlanTemp
-from server.test_tracker.services.dashboard import get_plans_based_on_project, get_project_by_id
-import datetime
+from server.test_tracker.utils.validations import Validator
 
 
-class TestPlansAPIView(GenericAPIView):
-    """Create a test plan."""
-    serializer_class = TestPlanSerializer
-    def post(self, request:Request, project_id: str) -> Response:
-        """
-            Use this endpoint to create a new test plan
-            You can set temps of null to create a test plan with default temps
-        """
-        serializer = self.get_serializer(data = request.data)
-        if serializer.is_valid():
-            type = serializer.validated_data.get('type')
-            project = get_project_by_id(project_id)
-            if project is None:
-                return CustomResponse.not_found(message = "Project not found")
-            if type == PLAN_CHOICES.TEMPLATE.value:
-                temps = TestPlanTemp.create_temps()
-                serializer.save(project = project, temps = temps)
-            serializer.save(project = project)
-            update_activity(
-                datetime.datetime.now(), request.user, project,
-                "Create", "Test Plan", serializer.data.get('name')
-            )
-            return CustomResponse.success(
-                data=serializer.validated_data,
-                message="Test plan created successfully"
-            )
-        return CustomResponse.bad_request(
-            data=serializer.errors,
-            message="Test plan not created",
-            status_code=201
-        )
+class ProjectsDetailAPIView(GenericAPIView):
+    """
+        Class ProjectsAPIView have all the functionality based on the project
+        Methods [GET, PUT, DELETE]
+    """
+    serializer_class = ProjectsSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, project_id: str) -> Response:
-        """Method get to get all of test plans based on the project"""
+        """Return a single project based on the given project id"""
         project = get_project_by_id(project_id)
-        if project is None:
-            return CustomResponse.not_found(message = "Project not found")
-        plans = get_plans_based_on_project(project)
-        serializer = TestPlanSerializer(plans, many=True)
-        return CustomResponse.success(
-            message = "Success plans found.",
-            data = serializer.data
+        if project is not None:
+            return CustomResponse.success(
+                data=ProjectsSerializer(project).data,
+                message="Project found successfully",
+            )
+        return CustomResponse.not_found(
+            message="Project not found",
         )
 
-
-class TestPlansDetailAPIView(GenericAPIView):
-    """This class for [GET, UPDATE, DELETE] test plans methods"""
-    serializer_class = TestPlanDetailSerializer
-
-
-    def get(self, request: Request, project_id:str, test_plan_id: str) -> Response:
-        """Get a test plan from the specified project"""
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
-        if isinstance(test_plan, TestPlan):
-            return CustomResponse.success(
-                message="Test plan found successfully",
-                data=TestPlanDetailSerializer(test_plan).data
-            )
-        return test_plan
-    
-
-    def delete(self, request: Request, project_id:str, test_plan_id: str) -> Response:
-        """Delete a test plan from the specified project"""
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
-        if isinstance(test_plan, TestPlan):
-            update_activity(
-                datetime.datetime.now(), request.user, get_project_by_id(project_id),
-                "Delete", "Test Plan", test_plan.name
-            )
-            test_plan.delete()
-            return CustomResponse.success(
-                message="DELETED",
-                status_code=204
-            )
-        return test_plan
-
-class UpdateTestPlanAPIView(GenericAPIView):
-    serializer_class = UpdateTestPlanSerializer
-    def put(self, request: Request, project_id:str, test_plan_id:str) -> Response:
-        """Update test plan title"""
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
-        if isinstance(test_plan, TestPlan):
-            serializer = self.get_serializer(test_plan, data = request.data)
+    def put(self, request: Request, project_id: int) -> Response:
+        """Put some data into the project"""
+        project = get_project_by_id(project_id)
+        if project is not None:
+            serializer = self.get_serializer(project, data=request.data)
             if serializer.is_valid():
-                serializer.save()
-                update_activity(
-                    datetime.datetime.now(), request.user, get_project_by_id(project_id),
-                    "Update", "Test Plan", test_plan.name
-                )
-                return CustomResponse.success(
-                    message="Test plan Updated",
-                    status_code=200
-                )
-            return CustomResponse.bad_request(
-                errors=serializer.errors,
-                message="Test plan not updated",
-            )
-        return test_plan
-
-class AddOrUpdateTempsAPIView(GenericAPIView):
-    """Add or update content area to test plan"""
-    serializer_class = AddOrUpdateTempsSerializer
-
-    def post (self, request: Request, project_id:str, test_plan_id: str) -> Response:
-        """Add custom content area to test plan"""
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
-        if isinstance(test_plan, TestPlan):
-            serializer = self.get_serializer(data = request.data)
-            if serializer.is_valid():
-                title = serializer.validated_data.get('title')
-                content = serializer.validated_data.get('content')
-                test_plan.add_or_update_temps(title, content)
-                update_activity(
-                    datetime.datetime.now(), request.user, get_project_by_id(project_id),
-                    "Create", "Test Plan Template", test_plan.name
-                )
-                return CustomResponse.success(
-                    message="Successfully added content area to test plan",
-                    data = serializer.data,
-                    status_code=201
+                project_name: str = serializer.validated_data.get('name')
+                validate_name: str = Validator().validate_string(project_name)
+                if validate_name:
+                    no_project = find_project_name_based_on_user(request.user, project_name)
+                    if no_project:
+                        project = serializer.save(user = request.user)
+                        update_activity(
+                            datetime.datetime.now(), request.user, project,
+                            "Create", "Project", project.name
+                        )
+                        return CustomResponse.success(
+                            data=serializer.data,
+                            message="Project updated successfully",
+                            status_code=203
+                        )
+                    return CustomResponse.bad_request(
+                        message = "Project already exists",
+                        status_code = 400
+                    )
+                return CustomResponse.bad_request(
+                    error = f"Name '{project_name}' is not a valid name",
+                    message = "Project creation failed",
                 )
             return CustomResponse.bad_request(
                 error=serializer.errors,
-                message="Content area not added",
+                message="Project update failed",
             )
-        return test_plan
+        return CustomResponse.not_found(
+            message="Project not found",
+        )
 
-
-class DeleteContentAreaAPIView(GenericAPIView):
-    """Delete content area from test plan"""
-    def delete(self, request: Request, project_id:str, test_plan_id: str, title:str) -> Response:
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
-        if isinstance(test_plan, TestPlan):
-            deleted = test_plan.delete_temp(title)
-            if deleted:
-                update_activity(
-                    datetime.datetime.now(), request.user, get_project_by_id(project_id),
-                    "Create", "Test Plan Template", test_plan.name
-                )
-                return CustomResponse.success(
-                    message="DELETED",
-                    status_code=204
-                )
-            return CustomResponse.not_found(
-                message = 'There are no content area with this title'
+    def delete(self, request: Request, project_id: int) -> Response:
+        project = get_project_by_id(project_id)
+        if project is not None :
+            project.delete()
+            return CustomResponse.success(
+                message="Project deleted successfully",
+                status_code=204
             )
-        return test_plan
+        return CustomResponse.not_found(
+            message="Project not found",
+        )
 
 class ProjectActivityAPIView(GenericAPIView):
     """Get all project activity"""
+    serializer_class = ActivitySerializer
     def get(self, request: Request, project_id: str) -> Response:
         project = get_project_by_id(project_id)
         if project is None:

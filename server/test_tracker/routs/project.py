@@ -7,21 +7,5 @@ from server.test_tracker.views.project import *
 
 urlpatterns = [
     path('activity/<str:project_id>/', ProjectActivityAPIView.as_view()),
-    path('<str:project_id>/test_plans/', TestPlansAPIView.as_view()),
-    path(
-        '<str:project_id>/test_plans/<str:test_plan_id>/',
-        TestPlansDetailAPIView.as_view()
-    ),
-    path(
-        '<str:project_id>/test_plans/<str:test_plan_id>/update/',
-        UpdateTestPlanAPIView.as_view()
-    ),
-    path(
-        '<str:project_id>/test_plans/<str:test_plan_id>/temps/',
-        AddOrUpdateTempsAPIView.as_view()
-    ),
-    path(
-        '<str:project_id>/test_plans/<str:test_plan_id>/temps/<str:title>/',
-        DeleteContentAreaAPIView.as_view()
-    ),
+    path('projects/<str:project_id>/', ProjectsDetailAPIView.as_view()),
 ]

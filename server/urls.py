@@ -9,6 +9,8 @@ urlpatterns = [
         path('auth/', include('server.test_tracker.routs.auth')),
         path('dashboard/', include('server.test_tracker.routs.dashboard')),
         path('project/', include('server.test_tracker.routs.project')),
+        path('test_plan/', include('server.test_tracker.routs.test_plan')),
+        path('people/', include('server.test_tracker.routs.people')),
     ])),
 ]
 
