@@ -117,7 +117,7 @@ class TestRun(TimeStampedModel):
     """Test run model to run all of test cases based on test suites"""
     assigned_user = models.ForeignKey(User, related_name="assigned_user", on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
-    suites = models.ManyToManyField(TestSuites, related_name="run_suites")
+    test_suites = models.ManyToManyField(TestSuites, related_name="run_suites")
     status =  models.CharField(
         max_length=100,
         choices=TEST_RUN_STATUS_CHOICES.choices,
