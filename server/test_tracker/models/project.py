@@ -73,3 +73,27 @@ class Requirements(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+class TestSuites(TimeStampedModel):
+    """
+        Class test suite model for create a new test suite for the project
+    """
+    project = models.ForeignKey(Project, related_name="project_test_suites", on_delete=models.CASCADE)
+    title = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.title
+
+class TestCases(TimeStampedModel):
+    """
+        Class test suite model for create a new test suite for the project
+    """
+    title = models.CharField(max_length=150)
+    description = models.TextField(default="")
+    test_steps = models.TextField(default="A list of steps to perform along with any sample data.")
+    expected_result = models.TextField(default="Details of what the final result should be.")
+    verifies_requirements = models.ManyToManyField(Requirements, related_name="verifies_requirements")
+
+    def __str__(self):
+        return self.title
+
