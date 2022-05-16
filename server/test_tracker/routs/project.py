@@ -1,6 +1,6 @@
 """Everything related to the project."""
 
-from django.urls import path
+from django.urls import include, path
 from server.test_tracker.views.project import *
 
 
