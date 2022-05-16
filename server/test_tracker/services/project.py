@@ -3,7 +3,7 @@
 
 from datetime import datetime
 from server.test_tracker.models.dashboard import Project
-from server.test_tracker.models.project import TestPlan
+from server.test_tracker.models.project import TestPlan, TestRun
 from server.test_tracker.models.users import User
 
 
@@ -44,3 +44,12 @@ def update_activity(
     }
 
     return project.save()
+
+def get_test_run_by_id(test_run_id: str):
+    """Try to return a test run based on its id."""
+    if test_run_id.isdigit():
+        try:
+            return TestRun.objects.get(id = int(test_run_id))
+        except TestRun.DoesNotExist:
+            return None
+    return None

@@ -5,7 +5,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.serializers.test_cases import TestCaseSerializer
+from server.test_tracker.serializers.test_cases import GetSingleTestCaseSerializer, TestCaseSerializer
 from server.test_tracker.services.project import update_activity
 from server.test_tracker.services.requirement import get_requirement_by_id
 from server.test_tracker.services.test_cases import get_test_case_by_id
@@ -64,7 +64,7 @@ class GetAllTestCasesAPIView(GenericAPIView):
         )
 
 
-class TestSuitesDetailAPIView(GenericAPIView):
+class TestCaseDetailAPIView(GenericAPIView):
     """Create a new test suite"""
     serializer_class = TestCaseSerializer
 
@@ -107,4 +107,17 @@ class TestSuitesDetailAPIView(GenericAPIView):
         return CustomResponse.success(
             message="Test Case deleted successfully",
             status_code=204
+        )
+
+
+class GetSingleTestCaseAPIView(GenericAPIView):
+    serializer_class = GetSingleTestCaseSerializer
+
+    def get(self, request: Request, test_case_id: str):
+        test_case = get_test_case_by_id(test_case_id)
+        if test_case is None:
+            return CustomResponse.not_found(message = "TestCase not found")
+        return CustomResponse.success(
+            message="Test Case found",
+            data=self.get_serializer(test_case).data
         )

@@ -48,5 +48,10 @@ class People(TimeStampedModel):
     invited = models.BooleanField(default=False)
     accepted = models.BooleanField(default=False)
 
+    @property
+    def full_name(self) -> str:
+        """Normal method to concatonate first_name and last_name"""
+        return f'{self.first_name} {self.last_name}'
+
     def __str__(self):
-        return str("{} -> {}".format(self.host_user , self.email))
+        return str(self.email)

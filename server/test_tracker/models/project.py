@@ -1,7 +1,7 @@
 """This file contains all sub tables based on the project table on 'models/dashboard' """
 from django.db import models
 from server.test_tracker.models.abstracts import TimeStampedModel
-from server.test_tracker.models.dashboard import Project
+from server.test_tracker.models.dashboard import People, Project
 from server.test_tracker.models.users import User
 
 
@@ -105,6 +105,14 @@ class TestCases(TimeStampedModel):
     passed = models.BooleanField(default=False)
     failed = models.BooleanField(default=False)
     skipped = models.BooleanField(default=False)
+    run = models.BooleanField(default=False)
+    status =  models.CharField(
+        max_length=100,
+        choices=TEST_RUN_STATUS_CHOICES.choices,
+        default=TEST_RUN_STATUS_CHOICES.NONE
+    )
+    completed = models.BooleanField(default=False)
+
 
     class Meta:
         verbose_name = "TestCase"
@@ -115,15 +123,9 @@ class TestCases(TimeStampedModel):
 
 class TestRun(TimeStampedModel):
     """Test run model to run all of test cases based on test suites"""
-    assigned_user = models.ForeignKey(User, related_name="assigned_user", on_delete=models.CASCADE)
+    assigned_user = models.ForeignKey(People, related_name="assigned_user", on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     test_suites = models.ManyToManyField(TestSuites, related_name="run_suites")
-    status =  models.CharField(
-        max_length=100,
-        choices=TEST_RUN_STATUS_CHOICES.choices,
-        default=TEST_RUN_STATUS_CHOICES.NONE
-    )
-    completed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

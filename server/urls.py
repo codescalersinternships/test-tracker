@@ -18,6 +18,7 @@ urlpatterns = [
         path('test_plan/', include('server.test_tracker.routs.test_plan')),
         path('test_suites/', include('server.test_tracker.routs.test_suites')),
         path('test_cases/', include('server.test_tracker.routs.test_cases')),
+        path('test_runs/', include('server.test_tracker.routs.test_runs')),
     ])),
 ]
 
