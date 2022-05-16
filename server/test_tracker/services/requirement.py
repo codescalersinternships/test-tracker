@@ -1,23 +1,42 @@
 """Everything related to the project requirements"""
 
 from server.test_tracker.models.dashboard import Project
-from server.test_tracker.models.project import Requirements
+from server.test_tracker.models.project import ProjectRequirement, Requirements
 
 from typing import List
 
 
 
-def get_requirements_by_project(project : Project) -> List[Requirements]:
+def get_requirements_by_project(project : Project) -> List[ProjectRequirement]:
     """
-    This method gets all requirements for a project
+    This method gets all Project requirements
     """
-    return Requirements.objects.filter(project=project)
+    return ProjectRequirement.objects.filter(project=project)
 
-def get_requirement_by_id(id : int) -> Requirements:
+def get_requirements_by_id(requirements_id : str) -> ProjectRequirement:
     """
-    This method gets all requirements for a project
+    This method gets all Project requirements
     """
+    if not requirements_id.isdigit():
+        return None
     try:
-        return Requirements.objects.get(id=id)
+        return ProjectRequirement.objects.get(id=int(requirements_id))
     except:
         return None
+
+def get_requirement_by_id(requirement_id : str) -> Requirements:
+    """
+    This method gets Requirements based on Project requirements
+    """
+    if not requirement_id.isdigit():
+        return None
+    try:
+        return Requirements.objects.get(id=int(requirement_id))
+    except:
+        return None
+
+def get_requirements_based_on_project_requirement(requirement : ProjectRequirement) -> Requirements:
+    """
+    This method gets Requirements based on Project requirements
+    """
+    return Requirements.objects.filter(requirement=requirement)
