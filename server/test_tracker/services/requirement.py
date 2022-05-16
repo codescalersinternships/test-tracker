@@ -7,7 +7,7 @@ from typing import List
 
 
 
-def get_requirements_by_project(project : Project) -> List[ProjectRequirement]:
+def filter_requirements_by_project(project : Project) -> List[ProjectRequirement]:
     """
     This method gets all Project requirements
     """
@@ -35,7 +35,7 @@ def get_requirement_by_id(requirement_id : str) -> Requirements:
     except:
         return None
 
-def get_requirements_based_on_project_requirement(requirement : ProjectRequirement) -> Requirements:
+def filter_requirements_based_on_project_requirement(requirement : ProjectRequirement) -> Requirements:
     """
     This method gets Requirements based on Project requirements
     """

@@ -1,12 +1,14 @@
 """Everything related to requeriments"""
+import datetime
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 
+from server.test_tracker.services.requirement import *
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.serializers.requirement import ProjectRequirementSerializer, RequirementsSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
-from server.test_tracker.services.requirement import get_requirement_by_id, get_requirements_based_on_project_requirement, get_requirements_by_id, get_requirements_by_project
+from server.test_tracker.services.project import update_activity
 
 
 
@@ -21,7 +23,11 @@ class ProjectRequirementsAPIView(GenericAPIView):
         if project is not None:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
-                serializer.save(project=project)
+                requirements = serializer.save(project=project)
+                update_activity(
+                    datetime.datetime.now(), request.user, project,
+                    "Create", "Project requirements", requirements.title
+                )
                 return CustomResponse.success(
                     data=serializer.data,
                     message="Requirement created successfully",
@@ -42,7 +48,7 @@ class GetProjectRequirementsAPIView(GenericAPIView):
         project = get_project_by_id(project_id)
         if project is None:
             return CustomResponse.not_found(message = "Project not found")
-        requirements = get_requirements_by_project(project)
+        requirements = filter_requirements_by_project(project)
         serializer = self.get_serializer(requirements, many=True)
         return CustomResponse.success(
             data=serializer.data,
@@ -65,7 +71,11 @@ class UpdateProjectRequirementsAPIView(GenericAPIView):
 
         serializer = self.get_serializer(requirement, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            requirements = serializer.save()
+            update_activity(
+                datetime.datetime.now(), request.user, project,
+                "Update", "Project requirements", requirements.title
+            )
             return CustomResponse.success(
                 data=serializer.data,
                 message="Requirement updated successfully",
@@ -79,13 +89,16 @@ class UpdateProjectRequirementsAPIView(GenericAPIView):
     def delete(self, request: Request, project_id: str, requirement_id: str) -> Response:
         """delete a requirement"""
         project = get_project_by_id(project_id)
-        requirement = get_requirements_by_id(requirement_id)
+        requirements = get_requirements_by_id(requirement_id)
         if project is None:
             return CustomResponse.not_found(message = "Project not found")
-        if requirement is None:
+        if requirements is None:
             return CustomResponse.not_found(message = "Requirement not found")
-
-        requirement.delete()
+        update_activity(
+            datetime.datetime.now(), request.user, project,
+            "DELETE", "Project requirements", requirements.title
+        )
+        requirements.delete()
         return CustomResponse.success(
             data={},
             message="Requirement deleted successfully",
@@ -105,7 +118,11 @@ class RequirementAPIView(GenericAPIView):
         if requirements is not None:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
-                serializer.save(requirement=requirements)
+                requirement = serializer.save(requirement=requirements)
+                update_activity(
+                    datetime.datetime.now(), request.user, requirements.project,
+                    "Create", "requirement", requirement.title
+                )
                 return CustomResponse.success(
                     data=serializer.data,
                     message="Requirement created successfully",
@@ -123,7 +140,7 @@ class RequirementAPIView(GenericAPIView):
             - requirements_id: the id of the parent requirements
         """
         project_requirements = get_requirements_by_id(requirements_id)
-        requirements = get_requirements_based_on_project_requirement(project_requirements)
+        requirements = filter_requirements_based_on_project_requirement(project_requirements)
         if project_requirements is None:
             return CustomResponse.not_found(message = "Project requirement not found")
         serializer = self.get_serializer(requirements, many=True)
@@ -158,7 +175,11 @@ class RequirementsDetailAPIView(GenericAPIView):
 
         serializer = self.get_serializer(requirement, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            requirement = serializer.save()
+            update_activity(
+                datetime.datetime.now(), request.user, requirement.requirement.project,
+                "Update", "requirement", requirement.title
+            )
             return CustomResponse.success(
                 data=serializer.data,
                 message="Requirement updated successfully",
@@ -175,7 +196,10 @@ class RequirementsDetailAPIView(GenericAPIView):
 
         if requirement is None:
             return CustomResponse.not_found(message = "Requirement not found")
-
+        update_activity(
+            datetime.datetime.now(), request.user, requirement.requirement.project,
+            "Update", "requirement", requirement.title
+        )
         requirement.delete()
         return CustomResponse.success(
             data={},

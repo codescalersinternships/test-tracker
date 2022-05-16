@@ -31,7 +31,13 @@ def update_activity(
         date_time = "Today"
     else:
         date_time = str(datetime.date())
-    last_id = [id for id in project.activity.keys()][-1]
+
+    last_id = [id for id in project.activity.keys()]
+
+    if len(last_id) == 0:
+        last_id = 0
+    else:
+        last_id = last_id[-1]
     project.activity[int(last_id) +1] = {
         "action": f"{user.full_name} {event} {on} '{name}'",
         "date" : date_time
