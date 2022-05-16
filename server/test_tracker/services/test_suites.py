@@ -1,4 +1,4 @@
-"""Everything related to test suites and test cases"""
+"""Everything related to test suites"""
 
 
 

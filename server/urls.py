@@ -7,12 +7,17 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include([
         path('auth/', include('server.test_tracker.routs.auth')),
+
         path('dashboard/', include('server.test_tracker.routs.dashboard')),
-        path('project/', include('server.test_tracker.routs.project')),
-        path('test_plan/', include('server.test_tracker.routs.test_plan')),
+
         path('requirements/', include('server.test_tracker.routs.requirement')),
+
         path('people/', include('server.test_tracker.routs.people')),
-        path('tests/', include('server.test_tracker.routs.test_suites_test_cases')),
+        path('project/', include('server.test_tracker.routs.project')),
+
+        path('test_plan/', include('server.test_tracker.routs.test_plan')),
+        path('test_suites/', include('server.test_tracker.routs.test_suites')),
+        path('test_cases/', include('server.test_tracker.routs.test_cases')),
     ])),
 ]
 
