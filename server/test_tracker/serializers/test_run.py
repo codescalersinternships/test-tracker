@@ -1,6 +1,6 @@
 """Everything related to TestRuns"""
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from server.test_tracker.models.dashboard import People
+from server.test_tracker.models.dashboard import Member
 
 from server.test_tracker.models.project import TestCases, TestRun, TestSuites
 
@@ -67,6 +67,6 @@ class TestRunsSerializer(ModelSerializer):
             return f"0.00 %"
         return f"{self.get_not_run(obj) / len(self.test_cases(obj.test_suites)) * 100} %"
 
-    def get_user(self, obj: TestRun) -> People:
+    def get_user(self, obj: TestRun) -> Member:
         """Return assigned user"""
         return obj.assigned_user.full_name

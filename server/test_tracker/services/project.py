@@ -2,7 +2,8 @@
 
 
 from datetime import datetime
-from server.test_tracker.models.dashboard import Project
+from server.test_tracker.api.response import CustomResponse
+from server.test_tracker.models.dashboard import Member, Project
 from server.test_tracker.models.project import TestPlan, TestRun
 from server.test_tracker.models.users import User
 
@@ -53,3 +54,15 @@ def get_test_run_by_id(test_run_id: str):
         except TestRun.DoesNotExist:
             return None
     return None
+
+def project_member_validation(project: Project, member: Member, user: User, remove=False):
+    """Validate if the user is a member of the project."""
+    if project is None:
+        return CustomResponse.not_found(message = "Project not found")
+    if user != project.user:
+        return CustomResponse.unauthorized()
+    if member is None:
+        return CustomResponse.not_found(message = "Member not found")
+    if not remove and member in project.members.all():
+        return CustomResponse.bad_request(message = "Member already in project")
+    return True

@@ -20,7 +20,7 @@ class TestPlanDetailSerializer(ModelSerializer):
 class UpdateTestPlanSerializer(ModelSerializer):
     class Meta:
         model = TestPlan
-        fields = ('name',)
+        fields = ('title',)
 
 class AddOrUpdateTempsSerializer(ModelSerializer):
     title = CharField()

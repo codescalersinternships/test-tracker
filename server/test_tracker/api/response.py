@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_400_BAD_REQUEST, 
-    HTTP_404_NOT_FOUND
+    HTTP_404_NOT_FOUND,
+    HTTP_403_FORBIDDEN
 )
 
 
@@ -47,5 +48,16 @@ class CustomResponse:
             'message' : message,
             'data' : data,
             'error' : error,
+            'status':status_code
+        }, status = status_code)
+
+    @staticmethod
+    def unauthorized(message: Optional[str] = None, status_code: int = HTTP_403_FORBIDDEN) -> Response:
+        """Http bad request method"""
+        if not message:
+            message = 'You are not authorized to access this resource.'
+
+        return Response({
+            'message' : message,
             'status':status_code
         }, status = status_code)

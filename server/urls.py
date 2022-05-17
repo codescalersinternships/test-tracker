@@ -12,7 +12,7 @@ urlpatterns = [
 
         path('requirements/', include('server.test_tracker.routs.requirement')),
 
-        path('people/', include('server.test_tracker.routs.people')),
+        path('members/', include('server.test_tracker.routs.member')),
         path('project/', include('server.test_tracker.routs.project')),
 
         path('test_plan/', include('server.test_tracker.routs.test_plan')),

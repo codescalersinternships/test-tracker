@@ -1,6 +1,6 @@
-from server.test_tracker.models.dashboard import People
+from server.test_tracker.models.dashboard import Member
 from server.test_tracker.models.users import User
-from server.test_tracker.services.people import get_person_by_email, get_person_by_id
+from server.test_tracker.services.member import get_member_by_email
 from django.contrib.auth.hashers import check_password
 
 def get_user_by_id(id: str) -> User:
@@ -19,21 +19,21 @@ def get_user_by_email_for_login(email: str) -> User:
     except:
         return None
 
-def success_login_user(email, password) -> User or People:
+def success_login_user(email, password) -> User or Member:
     """Return user who have the same email and password"""
     try:
         user: User = User.objects.get(email=email)
     except:
-        user: People = get_person_by_email(email)
+        user: Member = get_member_by_email(email)
     if user:
         if check_password(password, user.password):
             return user
     return None
 
-def get_user_or_people(email: str) -> User or People:
+def get_user_or_member(email: str) -> User or Member:
     """Return user who have the same email and password"""
     try:
         user = User.objects.get(email = email)
     except:
-        user = People.objects.get(email = email)
+        user = Member.objects.get(email = email)
     return user if user is not None else None

@@ -1,12 +1,9 @@
 <script>
-    import { Router, Link } from "svelte-navigator";
+    import Home from "../components/Home.svelte";
 </script>
 
 <svelte:head>
-  <title>Welcome</title>
+    <title>Test-Tracker</title>
 </svelte:head>
-<Router>
-    <Link to="/">Home</Link>
-    <Link to="auth/register/">Register</Link>
-</Router>
-<h1>Hello and welcome to my site!</h1>
+
+<Home />

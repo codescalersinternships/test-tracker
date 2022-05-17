@@ -1,4 +1,4 @@
-"""Everything related to people"""
+"""Everything related to Member"""
 
 
 from django.contrib.auth.hashers import make_password
@@ -8,24 +8,22 @@ from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 
 from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.serializers.people import PeopleSetPasswordSerializer
+from server.test_tracker.serializers.member import MemberSetPasswordSerializer
 from server.test_tracker.services.dashboard import get_signature
 
 
 
-
-
-class PeopleSetPasswordAPIView(GenericAPIView):
-    """This class to set password for person on people table"""
-    serializer_class = PeopleSetPasswordSerializer
+class MemberSetPasswordAPIView(GenericAPIView):
+    """This class to set password for member on Member table"""
+    serializer_class = MemberSetPasswordSerializer
 
     def put(self, request: Request) -> Response:
-        """Method to set password for person on people table"""
+        """Method to set password for member on Member table"""
         signature = request.query_params.get('signature')
         if signature:
-            person = get_signature(signature)
-            if person is not None:
-                serializer = self.get_serializer(person, data=request.data)
+            member = get_signature(signature)
+            if member is not None:
+                serializer = self.get_serializer(member, data=request.data)
                 if serializer.is_valid():
                     password = serializer.validated_data.get('password')
                     serializer.save(password = make_password(password))

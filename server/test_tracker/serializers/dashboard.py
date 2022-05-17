@@ -1,38 +1,36 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from server.test_tracker.models.dashboard import People, Project
-from server.test_tracker.models.users import Notification, User
+from server.test_tracker.models.dashboard import Member, Project
+from server.test_tracker.models.users import User
 
 
 class ProjectsSerializer(ModelSerializer):
     """class ProjectsSerializer to serialize the project obj"""
+    created = SerializerMethodField()
     class Meta:
         model = Project
-        exclude = ('user','activity')
+        exclude = ('user', 'activity', 'members',)
+    
+    def get_created(self, obj):
+        return obj.created.date()
 
-class NotificationSerializer(ModelSerializer):
-    """class Notification to serialize the Notification obj"""
+class MemberSerializer(ModelSerializer):
+    """class MemberSerializer to serialize the Member obj"""
     class Meta:
-        model = Notification
-        exclude = 'user'
-
-class PeopleSerializer(ModelSerializer):
-    """class PeopleSerializer to serialize the people obj"""
-    class Meta:
-        model = People
+        model = Member
         fields = ('first_name', 'last_name', 'email','permission')
 
-class GetPersonSerializer(ModelSerializer):
-    """class PeopleSerializer to serialize the people obj"""
-    person = SerializerMethodField(read_only=True)
+class GetMemberSerializer(ModelSerializer):
+    """class GetMemberSerializer to serialize the Member obj"""
+    member = SerializerMethodField(read_only=True)
 
     class Meta:
-        model = People
-        fields = ('permission','person')
+        model = Member
+        fields = ('permission','member')
 
-    def get_person(self, obj):
-        person = obj.invited_user
-        if person is None:
-            return PeopleSerializer(obj.signature.json_data).data
+    def get_member(self, obj):
+        member = obj.invited_user
+        if member is None:
+            return MemberSerializer(obj.signature.json_data).data
         return ProfileSerializers(obj.invited_user).data
 
 class ProfileSerializers(ModelSerializer):

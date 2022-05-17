@@ -67,11 +67,3 @@ class User(AbstractBaseUser, TimeStampedModel):
     def has_module_perms(app_label : Any) -> bool:
         """Does this user have permission to view this app? (ALWAYS YES FOR SIMPLICITY)"""
         return True
-
-class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    email_when_assigned_tests = models.BooleanField(default=True)
-    email_when_my_test_running = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.user.email

@@ -239,3 +239,4 @@ db.sqlite3
 /static/build/
 
 .DS_Store
+/frontend

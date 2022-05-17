@@ -1,7 +1,9 @@
+from typing import Dict
 from uuid import UUID
-from server.test_tracker.models.dashboard import PERMISSION_CHOICES, People, Project
+from server.test_tracker.models.dashboard import PERMISSION_CHOICES, Member, Project
 from server.test_tracker.models.project import TestPlan
 from server.test_tracker.models.users import User
+from server.test_tracker.services.member import get_member_by_id
 
 
 
@@ -27,41 +29,59 @@ def find_project_name_based_on_user(user: User, project_name: str) -> bool:
     except Project.DoesNotExist:
         return True
 
-def get_people_based_on_user(user: User) -> People:
-    """Return all of people based on the request user"""
-    return People.objects.filter(host_user=user)
+def get_member_based_on_user(user: User) -> Member:
+    """Return all of Member based on the request user"""
+    return Member.objects.filter(host_user=user)
 
-def get_person_by_user_and_person_email(user: User, person_email: str) -> People or None:
-    """Return a single person based on the user and person email"""
+def get_member_by_user_and_member_email(user: User, member_email: str) -> Member or None:
+    """Return a single member based on the user and member email"""
     try:
-        return People.objects.get(host_user=user, email=person_email)
-    except People.DoesNotExist:
+        return Member.objects.get(host_user=user, email=member_email)
+    except Member.DoesNotExist:
         return None
 
-def get_full_access_permission_based_on_user(user: User) -> People or None:
+def get_full_access_permission_based_on_user(user: User) -> Member or None:
     """Returns the full permission based on the user"""
-    return People.objects.filter(host_user=user, permission=PERMISSION_CHOICES.FULL_ACCESS)
+    return Member.objects.filter(host_user=user, permission=PERMISSION_CHOICES.FULL_ACCESS)
 
-def get_admin_access_permission_based_on_user(user: User) -> People or None:
+def get_admin_access_permission_based_on_user(user: User) -> Member or None:
     """Returns the full permission based on the user"""
-    return People.objects.filter(host_user=user, permission=PERMISSION_CHOICES.ADMIN_ACCESS)
+    return Member.objects.filter(host_user=user, permission=PERMISSION_CHOICES.ADMIN_ACCESS)
 
-def get_signature(signature: UUID) -> People:
+def get_signature(signature: UUID) -> Member:
     """Try to return user data based on invitation signature"""
     try:
-        return People.objects.get(signature=signature)
-    except People.DoesNotExist:
+        return Member.objects.get(signature=signature)
+    except Member.DoesNotExist:
         return None
 
-def get_people_based_on_signature(signature: UUID):
-    """Try to return people based on signature"""
+def get_member_based_on_signature(signature: UUID):
+    """Try to return Member based on signature"""
     try:
-        return People.objects.get(
+        return Member.objects.get(
             signature = signature
         )
-    except People.DoesNotExist:
+    except Member.DoesNotExist:
         return None
 
 def get_plans_based_on_project(project: Project) -> TestPlan:
     """Return all of test plans based on project"""
     return TestPlan.objects.filter(project=project)
+
+def get_total_projects(user: User or Member) -> Dict or int:
+    """Get total of projects based on user type"""
+    total = None
+    data = {}
+    total = Project.objects.filter(members__id__in=[user.id]).count()
+    if total > 0:
+        user = get_member_by_id(str(user.id))
+    else:
+        total = Project.objects.filter(user=user).count()
+
+    if total != 0:
+        if hasattr(user, 'permission'):
+            data['type'] = "member"
+        else:
+            data['type'] = "admin"
+        data['total_projects'] = total
+    return data

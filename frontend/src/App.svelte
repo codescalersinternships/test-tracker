@@ -1,8 +1,18 @@
 <script>
     import { Router, Route } from "svelte-navigator";
+    import { onMount } from 'svelte';
+
+    import isAuthenticated from "./healpers/IsAuthenticated"
+
     import Home from "./routes/Home.svelte";
     import Register from "./routes/Register.svelte";
     import NotFound from "./routes/NotFound.svelte";
+    import Login from "./routes/Login.svelte";
+
+    onMount(() => {
+        isAuthenticated();
+    });
+
 </script>
 <svelte:head>
     <title>THis Is Test</title>
@@ -26,11 +36,19 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.0.0/mdb.min.js"
         defer
     ></script>
+    <style>
+        body {
+            padding: 0 8px !important;
+        }
+    </style>
 </svelte:head>
 
-<Router>
-    <Route path="/" component={Home} />
-    <Route path="auth/register/" component={Register} />
-    <Route component={NotFound} />
-    <Route component={NotFound} />
-</Router>
+<main>
+    <Router>
+        <Route path="/" component={Home} />
+        <Route path="auth/login/" component={Login} />
+        <Route path="auth/register/" component={Register} />
+        <Route component={NotFound} />
+        <Route component={NotFound} />
+    </Router>
+</main>

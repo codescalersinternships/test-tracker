@@ -8,9 +8,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from server.test_tracker.api.response import CustomResponse
 
-from server.test_tracker.serializers.auth import MyTokenObtainPairSerializer, MyTokenRefreshSerializer, RegisterSerializer, UserSerializer
+from server.test_tracker.serializers.auth import *
 from server.test_tracker.services.dashboard import get_signature
-from server.test_tracker.services.users import get_user_or_people
+from server.test_tracker.services.users import get_user_or_member
 
 
 
@@ -43,10 +43,10 @@ class MyTokenRefreshView(TokenRefreshView):
     serializer_class = MyTokenRefreshSerializer
 
 class DecodeAndVerifySignatureAPIView(APIView):
-    """Decode signature of a person invited"""
+    """Decode signature of a member invited"""
 
     def get(self, request: Request) -> Response:
-        """Method to decode signature of a person invited"""
+        """Method to decode signature of a member invited"""
         try:
             signature = get_signature(request.query_params.get('signature'))
             data = {
@@ -64,14 +64,14 @@ class DecodeAndVerifySignatureAPIView(APIView):
             )
 
     def put(self, request: Request) -> Response:
-        """Update person obj"""
-        person_signature = get_signature(request.query_params.get('signature'))
-        if person_signature is not None:
-            person_signature.accepted = True
-            person_signature.signature = None # Remove signature from db
-            person_signature.save()
+        """Update member obj"""
+        member_signature = get_signature(request.query_params.get('signature'))
+        if member_signature is not None:
+            member_signature.accepted = True
+            member_signature.signature = None # Remove signature from db
+            member_signature.save()
             return CustomResponse.success(
-                message = 'Person updated successfully',
+                message = 'Member updated successfully',
             )
         return CustomResponse.not_found(
             message = 'Signature could not be decoded, Make sure that you have a valid signature'
@@ -82,7 +82,7 @@ class GetUserAPIView(GenericAPIView):
     serializer_class = UserSerializer
 
     def get(self, request: Request, email: str) -> Response:
-        user = get_user_or_people(email)
+        user = get_user_or_member(email)
         if user is not None:
             return CustomResponse.success(
                 data = self.get_serializer(user).data,

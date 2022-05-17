@@ -3,14 +3,13 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.state import token_backend
 from rest_framework_simplejwt.settings import api_settings
-from rest_framework import fields
 from rest_framework import exceptions
 from django.contrib.auth import authenticate
 
 
 
 from typing import Dict, Any
-from server.test_tracker.models.dashboard import People
+from server.test_tracker.models.dashboard import Member
 from server.test_tracker.models.users import  User
 from server.test_tracker.services.users import get_user_by_id
 
@@ -44,7 +43,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             self.user.save()
             return self.custom_token(data)
         try:
-            user = People.objects.get(email=attrs['email'])
+            user = Member.objects.get(email=attrs['email'])
             self.user = user
             return self.custom_token(data)
         except User.DoesNotExist:
@@ -58,6 +57,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['refresh_token'] = str(refresh)
         data['access_token'] = str(refresh.access_token)
         data['email'] = self.user.email
+        data['full_name'] = self.user.full_name
         data['first_name'] = self.user.first_name
         data['last_name'] = self.user.last_name
         data['id'] = self.user.id

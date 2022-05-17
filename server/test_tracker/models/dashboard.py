@@ -17,6 +17,7 @@ class PERMISSION_CHOICES(models.TextChoices):
 class Project(TimeStampedModel):
     """Class project model for adding a new project to the database"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_projects")
+    members = models.ManyToManyField('Member', related_name="project_members")
     name = models.CharField(max_length=100)
     activity = models.JSONField(default=dict)
 
@@ -24,17 +25,13 @@ class Project(TimeStampedModel):
         return self.name
 
 
-class People(TimeStampedModel):
+class Member(User):
     """
-    Class people model to add a new person to accessing the project
+    Class Member model to add a new member to accessing the project
     based on the permission type
     - To use this model you need to have already project
     """
-    host_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='host_user')
-
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=70, unique=True)
+    host_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='host_user_manager')
 
     permission = models.CharField(
         max_length=100,
@@ -43,15 +40,9 @@ class People(TimeStampedModel):
     )
 
     signature = models.UUIDField(default=uuid.uuid4, null=True)
-    password = models.CharField(max_length=90, null=True)
 
     invited = models.BooleanField(default=False)
     accepted = models.BooleanField(default=False)
-
-    @property
-    def full_name(self) -> str:
-        """Normal method to concatonate first_name and last_name"""
-        return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
         return str(self.email)

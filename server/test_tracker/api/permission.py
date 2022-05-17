@@ -15,13 +15,14 @@ class UserIsAuthenticated(permissions.BasePermission):
             return True
         raise PermissionDenied
 
-class HasProjectAccess(permissions.BasePermission):
+class HasAccess(permissions.BasePermission):
     """
         Only who have project or have a full access can pass
     """
     def has_permission(self, request: Request, view: APIView) -> bool:
         if request.user.is_authenticated:
             projects = Project.objects.filter(user=request.user)
+            
         #     from server.test_tracker.models.dashboard import People
         # print(project.user)
         # print(People.objects.filter(host_user=project.user).u)

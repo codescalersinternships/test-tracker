@@ -1,7 +1,7 @@
 """This file contains all sub tables based on the project table on 'models/dashboard' """
 from django.db import models
 from server.test_tracker.models.abstracts import TimeStampedModel
-from server.test_tracker.models.dashboard import People, Project
+from server.test_tracker.models.dashboard import Member, Project
 from server.test_tracker.models.users import User
 
 
@@ -25,7 +25,7 @@ class TestPlan(TimeStampedModel):
         Project, related_name="project_test_plans",
         on_delete=models.CASCADE, null=True
     )
-    name = models.CharField(max_length=150)
+    title = models.CharField(max_length=150)
     type = models.CharField(
         max_length=100,
         choices=PLAN_CHOICES.choices,
@@ -123,7 +123,7 @@ class TestCases(TimeStampedModel):
 
 class TestRun(TimeStampedModel):
     """Test run model to run all of test cases based on test suites"""
-    assigned_user = models.ForeignKey(People, related_name="assigned_user", on_delete=models.SET_NULL, null=True)
+    assigned_user = models.ForeignKey(Member, related_name="assigned_user", on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     test_suites = models.ManyToManyField(TestSuites, related_name="run_suites")
 
