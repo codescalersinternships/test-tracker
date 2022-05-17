@@ -4,16 +4,13 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.users import User
 
-from server.test_tracker.serializers.auth import LoginSerializer, RegisterSerializer
-from server.test_tracker.services.dashboard import get_people_based_on_signature, get_signature
-from server.test_tracker.services.users import get_user_by_email_for_login, success_login_user
-from server.test_tracker.utils.auth import get_tokens_for_user
-from server.test_tracker.utils.validations import Validator
-from django.contrib.auth.hashers import make_password
+from server.test_tracker.serializers.auth import MyTokenObtainPairSerializer, MyTokenRefreshSerializer, RegisterSerializer, UserSerializer
+from server.test_tracker.services.dashboard import get_signature
+from server.test_tracker.services.users import get_user_or_people
 
 
 
@@ -35,32 +32,15 @@ class RegisterAPIView(GenericAPIView):
             message = "User creation failed"
         )
 
-class LoginByTokenAPIView(GenericAPIView):
+class LoginByTokenAPIView(TokenObtainPairView):
     """Class LoginByTokenAPIView to login a user by jwt token"""
-    serializer_class = LoginSerializer
+    serializer_class = MyTokenObtainPairSerializer
 
-    def post(self, request: Request) -> Response:
-        """Method to login a user by jwt token"""
-        serializer: Dict = self.get_serializer(data=request.data)
-        email: str = request.data.get('email')
-        if serializer.is_valid() and Validator().validate_email(email):
-            password: str = serializer.validated_data.get('password')
-            user: User = success_login_user(email, password)
-            if user:
-                tokens: Dict = get_tokens_for_user(user)
-                return CustomResponse.success(
-                    data = tokens,
-                    message = "User logged in successfully",
-                    status_code = 200
-                )
-            return CustomResponse.bad_request(
-                message = "User not found",
-                status_code = 400
-            )
-        return CustomResponse.bad_request(
-            message = "Please make sure your email is valid",
-            error=serializer.errors
-        )
+class MyTokenRefreshView(TokenRefreshView):
+    """
+    An end point to refresh the user token
+    """
+    serializer_class = MyTokenRefreshSerializer
 
 class DecodeAndVerifySignatureAPIView(APIView):
     """Decode signature of a person invited"""
@@ -95,4 +75,20 @@ class DecodeAndVerifySignatureAPIView(APIView):
             )
         return CustomResponse.not_found(
             message = 'Signature could not be decoded, Make sure that you have a valid signature'
+        )
+
+
+class GetUserAPIView(GenericAPIView):
+    serializer_class = UserSerializer
+
+    def get(self, request: Request, email: str) -> Response:
+        user = get_user_or_people(email)
+        if user is not None:
+            return CustomResponse.success(
+                data = self.get_serializer(user).data,
+                message = "User found",
+                status_code = 200
+            )
+        return CustomResponse.not_found(
+            message = "User not found",
         )

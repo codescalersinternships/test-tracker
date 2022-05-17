@@ -1,14 +1,16 @@
 from server.test_tracker.models.dashboard import People
 from server.test_tracker.models.users import User
-from server.test_tracker.services.people import get_person_by_email
+from server.test_tracker.services.people import get_person_by_email, get_person_by_id
 from django.contrib.auth.hashers import check_password
 
-def get_user_by_id(id: int) -> User:
+def get_user_by_id(id: str) -> User:
     """Return user who have the same id"""
-    try:
-        return User.objects.get(id=id)
-    except:
-        return None
+    if id.isdigit():
+        try:
+            return User.objects.get(id=int(id))
+        except:
+            return None
+    return None
 
 def get_user_by_email_for_login(email: str) -> User:
     """Return user who have the same email"""
@@ -20,11 +22,18 @@ def get_user_by_email_for_login(email: str) -> User:
 def success_login_user(email, password) -> User or People:
     """Return user who have the same email and password"""
     try:
-        user: User = get_user_by_email_for_login(email)
-        print(len(user.password))
+        user: User = User.objects.get(email=email)
     except:
         user: People = get_person_by_email(email)
     if user:
         if check_password(password, user.password):
             return user
     return None
+
+def get_user_or_people(email: str) -> User or People:
+    """Return user who have the same email and password"""
+    try:
+        user = User.objects.get(email = email)
+    except:
+        user = People.objects.get(email = email)
+    return user if user is not None else None

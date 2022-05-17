@@ -7,7 +7,7 @@ class ProjectsSerializer(ModelSerializer):
     """class ProjectsSerializer to serialize the project obj"""
     class Meta:
         model = Project
-        exclude = ('user',)
+        exclude = ('user','activity')
 
 class NotificationSerializer(ModelSerializer):
     """class Notification to serialize the Notification obj"""
