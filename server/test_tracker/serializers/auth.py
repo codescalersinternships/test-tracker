@@ -27,11 +27,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
     def validate(self, attrs : Any) -> Dict[str,Any] :
+        data = {}
         attrs['email']  = attrs.get('email').lower()
         authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
             'password': attrs['password'],
         }
+
         try:
             authenticate_kwargs['request'] = self.context['request']
         except KeyError:
@@ -40,32 +42,26 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         if api_settings.USER_AUTHENTICATION_RULE(self.user):
             self.user.md5_from_old_system = None
             self.user.save()
-            data = {}
-            refresh = self.get_token(self.user)
-            data['refresh_token'] = str(refresh)
-            data['access_token'] = str(refresh.access_token)
-            data['email'] = self.user.email
-            data['first_name'] = self.user.first_name
-            data['last_name'] = self.user.last_name
-            data['id'] = self.user.id
-            return data
+            return self.custom_token(data)
         try:
             user = People.objects.get(email=attrs['email'])
             self.user = user
-            data = {}
-            refresh = self.get_token(self.user)
-            data['refresh_token'] = str(refresh)
-            data['access_token'] = str(refresh.access_token)
-            data['email'] = self.user.email
-            data['first_name'] = self.user.first_name
-            data['last_name'] = self.user.last_name
-            data['id'] = self.user.id
-            return data
+            return self.custom_token(data)
         except User.DoesNotExist:
             raise exceptions.AuthenticationFailed(
                 self.error_messages['no_active_account'],
                 'no_active_account',
             )
+
+    def custom_token(self, data: Dict):
+        refresh = self.get_token(self.user)
+        data['refresh_token'] = str(refresh)
+        data['access_token'] = str(refresh.access_token)
+        data['email'] = self.user.email
+        data['first_name'] = self.user.first_name
+        data['last_name'] = self.user.last_name
+        data['id'] = self.user.id
+        return data
 
 class MyTokenRefreshSerializer(TokenRefreshSerializer):
     """serializer to refresh user token"""
