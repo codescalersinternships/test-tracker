@@ -32,7 +32,7 @@ class TestCaseSerializer(ModelSerializer):
         return obj.created.date()
     
     def get_assigned_user(self, obj):
-        return obj.assigned_user.full_name
+        return {"id": obj.assigned_user.id,"full_name":obj.assigned_user.full_name}
 
 
 class GetSingleTestCaseSerializer(ModelSerializer):

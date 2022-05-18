@@ -82,8 +82,8 @@ class ProjectsSerializer(ModelSerializer):
             test_cases = TestCases.objects.filter(
                 test_suite__id__in = test_suites, completed=False,
                 assigned_user = user
-                )
-            return TestCaseSerializer(test_cases, many=True).data
+                ).order_by('-created')
+            return TestCaseSerializer(test_cases[:5], many=True).data
         return
 
     def get_people_with_the_most_incomplete_test_runs(self, obj):
@@ -98,8 +98,8 @@ class ProjectsSerializer(ModelSerializer):
             ).values_list("id", flat=True)
             test_cases = TestCases.objects.filter(
                 test_suite__id__in = test_suites, completed=False,
-            )
-            return TestCaseSerializer(test_cases, many=True).data
+            ).order_by('-created')
+            return TestCaseSerializer(test_cases[:5], many=True).data
         return
 
 

@@ -25,6 +25,9 @@ class GetMemberApiView(GenericAPIView):
 
     def get(self, request: Request) -> Response:
         """Use this method to get all of member based on request user"""
+        member = get_member_by_id(request.user.id)
+        if member != None:
+            return CustomResponse.unauthorized()
         member: Member = get_member_based_on_user(request.user)
         if len(member) > 0:
             return CustomResponse.success(
@@ -39,7 +42,6 @@ class GetMemberApiView(GenericAPIView):
 class MemberSetPasswordAPIView(GenericAPIView):
     """This class to set password for member on Member table"""
     serializer_class = MemberSetPasswordSerializer
-    permission_classes = (UserIsAuthenticated,)
 
     def put(self, request: Request) -> Response:
         """Method to set password for member on Member table"""
