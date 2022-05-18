@@ -7,10 +7,17 @@
         export let projectView = false;
 
         let user = {}
+        let userType;
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        };
+
         onMount(async () => {
             try {
                 const email = JWTPars(localStorage.getItem("token"))["email"];
                 const response = await axios.get(`/auth/users/${email}/`)
+                const uType = await axios.get('/dashboard/total_projects/', config)
+                userType = uType.data.data.type
             if (response.status === 200) { user = response.data.data }} 
             catch(err) {
                 console.log(err);
@@ -60,9 +67,11 @@
                         <li class="nav-item">
                             <Link to="/projects" class="nav-link">Projects</Link>
                         </li>
-                        <li class="nav-item">
-                            <Link to="/members/" class="nav-link">Members</Link>
-                        </li>
+                        {#if userType == "admin"}
+                            <li class="nav-item">
+                                <Link to="/members/" class="nav-link">Members</Link>
+                            </li>
+                        {/if}
                         <li class="nav-item">
                             <Link to="/overview/" class="nav-link">Settings</Link>
                         </li>

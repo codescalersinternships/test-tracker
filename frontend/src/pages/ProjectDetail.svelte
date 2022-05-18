@@ -26,10 +26,8 @@
                     window.location.href = '/not-found'
                 }
             }
-            console.log(err);
         }
     });
-
 </script>
 
 <svelte:head>
@@ -104,7 +102,9 @@
                                         <tbody>
                                         <tr>
                                             <th scope="row">{task.title}</th>
-                                            <td class="text-primary">{task.assigned_user}</td>
+                                            <td class="text-primary">
+                                                <a href="/members/{task.assigned_user.id}">{task.assigned_user.full_name}</a>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     {:else}

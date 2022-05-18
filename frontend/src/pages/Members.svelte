@@ -1,8 +1,86 @@
 <script>
+    import { onMount } from 'svelte';
+    import axios from '../healpers/axios'
     import NavBar from "../components/NavBar.svelte";
+    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
+    import Search from "../components/Search.svelte";
+
+    let members = [];
+
+    const config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    };
+
+    onMount(async () => {
+        try {
+            const response = await axios.get('/members/all/', config)
+            members = await response.data.data
+        } catch (err) {
+            if (err.response.status === 403){
+                window.location.href = '/not-found'
+            }
+        }
+    });
+
+
+    function searchMembers(params) {
+        
+    }
+
 </script>
 
+<svelte:head>
+    <title>Test-Tracker | Members</title>
+</svelte:head>
 
 <section>
     <NavBar/>
+    <div class="container">
+        {#if members.length > 0}
+            <div class="pt-5">
+                <strong class="h4">All Members</strong>
+                {#if members.length > 1}
+                    <p class="text-muted">There are {members.length} members registered</p>
+                {:else}
+                    <p class="text-muted">There are {members.length} member registered</p>
+                {/if}
+            </div>
+            <Search title="Search Members:" searchFunction={searchMembers}/>
+            <div class="pt-5">
+                <div class="row">
+                    {#each members as member}
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                            <div class="card mt-4" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">{member.full_name}</h5>
+                                    {#if member.permission === "full_access"}
+                                        <h6 class="card-subtitle mb-2 text-muted">Full access</h6>
+                                    {:else if member.permission === "admin_access"}
+                                        <h6 class="card-subtitle mb-2 text-muted">Admin</h6>
+                                    {/if}
+                                    {#if member.last_project_working_on.name.length > 0}
+                                        <p class="card-text">Working on: <span class="text-primary">
+                                            {member.last_project_working_on.name}
+                                        </span></p>
+                                    {:else}
+                                        <p class="card-text">Working on: <span class="text-primary">
+                                            Not working on any project
+                                        </span></p>
+                                    {/if}
+                                    <p class="card-text text-muted">Joined on: {member.created}</p>
+                                    <a href={`/members/${member.id}`} class="btn btn-primary text-white text-decoration-none">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        {:else}
+        <div class="col-12 pt-5">
+            <p class="text-muted">
+                -- There are no members yet
+            </p>
+        </div>
+        {/if}
+    </div>
 </section>
