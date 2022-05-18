@@ -51,7 +51,7 @@
     {:else}
         <div class="col-12">
             <p class="text-muted">
-                -- There are no projects activity yet
+                -- There are no activity yet
             </p>
         </div>
     {/if}

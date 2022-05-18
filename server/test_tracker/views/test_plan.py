@@ -2,6 +2,7 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
+from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
 
 
@@ -17,6 +18,8 @@ import datetime
 class TestPlansAPIView(GenericAPIView):
     """Create a test plan."""
     serializer_class = TestPlanSerializer
+    permission_classes = (UserIsAuthenticated,)
+
     def post(self, request:Request, project_id: str) -> Response:
         """
             Use this endpoint to create a new test plan
@@ -62,7 +65,7 @@ class TestPlansAPIView(GenericAPIView):
 class TestPlansDetailAPIView(GenericAPIView):
     """This class for [GET, UPDATE, DELETE] test plans methods"""
     serializer_class = TestPlanDetailSerializer
-
+    permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, project_id:str, test_plan_id: str) -> Response:
         """Get a test plan from the specified project"""
@@ -92,6 +95,8 @@ class TestPlansDetailAPIView(GenericAPIView):
 
 class UpdateTestPlanAPIView(GenericAPIView):
     serializer_class = UpdateTestPlanSerializer
+    permission_classes = (UserIsAuthenticated,)
+
     def put(self, request: Request, project_id:str, test_plan_id:str) -> Response:
         """Update test plan title"""
         test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
@@ -116,6 +121,7 @@ class UpdateTestPlanAPIView(GenericAPIView):
 class AddOrUpdateTempsAPIView(GenericAPIView):
     """Add or update content area to test plan"""
     serializer_class = AddOrUpdateTempsSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def post (self, request: Request, project_id:str, test_plan_id: str) -> Response:
         """Add custom content area to test plan"""
@@ -143,6 +149,8 @@ class AddOrUpdateTempsAPIView(GenericAPIView):
 
 
 class DeleteContentAreaAPIView(GenericAPIView):
+    permission_classes = (UserIsAuthenticated,)
+
     """Delete content area from test plan"""
     def delete(self, request: Request, project_id:str, test_plan_id: str, title:str) -> Response:
         test_plan = TestPlanHandeling.valid(project_id, test_plan_id)

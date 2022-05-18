@@ -4,6 +4,7 @@ import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
+from server.test_tracker.api.permission import UserIsAuthenticated
 
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.serializers.test_suites import TestSuitesSerializer
@@ -15,6 +16,7 @@ from server.test_tracker.services.test_suites import get_test_suite_by_id
 class TestSuitesAPIView(GenericAPIView):
     """Create a new test suite"""
     serializer_class = TestSuitesSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def post(self, request: Request, project_id: str) -> Response:
         """
@@ -56,6 +58,7 @@ class TestSuitesAPIView(GenericAPIView):
 class TestSuitesDetailAPIView(GenericAPIView):
     """Create a new test suite"""
     serializer_class = TestSuitesSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def put(self, request: Request, test_suite: str) -> Response:
         """

@@ -91,6 +91,8 @@ class ProjectsDetailAPIView(GenericAPIView):
 class ProjectActivityAPIView(GenericAPIView):
     """Get all project activity"""
     serializer_class = ActivitySerializer
+    permission_classes = (UserIsAuthenticated,)
+
     def get(self, request: Request, project_id: str) -> Response:
         project = get_project_by_id(project_id)
         if project is None:

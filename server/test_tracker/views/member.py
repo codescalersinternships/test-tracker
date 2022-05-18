@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
+from server.test_tracker.api.permission import UserIsAuthenticated
 
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.serializers.member import MemberSetPasswordSerializer
@@ -16,6 +17,7 @@ from server.test_tracker.services.dashboard import get_signature
 class MemberSetPasswordAPIView(GenericAPIView):
     """This class to set password for member on Member table"""
     serializer_class = MemberSetPasswordSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def put(self, request: Request) -> Response:
         """Method to set password for member on Member table"""

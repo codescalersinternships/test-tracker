@@ -3,6 +3,7 @@ import datetime
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
+from server.test_tracker.api.permission import UserIsAuthenticated
 
 from server.test_tracker.services.requirement import *
 from server.test_tracker.api.response import CustomResponse
@@ -16,6 +17,7 @@ from server.test_tracker.services.project import update_activity
 class ProjectRequirementsAPIView(GenericAPIView):
     """class project requirement view"""
     serializer_class = ProjectRequirementSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def post(self, request: Request, project_id: str) -> Response:
         """post a new requirement"""
@@ -42,6 +44,7 @@ class ProjectRequirementsAPIView(GenericAPIView):
 class GetProjectRequirementsAPIView(GenericAPIView):
     """class project requirement view"""
     serializer_class = ProjectRequirementSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, project_id: str) -> Response:
         """get all requirements for a project"""
@@ -59,6 +62,7 @@ class GetProjectRequirementsAPIView(GenericAPIView):
 class UpdateProjectRequirementsAPIView(GenericAPIView):
     """class project requirement view"""
     serializer_class = ProjectRequirementSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def put(self, request: Request, project_id: str, requirement_id: str) -> Response:
         """update a requirement"""
@@ -108,6 +112,7 @@ class UpdateProjectRequirementsAPIView(GenericAPIView):
 class RequirementAPIView(GenericAPIView):
     """This class is a sub requirement for project requirements"""
     serializer_class = RequirementsSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def post(self, request: Request, requirements_id: str) -> Response:
         """
@@ -153,6 +158,7 @@ class RequirementAPIView(GenericAPIView):
 class RequirementsDetailAPIView(GenericAPIView):
     """class project requirement view"""
     serializer_class = RequirementsSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, requirement_id: str) -> Response:
         """get a requirement"""

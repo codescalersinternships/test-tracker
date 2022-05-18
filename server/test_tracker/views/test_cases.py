@@ -3,6 +3,7 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
+from server.test_tracker.api.permission import UserIsAuthenticated
 
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.serializers.test_cases import GetSingleTestCaseSerializer, TestCaseSerializer
@@ -19,6 +20,7 @@ import datetime
 class TestCasesAPIView(GenericAPIView):
     """Create a new test suite"""
     serializer_class = TestCaseSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def post(self, request: Request, test_suite: str, requirement_id: str) -> Response:
         """
@@ -50,6 +52,7 @@ class TestCasesAPIView(GenericAPIView):
 class GetAllTestCasesAPIView(GenericAPIView):
     """Get all of test cases"""
     serializer_class = TestCaseSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, test_suite: str) -> Response:
         """Method get to get all of test cases based on the test suite"""
@@ -67,6 +70,7 @@ class GetAllTestCasesAPIView(GenericAPIView):
 class TestCaseDetailAPIView(GenericAPIView):
     """Create a new test suite"""
     serializer_class = TestCaseSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def put(self, request: Request, test_case: str) -> Response:
         """
@@ -112,6 +116,7 @@ class TestCaseDetailAPIView(GenericAPIView):
 
 class GetSingleTestCaseAPIView(GenericAPIView):
     serializer_class = GetSingleTestCaseSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, test_case_id: str):
         test_case = get_test_case_by_id(test_case_id)

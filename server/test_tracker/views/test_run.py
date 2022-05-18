@@ -3,6 +3,7 @@ import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
+from server.test_tracker.api.permission import UserIsAuthenticated
 
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.project import TestRun
@@ -16,6 +17,7 @@ from server.test_tracker.services.project import get_test_run_by_id, update_acti
 class TestRunAPIView(GenericAPIView):
     """Class TestRunAPIView to handle test runs endpoints"""
     serializer_class = TestRunsSerializer
+    permission_classes = (UserIsAuthenticated,)
 
     def post(self, request:Request) -> Response:
         serializer = self.serializer_class(data=request.data)
@@ -41,6 +43,7 @@ class TestRunAPIView(GenericAPIView):
 class TestRunDetailAPIView(GenericAPIView):
     """Class TestRunAPIView to handle test runs endpoints"""
     serializer_class = TestRunsSerializer
+    permission_classes = (UserIsAuthenticated,)
     
     def get(self, request:Request, test_run_id: str) -> Response:
         """
