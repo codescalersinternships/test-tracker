@@ -4,14 +4,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.state import token_backend
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework import exceptions
-from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
 
 
 
 from typing import Dict, Any
 from server.test_tracker.models.dashboard import Member
 from server.test_tracker.models.users import  User
-from server.test_tracker.services.users import get_user_by_id
+from server.test_tracker.services.users import get_user_by_email_for_login, get_user_by_id
 
 
 
@@ -27,30 +27,33 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs : Any) -> Dict[str,Any] :
         data = {}
-        attrs['email']  = attrs.get('email').lower()
-        authenticate_kwargs = {
-            self.username_field: attrs[self.username_field],
-            'password': attrs['password'],
-        }
+        attrs['email']  = attrs.get('email').lower()        
 
-        try:
-            authenticate_kwargs['request'] = self.context['request']
-        except KeyError:
-            pass
-        self.user = authenticate(**authenticate_kwargs)
-        if api_settings.USER_AUTHENTICATION_RULE(self.user):
-            self.user.md5_from_old_system = None
-            self.user.save()
-            return self.custom_token(data)
-        try:
-            user = Member.objects.get(email=attrs['email'])
-            self.user = user
-            return self.custom_token(data)
-        except User.DoesNotExist:
+        self.user = get_user_by_email_for_login(attrs['email'])
+        if self.user is None:
             raise exceptions.AuthenticationFailed(
-                self.error_messages['no_active_account'],
-                'no_active_account',
-            )
+            self.error_messages['no_active_account'],
+            'no_active_account',
+        )
+
+        if check_password(attrs.get('password'), self.user.password):
+            if api_settings.USER_AUTHENTICATION_RULE(self.user):
+                self.user.md5_from_old_system = None
+                self.user.save()
+                return self.custom_token(data)
+            try:
+                user = Member.objects.get(email=attrs['email'])
+                self.user = user
+                return self.custom_token(data)
+            except User.DoesNotExist:
+                raise exceptions.AuthenticationFailed(
+                    self.error_messages['no_active_account'],
+                    'no_active_account',
+                )
+        raise exceptions.AuthenticationFailed(
+            self.error_messages['no_active_account'],
+            'no_active_account',
+        )
 
     def custom_token(self, data: Dict):
         refresh = self.get_token(self.user)

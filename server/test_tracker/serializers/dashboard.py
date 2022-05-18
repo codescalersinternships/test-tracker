@@ -118,7 +118,7 @@ class GetMemberSerializer(ModelSerializer):
 
     class Meta:
         model = Member
-        fields = ('permission','full_name', 'email', 'phone', 'created', 'last_project_working_on')
+        fields = ('id', 'permission','full_name', 'email', 'phone', 'created', 'last_project_working_on')
 
     def get_created(self, obj):
         """Return created date"""
