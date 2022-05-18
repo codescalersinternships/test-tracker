@@ -3,6 +3,8 @@
     import { onMount } from 'svelte';
 
     import isAuthenticated from "./healpers/IsAuthenticated"
+    import axios from '././healpers/axios';
+    import Logout from "./components/Logout.svelte"
 
     import Home from "./pages/Home.svelte";
     import Login from "./pages/Login.svelte";
@@ -10,11 +12,17 @@
     import Projects from "./pages/Projects.svelte";
     import ProjectDetail from "./pages/ProjectDetail.svelte";
     import MemberDetail from "./pages/MemberDetail.svelte";
-    import People from "./pages/Members.svelte";
+    import Members from "./pages/Members.svelte";
     import NotFound from "./pages/NotFound.svelte";
 
-    onMount(() => {
+    let user;
+    const config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    };
+    onMount(async () => {
         isAuthenticated();
+        const userDetails = await axios.get('/dashboard/total_projects/', config);
+        user = await userDetails.data.data
     });
 
 </script>
@@ -49,13 +57,14 @@
 
 <main>
     <Router>
-        <Route path="/" primary={false}><Home /></Route>
+        <Route path="/" primary={false}><Home user={user}/></Route>
+        <Route path="projects/" primary={false}><Projects user={user}/></Route>
+        <Route path="projects/:id/" primary={false}><ProjectDetail user={user}/></Route>
         <Route path="auth/login/" primary={false}><Login/></Route>
         <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
-        <Route path="projects/" primary={false}><Projects/></Route>
-        <Route path="projects/:id/" primary={false}><ProjectDetail/></Route>
-        <Route path="members/" primary={false}><People/></Route>
-        <Route path="members/:id/" primary={false}><MemberDetail/></Route>
+        <Route path="members/" primary={false}><Members user={user}/></Route>
+        <Route path="members/:id/" primary={false}><MemberDetail user={user}/></Route>
+        <Route path="auth/logout/" primary={false}><Logout/></Route>
         <Route> 
             <NotFound/>
         </Route>

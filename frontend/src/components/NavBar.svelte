@@ -1,30 +1,7 @@
 <script>
         import { Router, Link } from "svelte-navigator";
-        import { onMount } from 'svelte';
-        import JWTPars from "../healpers/JWTPars"
-        import axios from '../healpers/axios';
-
         export let projectView = false;
-
-        let user = {}
-        let userType;
-        const config = {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-        };
-
-        onMount(async () => {
-            try {
-                const email = JWTPars(localStorage.getItem("token"))["email"];
-                const response = await axios.get(`/auth/users/${email}/`)
-                const uType = await axios.get('/dashboard/total_projects/', config)
-                userType = uType.data.data.type
-            if (response.status === 200) { user = response.data.data }} 
-            catch(err) {
-                console.log(err);
-                // window.location.href = '/auth/login/'
-            }
-            return user
-        });
+        export let user;
 </script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -47,6 +24,11 @@
                     <Link to="/" class="nav-link text-primary">Dashboard</Link>
                 </li>
                 <Router>
+                    {#if user.type == "admin"}
+                        <li class="nav-item">
+                            <Link to="/members/" class="nav-link">Members</Link>
+                        </li>
+                    {/if}
                     {#if projectView}
                         <li class="nav-item">
                             <Link to="/projects" class="nav-link">Projects</Link>
@@ -63,15 +45,10 @@
                         <li class="nav-item">
                             <Link to="/test-runs/" class="nav-link">Test Runs</Link>
                         </li>
-                        {:else}
+                    {:else}
                         <li class="nav-item">
                             <Link to="/projects" class="nav-link">Projects</Link>
                         </li>
-                        {#if userType == "admin"}
-                            <li class="nav-item">
-                                <Link to="/members/" class="nav-link">Members</Link>
-                            </li>
-                        {/if}
                         <li class="nav-item">
                             <Link to="/overview/" class="nav-link">Settings</Link>
                         </li>
@@ -95,14 +72,16 @@
                     class="dropdown-menu dropdown-menu-end"
                     aria-labelledby="navbarDropdownMenuAvatar"
                 >
+                {#if user.type != "admin"}
                     <li>
-                        <a class="dropdown-item" href="#">{user.full_name}</a>
+                        <a class="dropdown-item text-primary" href="/members/{user.id}">{user.full_name}</a>
+                    </li>
+                {/if}
+                    <li>
+                        <a class="dropdown-item text-primary" href="#">Settings</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#">Settings</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">Logout</a>
+                        <a class="dropdown-item text-primary" href="/auth/logout/">Logout</a>
                     </li>
                 </ul>
             </div>

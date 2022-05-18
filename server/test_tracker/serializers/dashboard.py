@@ -9,8 +9,17 @@ from server.test_tracker.serializers.test_run import TestRunsSerializer
 from server.test_tracker.serializers.test_suites import TestSuitesSerializer
 
 
+
+class ProfileSerializers(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id','first_name','full_name','email','phone']
+
+
 class ProjectsSerializer(ModelSerializer):
     """class ProjectsSerializer to serialize the project obj"""
+    teams = SerializerMethodField()
+    modified = SerializerMethodField()
     created = SerializerMethodField()
     activity = SerializerMethodField()
     total_test_plan = SerializerMethodField()
@@ -27,6 +36,20 @@ class ProjectsSerializer(ModelSerializer):
     def get_created(self, obj):
         """Return created date"""
         return obj.created.date()
+
+    def get_modified(self, obj):
+        """Return created date"""
+        return obj.modified.date()
+
+    def get_teams(self, obj):
+        """Return created date"""
+        if self.context.get('profile_view'):
+            return ProfileSerializers(
+                obj.members.all().exclude(
+                    id = self.context['this_user'].id
+                ), many=True
+            ).data
+        return ProfileSerializers(obj.members.all(), many=True).data
 
     def get_activity(self, obj):
         """Return all project activity"""
@@ -106,11 +129,16 @@ class GetMemberSerializer(ModelSerializer):
     """class GetGetMemberSerializer to serialize the Member obj"""
     created = SerializerMethodField()
     last_project_working_on = SerializerMethodField()
+    total_project_worked_on = SerializerMethodField()
+    last_tests_assigned = SerializerMethodField()
     phone = SerializerMethodField()
 
     class Meta:
         model = Member
-        fields = ('id', 'permission','full_name', 'email', 'phone', 'created', 'last_project_working_on')
+        fields = (
+            'id', 'permission','full_name', 'email', 'phone', 'created', 
+            'last_project_working_on', 'total_project_worked_on','last_tests_assigned'
+        )
 
     def get_created(self, obj):
         """Return created date"""
@@ -122,13 +150,19 @@ class GetMemberSerializer(ModelSerializer):
 
     def get_last_project_working_on(self, obj):
         """Get last project working on for member"""
-        project = Project.objects.filter(members__id = obj.id).last()
-        return ProjectsSerializer(project).data
+        project = Project.objects.filter(members__id = obj.id).order_by('-created').first()
+        return ProjectsSerializer(project, context=self.context).data
 
-class ProfileSerializers(ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            'id','first_name','last_name', 'email',
-            'phone'
-        ]
+    def get_total_project_worked_on(self, obj):
+        """Get total projects worked on for member"""
+        project = Project.objects.filter(members__id = obj.id).count()
+        return project
+
+    def get_last_tests_assigned(self, obj):
+        """Get total projects worked on for member"""
+        project = Project.objects.filter(members__id__in = [obj.id])
+        test_suites = TestSuites.objects.filter(project__id__in = project)
+        test_cases = TestCases.objects.filter(
+            test_suite__in = test_suites, assigned_user__id__in = [obj.id]
+        ).order_by('-created').first()
+        return TestCaseSerializer(test_cases).data

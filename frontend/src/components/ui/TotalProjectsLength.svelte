@@ -1,29 +1,17 @@
 <script>
-    import { onMount } from 'svelte';
-    import axios from '../../healpers/axios';
-
-    let lengthOfProjects = {};
-    
-    const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-    };
-
-    onMount(async () => {
-        const lengthOfTotalProjects = await axios.get('/dashboard/total_projects/', config)
-        lengthOfProjects = lengthOfTotalProjects.data.data
-    });
+    export let user;
 </script>
 
-{#if lengthOfProjects.total_projects }
+{#if user }
 <div class="pt-4">
     <p class="h5">
         Projects
     </p>
     <p class="text-muted">
-        {#if lengthOfProjects.total_projects < 2}
-            You are {lengthOfProjects.type} of {lengthOfProjects.total_projects} project
+        {#if user.total_projects < 2}
+            You are {user.type} of {user.total_projects} project
         {:else}
-            You are {lengthOfProjects.type} of {lengthOfProjects.total_projects} projects
+            You are {user.type} of {user.total_projects} projects
         {/if}
     </p>
 </div>

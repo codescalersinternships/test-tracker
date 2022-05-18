@@ -3,9 +3,10 @@
     import axios from '../healpers/axios'
     import NavBar from "../components/NavBar.svelte";
     import ActivityTable from "../components/ActivityTable.svelte"
+    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte"
 
-    let project = {};
-    let projectActivtyEndPoint;
+    export let user;
+    let project, projectActivtyEndPoint;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -17,17 +18,14 @@
         var projectID = path.substring(lastSlash + 1);
         try {
             const response = await axios.get(`project/${projectID}/`, config)
-            project = response.data.data
+            project = await response.data.data;
             projectActivtyEndPoint = `/project/activity/${projectID}/`
-        if (response.status === 200) { data = response.data.data }} 
-        catch(err) {
-            if (err.response){
-                if(err.response.status === 404){
-                    window.location.href = '/not-found'
-                }
+        }catch(err) {
+            if(err.response.status === 404){
+                window.location.href = '/not-found'
             }
         }
-    });
+    })
 </script>
 
 <svelte:head>
@@ -35,34 +33,34 @@
 </svelte:head>
 
 <section>
-    <NavBar projectView="true"/>
-    <div class="container">
-        <div class="pt-5">
-            {#if project.id}
+    {#if user && project}
+        <NavBar projectView="true" user={user}/>
+        <div class="container">
+            <div class="pt-5">
                 <strong class="h4">Project overview & activity of {project.name}</strong>
                 <div class="card mt-4 p-4">
                     <div class="pt-4">
                         <p class="h5 text-muted">Project statistics</p>
                         <hr>
                         <table class="table table-borderless">
-                              <tbody>
+                            <tbody>
                                 <tr>
-                                  <th scope="row">Total test plans</th>
-                                  <td class="text-primary">{project.total_test_plan.length}</td>
+                                <th scope="row">Total test plans</th>
+                                <td class="text-primary">{project.total_test_plan.length}</td>
                                 </tr>
                                 <tr>
-                                  <th scope="row">Total Requirements Docs</th>
-                                  <td class="text-primary">{project.total_requirements_docs.length}</td>
+                                <th scope="row">Total Requirements Docs</th>
+                                <td class="text-primary">{project.total_requirements_docs.length}</td>
                                 </tr>
                                 <tr>
-                                  <th scope="row">Total Test Suites</th>
-                                  <td class="text-primary">{project.total_suites.length}</td>
+                                <th scope="row">Total Test Suites</th>
+                                <td class="text-primary">{project.total_suites.length}</td>
                                 </tr>
                                 <tr>
-                                  <th scope="row">Total Test Runs</th>
-                                  <td class="text-primary">{project.total_test_runs.length}</td>
+                                <th scope="row">Total Test Runs</th>
+                                <td class="text-primary">{project.total_test_runs.length}</td>
                                 </tr>
-                              </tbody>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -120,7 +118,9 @@
                     </div>
                 </div>
                 <ActivityTable endPoint={projectActivtyEndPoint} detail="true" />
-            {/if}
+            </div>
         </div>
-    </div>
+    {:else}
+        <LoodingSpiner />
+    {/if}
 </section>

@@ -77,30 +77,33 @@ class MemberDetailAPIView(GenericAPIView):
         Methods [GET, PUT, DELETE]
     """
     serializer_class = GetMemberSerializer
-    permission_classes = (IsHost,)
+    permission_classes = (UserIsAuthenticated,)
 
-    def get(self, request: Request, member_email: str) -> Response:
+    def get(self, request: Request, member_key: str) -> Response:
         """Return a single member based on the request user, member_email"""
-        member: Member = get_member_by_user_and_member_email(
-            request.user, member_email
-        )
+        member: Member = get_member_by_id(member_key)
         if member is not None:
+            serializer = GetMemberSerializer(member, context={
+                "this_user":member, 'request_user':request.user,
+                "profile_view":True
+                }
+            )
             return CustomResponse.success(
-                data=GetMemberSerializer(member).data,
+                data=serializer.data,
                 message="User found successfully",
             )
         return CustomResponse.not_found(
             message="User not found",
         )
 
-    def delete(self, request: Request, member_email: str) -> Response:
+    def delete(self, request: Request, member_key: str) -> Response:
         """
             * Usage
             The host can delete the member, 
             but it will not deleted from the whole system (only from access)
         """
         member: Member = get_member_by_user_and_member_email(
-            request.user, member_email
+            request.user, member_key
         )
         if member is not None:
             member.delete()

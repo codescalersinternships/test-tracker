@@ -80,7 +80,7 @@ def get_plans_based_on_project(project: Project) -> TestPlan:
 def get_total_projects(user: User or Member) -> Dict or int:
     """Get total of projects based on user type"""
     total = None
-    data = {}
+    data = {'email': user.email, 'full_name': user.full_name, "id": user.id}
     total = Project.objects.filter(members__id__in=[user.id]).count()
     if total > 0:
         user = get_member_by_id(str(user.id))

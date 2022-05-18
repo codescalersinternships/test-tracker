@@ -3,9 +3,10 @@
     import axios from '../healpers/axios'
     import NavBar from "../components/NavBar.svelte";
     import ActivityTable from "../components/ActivityTable.svelte"
+    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte"
 
-    let project = {};
-    let projectActivtyEndPoint;
+    export let user;
+    let member, memberEmail;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -14,20 +15,34 @@
     onMount(async () => {
         var path = window.location.pathname;
         var lastSlash = path.lastIndexOf('/');
-        var projectID = path.substring(lastSlash + 1);
+        var memberID = path.substring(lastSlash + 1);
         try {
-            const response = await axios.get(`project/${projectID}/`, config)
-            project = response.data.data
-            projectActivtyEndPoint = `/project/activity/${projectID}/`
-        if (response.status === 200) { data = response.data.data }} 
-        catch(err) {
-            if (err.response){
-                if(err.response.status === 404){
-                    window.location.href = '/not-found'
-                }
+            const response = await axios.get(`members/${memberID}/`, config)
+            member = response.data.data
+        }catch(err) {
+            if(err.response.status === 404){
+                window.location.href = '/not-found'
             }
         }
     });
+
+    async function deleteMember(email){
+        try {
+            await axios.delete(`/members/${email}/`, config)
+            closeModal()
+            window.location.href = "/members"
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    function openModal(email) {
+        memberEmail = email;
+        document.querySelector('.modal').style.display = 'block'
+    }
+
+    function closeModal() {document.querySelector('.modal').style.display = 'none'}
+
 </script>
 
 <svelte:head>
@@ -35,92 +50,149 @@
 </svelte:head>
 
 <section>
-    <NavBar projectView="true"/>
-    <div class="container">
-        <div class="pt-5">
-            {#if project.id}
-                <strong class="h4">Project overview & activity of {project.name}</strong>
-                <div class="card mt-4 p-4">
-                    <div class="pt-4">
-                        <p class="h5 text-muted">Project statistics</p>
-                        <hr>
-                        <table class="table table-borderless">
-                              <tbody>
-                                <tr>
-                                  <th scope="row">Total test plans</th>
-                                  <td class="text-primary">{project.total_test_plan.length}</td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">Total Requirements Docs</th>
-                                  <td class="text-primary">{project.total_requirements_docs.length}</td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">Total Test Suites</th>
-                                  <td class="text-primary">{project.total_suites.length}</td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">Total Test Runs</th>
-                                  <td class="text-primary">{project.total_test_runs.length}</td>
-                                </tr>
-                              </tbody>
-                        </table>
-                    </div>
+    {#if user && member}
+        <NavBar user={user} projectView="true"/>
+        <div class="container pb-5">
+            <div class="pt-5">
+                <p class="h4">About <strong class="h4">{member.full_name}</strong></p>
+            </div>
+            {#if user.type === "admin"}
+                <div class="col-4 pt-5">
+                    <button type="button" class="btn btn-danger text-white text-decoration-none" 
+                        on:click={openModal(member.email)}>
+                        Delete
+                    </button>
                 </div>
-                <div class="card mt-4 p-4">
-                    <div class="pt-4">
-                        <div class="row">
-                            <div class="col-6">
-                                <p class="h5 text-muted">Incomplete test runs assigned to you</p>
-                            </div>
-                            <div class="col-6 text-muted">
-                                <p class="h5">People with the most incomplete test runs</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-6">
-                                <table class="table table-borderless">
-                                    {#each project.incomplete_test_runs_assigned_to_you as task }
-                                        <tbody>
-                                        <tr>
-                                            <th scope="row">{task.title}</th>
-                                            <td class="text-primary">{task.created}</td>
-                                        </tr>
-                                        </tbody>
-                                    {:else}
-                                        <tbody>
-                                        <tr>
-                                            <td class="text-muted">There are no incompleted task for you</td>
-                                        </tr>
-                                        </tbody>
-                                    {/each}
-                                </table>
-                            </div>
-                            <div class="col-6">
-                                <table class="table table-borderless">
-                                    {#each project.people_with_the_most_incomplete_test_runs as task }
-                                        <tbody>
-                                        <tr>
-                                            <th scope="row">{task.title}</th>
-                                            <td class="text-primary">
-                                                <a href="/members/{task.assigned_user.id}">{task.assigned_user.full_name}</a>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    {:else}
-                                        <tbody>
-                                        <tr>
-                                            <td class="text-muted">There are no pinding tasks</td>
-                                        </tr>
-                                        </tbody>
-                                    {/each}
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <ActivityTable endPoint={projectActivtyEndPoint} detail="true" />
             {/if}
+            <div class="card mt-4 p-4">
+                <div class="pt-4">
+                    <p class="h5 text-muted">Personal Information</p>
+                    <hr>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Full Name</th>
+                                <td class="text-primary">{member.full_name}</td>
+                                <th scope="row">Email</th>
+                                <td class="text-primary">{member.email}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Phone Number</th>
+                                {#if member.phone.length === 0}
+                                    <td class="text-muted">Not set yet</td>
+                                {:else}
+                                    <td class="text-primary">{member.phone}</td>
+                                {/if}
+                                <th scope="row">Joined date</th>
+                                <td class="text-primary">{member.created}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Permission</th>
+                                {#if member.permission == "full_access"}
+                                    <td class="text-primary">Full Access</td>
+                                {:else}
+                                    <td class="text-primary">Admin</td>
+                                {/if}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card mt-4 p-4">
+                <div class="pt-4">
+                    <p class="h5 text-muted">Last Project Worked on</p>
+                    <hr>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Name</th>
+                                <td class="text-primary">{member.last_project_working_on.name.slice(0, 50)}</td>
+                                <th scope="row">Updated date</th>
+                                <td class="text-primary">{member.last_project_working_on.modified}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Pinding tasks</th>
+                                {#if member.incomplete_test_runs_assigned_to_you}
+                                    <td class="text-primary">{member.incomplete_test_runs_assigned_to_you}</td>
+                                {:else}
+                                    <td class="text-muted">There are no pinding tasks.</td>
+                                {/if}
+                                <th scope="row">Created date</th>
+                                <td class="text-primary">{member.last_project_working_on.created}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <strong class="pl-3 text-muted">Team</strong>
+                    <br/><hr>
+                    <div class="row">
+                        {#if member.last_project_working_on.teams.length === 0 }
+                            <div class="col-6 text-muted">There are no teams yet, only you.</div>
+                        {:else}
+                            {#each member.last_project_working_on.teams as person }
+                            <div class="col-2 text-muted">
+                                <span class="text-muted ml-3"><a href="/members/{person.id}">@{person.first_name}</a></span>
+                            </div>
+                            {/each}
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-4 p-4">
+                <div class="pt-4">
+                    <p class="h5 text-muted">Last Tests Assigned</p>
+                    <hr>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Name</th>
+                                <td class="text-primary">{member.last_tests_assigned.title.slice(0, 50)}</td>
+                                <th scope="row">Date</th>
+                                <td class="text-primary">{member.last_tests_assigned.created}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Description</th>
+                                <div class="card">
+                                    {member.last_tests_assigned.description}
+                                </div>
+                            </tr>
+                            <tr>
+                                <th scope="row">Steps</th>
+                                <div class="card">
+                                    {member.last_tests_assigned.test_steps}
+                                </div>
+                            </tr>
+                            <tr>
+                                <th scope="row">Expected Result</th>
+                                <div class="card">
+                                    {member.last_tests_assigned.expected_result}
+                                </div>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {:else}
+        <LoodingSpiner />
+    {/if}
+    <!-- Modal -->
+    <div class="modal" tabindex="-1" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">You are about to delete this member.</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Please note that <strong>{memberEmail}</strong> cannot access the whole Test-Tracker after you confirm.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" on:click={closeModal}>Close</button>
+                    <button type="button" class="btn btn-danger text-white text-decoration-none" 
+                        on:click={deleteMember(memberEmail)}>
+                        Delete
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </section>
