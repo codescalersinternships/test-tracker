@@ -9,6 +9,7 @@
     import RegisterHandeler from "./pages/RegisterHandeler.svelte";
     import Projects from "./pages/Projects.svelte";
     import ProjectDetail from "./pages/ProjectDetail.svelte";
+    import People from "./pages/Members.svelte";
     import NotFound from "./pages/NotFound.svelte";
 
     onMount(() => {
@@ -52,6 +53,7 @@
         <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
         <Route path="projects/" primary={false}><Projects/></Route>
         <Route path="projects/:id" primary={false}><ProjectDetail/></Route>
+        <Route path="members/" primary={false}><People/></Route>
         <Route> 
             <NotFound/>
         </Route>

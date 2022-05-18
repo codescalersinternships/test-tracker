@@ -35,12 +35,12 @@
         </button>
         
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            {#if projectView}
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <Router>
-                        <li class="nav-item">
-                            <Link to="/" class="nav-link">Dashboard</Link>
-                        </li>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <Link to="/" class="nav-link text-primary">Dashboard</Link>
+                </li>
+                <Router>
+                    {#if projectView}
                         <li class="nav-item">
                             <Link to="/projects" class="nav-link">Projects</Link>
                         </li>
@@ -56,23 +56,19 @@
                         <li class="nav-item">
                             <Link to="/test-runs/" class="nav-link">Test Runs</Link>
                         </li>
-                    </Router>
-                </ul>
-            {:else}
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <Router>
+                        {:else}
                         <li class="nav-item">
                             <Link to="/projects" class="nav-link">Projects</Link>
                         </li>
                         <li class="nav-item">
-                            <Link to="/overview/" class="nav-link">People</Link>
+                            <Link to="/members/" class="nav-link">Members</Link>
                         </li>
                         <li class="nav-item">
                             <Link to="/overview/" class="nav-link">Settings</Link>
                         </li>
-                    </Router>
-                </ul>
-            {/if}
+                    {/if}
+                </Router>
+            </ul>
         </div>
         <div class="d-flex align-items-center">
             <div class="dropdown">
