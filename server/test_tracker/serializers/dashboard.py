@@ -112,17 +112,26 @@ class MemberSerializer(ModelSerializer):
 
 class GetMemberSerializer(ModelSerializer):
     """class GetMemberSerializer to serialize the Member obj"""
-    member = SerializerMethodField(read_only=True)
+    created = SerializerMethodField()
+    last_project_working_on = SerializerMethodField()
+    phone = SerializerMethodField()
 
     class Meta:
         model = Member
-        fields = ('permission','member')
+        fields = ('permission','full_name', 'email', 'phone', 'created', 'last_project_working_on')
 
-    def get_member(self, obj):
-        member = obj.invited_user
-        if member is None:
-            return MemberSerializer(obj.signature.json_data).data
-        return ProfileSerializers(obj.invited_user).data
+    def get_created(self, obj):
+        """Return created date"""
+        return obj.created.date()
+
+    def get_phone(self, obj):
+        """Return created date"""
+        return '' if obj.phone is None else obj.phone
+
+    def get_last_project_working_on(self, obj):
+        """Get last project working on for member"""
+        project = Project.objects.filter(members__id = obj.id).last()
+        return ProjectsSerializer(project).data
 
 class ProfileSerializers(ModelSerializer):
     class Meta:

@@ -1,7 +1,6 @@
 """Here will be any url for the dashboard."""
 from django.urls import path
-from server.test_tracker.views.dashboard import *
-from server.test_tracker.views.member import MemberSetPasswordAPIView
+from server.test_tracker.views.member import *
 
 urlpatterns = [
     path('all/', GetMemberApiView.as_view()),
