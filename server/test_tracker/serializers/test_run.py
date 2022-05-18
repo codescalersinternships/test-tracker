@@ -69,4 +69,6 @@ class TestRunsSerializer(ModelSerializer):
 
     def get_user(self, obj: TestRun) -> Member:
         """Return assigned user"""
-        return obj.assigned_user.full_name
+        test_suite = obj.test_suites.all().values_list("id", flat=True)
+        test_cases = TestCases.objects.filter(test_suite__id__in = test_suite)
+        return test_cases.values_list("assigned_user", flat=True).distinct()

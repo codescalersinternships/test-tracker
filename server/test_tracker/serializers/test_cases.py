@@ -13,6 +13,8 @@ from server.test_tracker.serializers.requirement import RequirementsSerializer
 class TestCaseSerializer(ModelSerializer):
     """class TestCaseSerializer to serialize the test case obj"""
     requirement = SerializerMethodField()
+    created = SerializerMethodField()
+    assigned_user = SerializerMethodField()
 
     class Meta:
         model = TestCases
@@ -25,6 +27,12 @@ class TestCaseSerializer(ModelSerializer):
     def get_requirement(self, obj):
         """Method to get the requirement obj"""
         return RequirementsSerializer(obj.verify_requirement).data
+    
+    def get_created(self, obj):
+        return obj.created.date()
+    
+    def get_assigned_user(self, obj):
+        return obj.assigned_user.full_name
 
 
 class GetSingleTestCaseSerializer(ModelSerializer):

@@ -31,7 +31,7 @@ def get_requirement_by_id(requirement_id : str) -> Requirements:
     if not requirement_id.isdigit():
         return None
     try:
-        return Requirements.objects.get(id=int(requirement_id))
+        return ProjectRequirement.objects.get(id=int(requirement_id))
     except:
         return None
 

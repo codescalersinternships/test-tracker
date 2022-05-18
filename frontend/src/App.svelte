@@ -4,10 +4,12 @@
 
     import isAuthenticated from "./healpers/IsAuthenticated"
 
-    import Home from "./routes/Home.svelte";
-    import Register from "./routes/Register.svelte";
-    import NotFound from "./routes/NotFound.svelte";
-    import Login from "./routes/Login.svelte";
+    import Home from "./pages/Home.svelte";
+    import Login from "./pages/Login.svelte";
+    import RegisterHandeler from "./pages/RegisterHandeler.svelte";
+    import Projects from "./pages/Projects.svelte";
+    import ProjectDetail from "./pages/ProjectDetail.svelte";
+    import NotFound from "./pages/NotFound.svelte";
 
     onMount(() => {
         isAuthenticated();
@@ -45,10 +47,13 @@
 
 <main>
     <Router>
-        <Route path="/" component={Home} />
-        <Route path="auth/login/" component={Login} />
-        <Route path="auth/register/" component={Register} />
-        <Route component={NotFound} />
-        <Route component={NotFound} />
+        <Route path="/" primary={false}><Home /></Route>
+        <Route path="auth/login/" primary={false}><Login/></Route>
+        <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
+        <Route path="projects/" primary={false}><Projects/></Route>
+        <Route path="projects/:id" primary={false}><ProjectDetail/></Route>
+        <Route> 
+            <NotFound/>
+        </Route>
     </Router>
 </main>

@@ -29,9 +29,10 @@ class ProjectsDetailAPIView(GenericAPIView):
     def get(self, request: Request, project_id: str) -> Response:
         """Return a single project based on the given project id"""
         project = get_project_by_id(project_id)
+        serializer = ProjectsSerializer(project, context={'request': request})
         if project is not None:
             return CustomResponse.success(
-                data=ProjectsSerializer(project).data,
+                data=serializer.data,
                 message="Project found successfully",
             )
         return CustomResponse.not_found(
@@ -94,9 +95,19 @@ class ProjectActivityAPIView(GenericAPIView):
         project = get_project_by_id(project_id)
         if project is None:
             return CustomResponse.not_found(message = "Project not found")
+        result = []
+        if len(project.activity) > 0:
+            for items, values in project.activity.items():                    
+                result.append(
+                    {
+                        "date" : values.get('date'),
+                        "action" : values.get('action')
+                    }
+                )
+
         return CustomResponse.success(
             message="Success plans found.",
-            data = ActivitySerializer(project).data
+            data = result[::-1]
         )
 
 class AddMemberToProjectAPIView(GenericAPIView):
@@ -186,19 +197,20 @@ class GetActivityOfLast5ProjectsAPIView(GenericAPIView):
             )|
             Q(user=request.user)
             ).order_by('-modified')
-    
+        print(len(projects))
         if len(projects) > 5:
             projects = projects[:5]
         elif len(projects) > 0:
             for project in projects:
-                last_key = project.activity[list(project.activity.keys())[-1]]
-                if last_key.get('date') and last_key.get('action'):
-                    result.append(
-                        {
-                            "date" : last_key.get('date'),
-                            "action" : last_key.get('action')
-                        }
-                    )
+                if len(list(project.activity.keys())) > 1:
+                    last_key = project.activity[list(project.activity.keys())[-1]]                    
+                    if last_key.get('date') and last_key.get('action'):
+                        result.append(
+                            {
+                                "date" : last_key.get('date'),
+                                "action" : last_key.get('action')
+                            }
+                        )
         return CustomResponse.success(
             message="Success activity found.",
             data = result

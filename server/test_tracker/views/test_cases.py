@@ -30,7 +30,7 @@ class TestCasesAPIView(GenericAPIView):
         if test_suite is None:
             return CustomResponse.not_found(message="Test suite not found")
         if requirement is None:
-            return CustomResponse.not_found(message="Requirement suite not found")
+            return CustomResponse.not_found(message="Requirement not found")
         if serializer.is_valid():
             testcase = serializer.save(test_suite=test_suite, verify_requirement=requirement)
             update_activity(
@@ -38,7 +38,7 @@ class TestCasesAPIView(GenericAPIView):
                 "Create", "Test Case", testcase.title
             )
             return CustomResponse.success(
-                data=serializer.validated_data,
+                data=serializer.data,
                 message="Test suite created successfully"
             )
         return CustomResponse.bad_request(
