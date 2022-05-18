@@ -1,11 +1,7 @@
 <script>
-    import { onMount } from 'svelte';
-    import axios from '../healpers/axios'
-
     import NavBar from "../components/NavBar.svelte";
     import Projects from "../components/Projects.svelte";
     import TotalProjectsLength from "../components/ui/TotalProjectsLength.svelte";
-
 </script>
 
 <svelte:head>

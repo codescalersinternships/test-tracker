@@ -159,7 +159,10 @@ class AddMemberToProjectAPIView(GenericAPIView):
         )
 
 class GetLast5ProjectsUpdatedAPIView(GenericAPIView):
-    """Class to get last 5 Updated"""
+    """
+        * Usage
+        Class to get last 5 Updated
+    """
     serializer_class = ProjectsSerializer
     permission_classes = (UserIsAuthenticated,)
 
@@ -186,7 +189,10 @@ class GetLast5ProjectsUpdatedAPIView(GenericAPIView):
 
 
 class GetActivityOfLast5ProjectsAPIView(GenericAPIView):
-    """This class to concatenate the activity of the last 5 projects updated."""
+    """
+        * Usage
+        This class to concatenate the activity of the last 5 projects updated.
+    """
     serializer_class = ActivitySerializer
     permission_classes = (UserIsAuthenticated,)
 
@@ -199,7 +205,6 @@ class GetActivityOfLast5ProjectsAPIView(GenericAPIView):
             )|
             Q(user=request.user)
             ).order_by('-modified')
-        print(len(projects))
         if len(projects) > 5:
             projects = projects[:5]
         elif len(projects) > 0:
@@ -219,7 +224,10 @@ class GetActivityOfLast5ProjectsAPIView(GenericAPIView):
         )
 
 class SearchProjectAPIView(GenericAPIView):
-    """This class to filter all op projects based on project name."""
+    """
+        * Usage
+        This class to filter all op projects based on project name.
+    """
     serializer_class = ProjectsSerializer
     permission_classes = (UserIsAuthenticated,)
 

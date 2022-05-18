@@ -1,6 +1,5 @@
 <script>
     import axios from '../healpers/axios'
-    import Button from "../components/ui/Button.svelte";
     import Modal from "../components/ui/Modal.svelte";
     export let data;
 
@@ -59,7 +58,10 @@
                       </div>
                     </div> 
                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                      <Button Class="btn btn-primary btn-lg" Function={RegisterApi} text="Register" />
+                      <button type="button" class="btn btn-danger text-white text-decoration-none" 
+                          on:click={RegisterApi}>
+                          Register
+                      </button>
                   </div>
                   </form>
   

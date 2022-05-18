@@ -45,7 +45,7 @@ def get_member_based_on_user(user: User) -> Member:
 def get_member_by_user_and_member_email(user: User, member_email: str) -> Member or None:
     """Return a single member based on the user and member email"""
     try:
-        return Member.objects.get(host_user=user, email=member_email)
+        return Member.objects.get(host_user=user, email=str(member_email))
     except Member.DoesNotExist:
         return None
 

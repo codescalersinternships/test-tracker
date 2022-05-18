@@ -4,6 +4,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from server.test_tracker.models.dashboard import Project
+from server.test_tracker.services.member import get_member_by_id
 
 
 class UserIsAuthenticated(permissions.BasePermission):
@@ -15,14 +16,14 @@ class UserIsAuthenticated(permissions.BasePermission):
             return True
         raise PermissionDenied
 
-class HasAccess(permissions.BasePermission):
+class IsHost(permissions.BasePermission):
     """
-        Only who have project or have a full access can pass
+        Only host user can use
     """
     def has_permission(self, request: Request, view: APIView) -> bool:
         if request.user.is_authenticated:
-            projects = Project.objects.filter(user=request.user)
-            
-        #     from server.test_tracker.models.dashboard import People
-        # print(project.user)
-        # print(People.objects.filter(host_user=project.user).u)
+            member = get_member_by_id(request.user.id)
+            if member == None:
+                return True
+            raise PermissionDenied
+        raise PermissionDenied

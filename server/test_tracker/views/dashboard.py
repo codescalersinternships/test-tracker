@@ -11,9 +11,7 @@ from server.test_tracker.services.member import get_member_by_email
 from server.test_tracker.services.users import get_user_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
-from server.test_tracker.serializers.dashboard import (
-    GetMemberSerializer, MemberSerializer, MemberSerializer, ProjectsSerializer, ProfileSerializers
-)
+from server.test_tracker.serializers.dashboard import (GetMemberSerializer, ProjectsSerializer, ProfileSerializers)
 
 
 class ProjectsAPIView(GenericAPIView):
@@ -64,7 +62,7 @@ class MemberAPIView(GenericAPIView):
     """
         Class MemberAPIView have all the functionality based on the user
     """
-    serializer_class = MemberSerializer
+    serializer_class = GetMemberSerializer
     permission_classes = (UserIsAuthenticated,)
 
     def post(self, request: Request) -> Response:

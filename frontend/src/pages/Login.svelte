@@ -1,7 +1,6 @@
 
 <script>
     import axios from '../healpers/axios'
-    import Button from "../components/ui/Button.svelte";
     import Modal from "../components/ui/Modal.svelte";
 
 
@@ -51,7 +50,10 @@
                 </div>
                 <!-- Submit button -->
                 <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                    <Button Class="btn btn-primary btn-lg" Function={loginApi} text="Login" />
+                    <button type="button" class="btn btn-primary btn-lg" 
+                        on:click={loginApi}>
+                        Login
+                    </button>
                 </div>
             </form>
         </div>

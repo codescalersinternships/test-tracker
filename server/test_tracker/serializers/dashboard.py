@@ -102,16 +102,8 @@ class ProjectsSerializer(ModelSerializer):
             return TestCaseSerializer(test_cases[:5], many=True).data
         return
 
-
-
-class MemberSerializer(ModelSerializer):
-    """class MemberSerializer to serialize the Member obj"""
-    class Meta:
-        model = Member
-        fields = ('first_name', 'last_name', 'email','permission')
-
 class GetMemberSerializer(ModelSerializer):
-    """class GetMemberSerializer to serialize the Member obj"""
+    """class GetGetMemberSerializer to serialize the Member obj"""
     created = SerializerMethodField()
     last_project_working_on = SerializerMethodField()
     phone = SerializerMethodField()

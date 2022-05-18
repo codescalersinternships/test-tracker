@@ -2,10 +2,11 @@
     import { onMount } from 'svelte';
     import axios from '../healpers/axios'
     import NavBar from "../components/NavBar.svelte";
-    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import Search from "../components/Search.svelte";
 
     let members = [];
+    let membersCopy = [];
+    let memberEmail;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -15,6 +16,7 @@
         try {
             const response = await axios.get('/members/all/', config)
             members = await response.data.data
+            membersCopy = members
         } catch (err) {
             if (err.response.status === 403){
                 window.location.href = '/not-found'
@@ -23,9 +25,34 @@
     });
 
 
-    function searchMembers(params) {
-        
+    async function searchMembers(params) {
+        var inputValue = document.getElementById('search-id').value,
+            endPoint = `members/search/${inputValue}/`;
+        if (inputValue){
+            const result = await axios.get(endPoint, config)
+            members = result.data.data 
+        } else{
+            members = membersCopy
+        }
     }
+
+    async function deleteMember(email){
+        console.log(email);
+        try {
+            await axios.delete(`/members/${email}/`, config)
+            closeModal()
+            window.location.reload()
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    function openModal(email) {
+        memberEmail = email;
+        document.querySelector('.modal').style.display = 'block'
+    }
+
+    function closeModal() {document.querySelector('.modal').style.display = 'none'}
 
 </script>
 
@@ -36,18 +63,18 @@
 <section>
     <NavBar/>
     <div class="container">
-        {#if members.length > 0}
-            <div class="pt-5">
-                <strong class="h4">All Members</strong>
-                {#if members.length > 1}
-                    <p class="text-muted">There are {members.length} members registered</p>
-                {:else}
-                    <p class="text-muted">There are {members.length} member registered</p>
-                {/if}
-            </div>
-            <Search title="Search Members:" searchFunction={searchMembers}/>
-            <div class="pt-5">
-                <div class="row">
+        <div class="pt-5">
+            <strong class="h4">All Members</strong>
+            {#if members.length > 1}
+            <p class="text-muted">There are {members.length} members registered</p>
+            {:else}
+            <p class="text-muted">There are {members.length} member registered</p>
+            {/if}
+        </div>
+        <Search title="Search Members:" searchFunction={searchMembers}/>
+        <div class="pt-5">
+            <div class="row">
+                {#if members.length > 0}
                     {#each members as member}
                         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                             <div class="card mt-4" style="width: 18rem;">
@@ -69,18 +96,43 @@
                                     {/if}
                                     <p class="card-text text-muted">Joined on: {member.created}</p>
                                     <a href={`/members/${member.id}`} class="btn btn-primary text-white text-decoration-none">View</a>
+                                    <button type="button" class="btn btn-danger text-white text-decoration-none" 
+                                        on:click={openModal(member.email)}>
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     {/each}
+                {:else}
+                    <div class="col-12 pt-5">
+                        <p class="text-muted">
+                            -- There are no members
+                        </p>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" tabindex="-1" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">You are about to delete this member.</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Please note that <strong>{memberEmail}</strong> cannot access the whole Test-Tracker after you confirm.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" on:click={closeModal}>Close</button>
+                    <button type="button" class="btn btn-danger text-white text-decoration-none" 
+                        on:click={deleteMember(memberEmail)}>
+                        Delete
+                    </button>
                 </div>
             </div>
-        {:else}
-        <div class="col-12 pt-5">
-            <p class="text-muted">
-                -- There are no members yet
-            </p>
         </div>
-        {/if}
     </div>
 </section>

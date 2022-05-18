@@ -9,6 +9,7 @@
     import RegisterHandeler from "./pages/RegisterHandeler.svelte";
     import Projects from "./pages/Projects.svelte";
     import ProjectDetail from "./pages/ProjectDetail.svelte";
+    import MemberDetail from "./pages/MemberDetail.svelte";
     import People from "./pages/Members.svelte";
     import NotFound from "./pages/NotFound.svelte";
 
@@ -52,8 +53,9 @@
         <Route path="auth/login/" primary={false}><Login/></Route>
         <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
         <Route path="projects/" primary={false}><Projects/></Route>
-        <Route path="projects/:id" primary={false}><ProjectDetail/></Route>
+        <Route path="projects/:id/" primary={false}><ProjectDetail/></Route>
         <Route path="members/" primary={false}><People/></Route>
+        <Route path="members/:id/" primary={false}><MemberDetail/></Route>
         <Route> 
             <NotFound/>
         </Route>
