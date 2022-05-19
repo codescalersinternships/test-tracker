@@ -2,6 +2,15 @@
         import { Router, Link } from "svelte-navigator";
         export let projectView = false;
         export let user;
+
+        let projectID;
+
+        if (projectView) {
+            let path = window.location.pathname;
+            let lastSlash = path.lastIndexOf('/');
+            projectID = path.substring(lastSlash + 1);
+        }
+
 </script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -29,12 +38,12 @@
                             <Link to="/members/" class="nav-link">Members</Link>
                         </li>
                     {/if}
-                    {#if projectView}
+                    {#if projectView && projectID}
                         <li class="nav-item">
                             <Link to="/projects" class="nav-link">Projects</Link>
                         </li>
                         <li class="nav-item">
-                            <Link to="/test-plans/" class="nav-link">Test Plans</Link>
+                            <Link to="/projects/{projectID}/test-plans/" class="nav-link">Test Plans</Link>
                         </li>
                         <li class="nav-item">
                             <Link to="/requirements/" class="nav-link">Requirements</Link>
