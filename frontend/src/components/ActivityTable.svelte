@@ -1,22 +1,5 @@
 <script>
-    import { onMount } from 'svelte';
-    import axios from '../healpers/axios';
-
-    export let endPoint;
-
-    let activityTable;
-
-    const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-    };
-
-    onMount(async () => {
-        const response = await axios.get(endPoint, config)
-        if (response.data.data.length > 0){
-            activityTable = response.data.data
-        }
-        return activityTable
-    });
+    export let activity;
 </script>
 
 
@@ -25,13 +8,13 @@
     <div class="pt-5">
         <p>Activity</p>
     </div>
-    {#if activityTable}
+    {#if activity}
         <div class="table pt-4">
-            {#each activityTable as activity}
+            {#each activity as action}
                 <table class="table align-middle mb-3 bg-white">
                     <thead class="bg-light">
                         <tr>
-                            <th><span class="badge badge-success rounded-pill d-inline">{activity.date}</span></th>
+                            <th><span class="badge badge-success rounded-pill d-inline">{action.date}</span></th>
                         </tr>
                     </thead>
                     <thead class="bg-light">
@@ -39,7 +22,7 @@
                             <td>
                                 <div class="d-inline">
                                     <div class="ms-3">
-                                        <p class="text-muted mb-0">{activity.action}</p>
+                                        <p class="text-muted mb-0">{action.action}</p>
                                     </div>
                                 </div>
                             </td>
