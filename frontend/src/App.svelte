@@ -4,15 +4,22 @@
 
     import isAuthenticated from "./healpers/IsAuthenticated"
     import axios from '././healpers/axios';
-    import Logout from "./components/Logout.svelte"
-
+    
     import Home from "./pages/Home.svelte";
+    
     import Login from "./pages/Login.svelte";
+    import Logout from "./components/Logout.svelte"
     import RegisterHandeler from "./pages/RegisterHandeler.svelte";
+
     import Projects from "./pages/Projects.svelte";
     import ProjectDetail from "./pages/ProjectDetail.svelte";
-    import MemberDetail from "./pages/MemberDetail.svelte";
+
     import Members from "./pages/Members.svelte";
+    import MemberDetail from "./pages/MemberDetail.svelte";
+
+    import TestPlans from "./pages/TestPlans.svelte";
+    import TestPlanDetail from "./pages/TestPlanDetail.svelte";
+
     import NotFound from "./pages/NotFound.svelte";
 
     let user;
@@ -21,7 +28,7 @@
     };
     onMount(async () => {
         isAuthenticated();
-        const userDetails = await axios.get('/dashboard/total_projects/', config);
+        const userDetails = await axios.get('/dashboard/user/', config);
         user = await userDetails.data.data
     });
 
@@ -59,6 +66,8 @@
     <Router>
         <Route path="/" primary={false}><Home user={user}/></Route>
         <Route path="projects/" primary={false}><Projects user={user}/></Route>
+        <Route path="projects/:id/test-plans/" primary={false}><TestPlans user={user}/></Route>
+        <Route path="projects/:id/test-plans/:id/" primary={false}><TestPlanDetail user={user}/></Route>
         <Route path="projects/:id/" primary={false}><ProjectDetail user={user}/></Route>
         <Route path="auth/login/" primary={false}><Login/></Route>
         <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
