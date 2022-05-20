@@ -1,30 +1,38 @@
 <script>
-    export let message;
+    export let textArea = false;
 
-    function closeModal() {
-        document.querySelector('.modal').style.display = 'none'
+    function contentAreaModalAction() {
+        if (document.querySelector('.custom-modal').style.display === 'block') {
+            document.querySelector('.custom-modal').style.display = 'none'
+        } else {
+            document.querySelector('.custom-modal').style.display = 'block'
+        }
     }
+
+
 </script>
 
-<section>
-    <!-- Modal -->
-    <div class="modal fade top show" id="exampleFrameModal1" tabindex="-1" 
-        aria-labelledby="exampleFrameModal1" style="display: none;" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-frame modal-top">
-        <div class="modal-content rounded-0">
-            <div class="modal-body py-1">
-                <div class="d-flex justify-content-center align-items-center my-3">
-                    <p class="pt-3 mx-4">
-                        {message}
-                    </p>
-                    <button type="button" class="btn-close" 
-                        aria-label="Close" on:click={closeModal}
-                        style="position: absolute;right: 10px;top: 10px;"
-                        >
-                    </button>
-                </div>
+<div class="modal custom-modal" tabindex="-1" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-4">
+                <form>
+                    <div class="form-group p-2">
+                      <label for="content-title">Title</label>
+                      <input type="text" class="form-control" id="content-title">
+                    </div>
+                    {#if textArea}
+                        <div class="form-group p-2">
+                        <label for="content-body">Content</label>
+                        <textarea class="form-control" id="content-body" style="height: 150px; max-height: 150px"></textarea>
+                        </div>
+                    {/if}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" on:click={contentAreaModalAction}>Close</button>
+                <button type="button" class="btn btn-success" data-mdb-dismiss="modal" on:click={addNewContentArea}>Add</button>
             </div>
         </div>
-        </div>
     </div>
-</section>
+</div>
