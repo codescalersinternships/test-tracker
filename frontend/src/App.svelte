@@ -12,15 +12,16 @@
     import RegisterHandeler from "./pages/RegisterHandeler.svelte";
 
     import Projects from "./pages/Projects.svelte";
-    import ProjectDetail from "./pages/ProjectDetail.svelte";
+    import ProjectDetails from "./pages/ProjectDetails.svelte";
 
     import Members from "./pages/Members.svelte";
-    import MemberDetail from "./pages/MemberDetail.svelte";
+    import MemberDetails from "./pages/MemberDetails.svelte";
 
     import Requirements from "./pages/Requirements.svelte";
+    import RequirementsDetails from "./pages/RequirementsDetails.svelte";
 
     import TestPlans from "./pages/TestPlans.svelte";
-    import TestPlanDetail from "./pages/TestPlanDetail.svelte";
+    import TestPlanDetails from "./pages/TestPlanDetails.svelte";
 
     import NotFound from "./pages/NotFound.svelte";
 
@@ -36,7 +37,6 @@
 
 </script>
 <svelte:head>
-    <title>THis Is Test</title>
     <!-- Font Awesome -->
     <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -67,16 +67,21 @@
 <main>
     <Router>
         <Route path="/" primary={false}><Home user={user}/></Route>
+        <Route path="auth/login/" primary={false}><Login/></Route>
+        <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
+        <Route path="auth/logout/" primary={false}><Logout/></Route>
+        
         <Route path="projects/" primary={false}><Projects user={user}/></Route>
         <Route path="projects/:id/test-plans/" primary={false}><TestPlans user={user}/></Route>
         <Route path="projects/:id/requirements/" primary={false}><Requirements user={user}/></Route>
-        <Route path="projects/:id/test-plans/:id/" primary={false}><TestPlanDetail user={user}/></Route>
-        <Route path="projects/:id/" primary={false}><ProjectDetail user={user}/></Route>
-        <Route path="auth/login/" primary={false}><Login/></Route>
-        <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
+        <Route path="projects/:id/requirements/:id/" primary={false}><RequirementsDetails user={user}/></Route>
+        <Route path="projects/:id/test-plans/:id/" primary={false}><TestPlanDetails user={user}/></Route>
+        <Route path="projects/:id/" primary={false}><ProjectDetails user={user}/></Route>
+        
+
         <Route path="members/" primary={false}><Members user={user}/></Route>
-        <Route path="members/:id/" primary={false}><MemberDetail user={user}/></Route>
-        <Route path="auth/logout/" primary={false}><Logout/></Route>
+        <Route path="members/:id/" primary={false}><MemberDetails user={user}/></Route>
+        
         <Route> 
             <NotFound/>
         </Route>
