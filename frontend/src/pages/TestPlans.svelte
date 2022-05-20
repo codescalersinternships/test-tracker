@@ -2,7 +2,6 @@
     import { onMount } from 'svelte';
     import axios from '../healpers/axios';
     import NavBar from "../components/NavBar.svelte";
-    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import Search from "../components/Search.svelte";
 
     export let user;
@@ -15,8 +14,7 @@
 
     onMount(async () => {
         let path = window.location.pathname;
-        let lastSlash = path.lastIndexOf('/');
-        projectID = path.substring(lastSlash - 1).replace('/test-plans','');
+        projectID = path.split("/")[2];
 
         const responseProjects = await axios.get(`/test_plan/${projectID}/`, config);
         testPlans = responseProjects.data.data;
@@ -73,18 +71,15 @@
                     Test Plans
                 </p>
                 <p class="text-muted">
-                    {#if testPlans.length > 1}
-                        There are {testPlans.length} Test Plans
-                    {:else}
-                        There are {testPlans.length} Test Plan
-                    {/if}
+                    There are <strong>{testPlans.length}</strong> 
+                    Test {testPlans.length === 1 ? 'Plan' : 'Plans'}
                 </p>
             </div>
             <Search title="Search On Plan" searchFunction={searchFunction}/>
             <div class="pt-5">
                 <p class="search-result" style="display: none">Search Result</p>
                 {#each testPlans as plan}
-                    <div class="card mb-3" style="padding: 20px;">
+                    <div class="card mb-3" style="padding: 20px; background: #f9f9f9;">
                         <div class="card-body pb-2">
                             <div class="dropdown p-1" style="position: absolute;font-size: 0;right: 0;width: 35px;">
                                 <a
@@ -108,6 +103,20 @@
                                 </ul>
                             </div>
                             <h5 class="card-title">{plan.title}</h5>
+                            <div class="pt-4">
+                                <div class="row">
+                                    <div class="col-6 col-md-6 col-sm-6 col-xs-8">
+                                        <p class="text-muted">
+                                            Created: <strong>{plan.created}</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-6 col-md-6 col-sm-6 col-xs-8">
+                                        <p class="text-muted">
+                                            Updated: <strong>{plan.modified}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 {/each}
