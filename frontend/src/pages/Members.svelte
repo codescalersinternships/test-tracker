@@ -67,11 +67,7 @@
             <div class="container">
                 <div class="pt-5">
                     <strong class="h4">All Members</strong>
-                    {#if members.length > 1}
-                    <p class="text-muted">There are {members.length} members registered</p>
-                    {:else}
-                    <p class="text-muted">There are {members.length} member registered</p>
-                    {/if}
+                    There are <strong>{members.length}</strong> {user.total_projects === 1 ? 'member' : 'members'} registered
                 </div>
                 <Search title="Search Members:" searchFunction={searchMembers}/>
                 <div class="pt-5">
