@@ -6,7 +6,7 @@
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte"
 
     export let user;
-    let project, projectActivtyEndPoint;
+    let project, activity;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -19,7 +19,7 @@
         try {
             const response = await axios.get(`project/${projectID}/`, config)
             project = await response.data.data;
-            projectActivtyEndPoint = `/project/activity/${projectID}/`
+            activity = project.activity
         }catch(err) {
             if(err.response.status === 404){
                 window.location.href = '/not-found'
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                 </div>
-                <ActivityTable endPoint={projectActivtyEndPoint} detail="true" />
+                <ActivityTable activity={activity} />
             </div>
         </div>
     {:else}
