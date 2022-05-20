@@ -173,10 +173,13 @@ class TestPlanContentAreaAPIView(GenericAPIView):
         """
         test_plan = TestPlanHandling.validate(project_id, test_plan_id)
         if isinstance(test_plan, TestPlan):
-            serializer = self.get_serializer(data = request.data)
             new_title = request.data.get('title')
             content = request.data.get('content')
             if Validator().validate_string(request.data.get('title')):
+                update_activity(
+                    datetime.datetime.now(), request.user, get_project_by_id(project_id),
+                    "Update", f"Test Plan Content Area '{test_plan.temps[title]}' with new title '{new_title} from ' ", test_plan.title
+                )
                 if test_plan.temps.get(title):
                     del test_plan.temps[title]
                 test_plan.temps[new_title] = content
