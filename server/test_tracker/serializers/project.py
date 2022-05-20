@@ -8,9 +8,15 @@ from server.test_tracker.models.project import TestPlan
 
 
 class TestPlanSerializer(ModelSerializer):
+    created = SerializerMethodField()
+    modified = SerializerMethodField()
+
     class Meta:
         model = TestPlan
         exclude = ('temps','project')
+    
+    def get_created(self, obj):return obj.created.date()
+    def get_modified(self, obj):return obj.modified.date()
 
 class TestPlanDetailSerializer(ModelSerializer):
     created = SerializerMethodField()

@@ -3,7 +3,8 @@ import datetime
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from server.test_tracker.api.permission import UserIsAuthenticated
+from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
+from server.test_tracker.services.member import get_member_by_id
 
 from server.test_tracker.services.requirement import *
 from server.test_tracker.api.response import CustomResponse
@@ -44,7 +45,7 @@ class ProjectRequirementsAPIView(GenericAPIView):
 class GetProjectRequirementsAPIView(GenericAPIView):
     """class project requirement view"""
     serializer_class = ProjectRequirementSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def get(self, request: Request, project_id: str) -> Response:
         """get all requirements for a project"""
@@ -52,6 +53,30 @@ class GetProjectRequirementsAPIView(GenericAPIView):
         if project is None:
             return CustomResponse.not_found(message = "Project not found")
         requirements = filter_requirements_by_project(project)
+        serializer = self.get_serializer(requirements, many=True)
+        return CustomResponse.success(
+            data=serializer.data,
+            message="All requirements for project",
+            status_code=200
+        )
+
+class SearchProjectRequirementsAPIView(GenericAPIView):
+    """
+        *Usage
+        class project requirement view search on project requirements
+    """
+    serializer_class = ProjectRequirementSerializer
+    permission_classes = (HasProjectAccess,)
+
+    def get(self, request: Request, project_id: str, key_word: str) -> Response:
+        """get all requirements for a project"""
+        project = get_project_by_id(project_id)
+        if project is None:
+            return CustomResponse.not_found(message = "Project not found")
+        requirements = ProjectRequirement.objects.filter(
+            title__icontains=key_word,
+            project = project
+        )
         serializer = self.get_serializer(requirements, many=True)
         return CustomResponse.success(
             data=serializer.data,

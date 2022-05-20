@@ -1,6 +1,6 @@
 """Everything related to the project."""
 import datetime
-from server.test_tracker.api.permission import UserIsAuthenticated
+from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
@@ -23,7 +23,7 @@ class ProjectsDetailAPIView(GenericAPIView):
         Methods [GET, PUT, DELETE]
     """
     serializer_class = ProjectsSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def get(self, request: Request, project_id: str) -> Response:
         """Return a single project based on the given project id"""

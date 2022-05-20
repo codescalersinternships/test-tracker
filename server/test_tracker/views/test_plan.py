@@ -2,7 +2,7 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from server.test_tracker.api.permission import UserIsAuthenticated
+from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
 
 
@@ -20,7 +20,7 @@ from server.test_tracker.utils.validations import Validator
 class TestPlansAPIView(GenericAPIView):
     """Create a test plan."""
     serializer_class = TestPlanSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def post(self, request:Request, project_id: str) -> Response:
         """
@@ -67,7 +67,7 @@ class TestPlansAPIView(GenericAPIView):
 class TestPlansDetailAPIView(GenericAPIView):
     """This class for [GET, UPDATE, DELETE] test plans methods"""
     serializer_class = TestPlanDetailSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def get(self, request: Request, project_id:str, test_plan_id: str) -> Response:
         """Get a test plan from the specified project"""
@@ -97,7 +97,7 @@ class TestPlansDetailAPIView(GenericAPIView):
 
 class UpdateTestPlanAPIView(GenericAPIView):
     serializer_class = UpdateTestPlanSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def put(self, request: Request, project_id:str, test_plan_id:str) -> Response:
         """Update test plan title"""
@@ -126,7 +126,7 @@ class PostNewTestPlanContentAreaAPIView(GenericAPIView):
         Add or update content area to test plan
     """
     serializer_class = TestPlanTempsSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def post (self, request: Request, project_id:str, test_plan_id: str) -> Response:
         """Add custom content area to test plan"""
@@ -161,7 +161,7 @@ class TestPlanContentAreaAPIView(GenericAPIView):
         * Usage
         Delete and get test plan content area based on its title
     """
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
     serializer_class = TestPlanTempsSerializer
 
     def put(self, request: Request, project_id:str, test_plan_id: str, title:str) -> Response:

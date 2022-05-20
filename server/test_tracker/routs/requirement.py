@@ -7,6 +7,7 @@ from server.test_tracker.views.requirement import *
 
 urlpatterns = [
     path('projects/<str:project_id>/', ProjectRequirementsAPIView.as_view()),
+    path('projects/<str:project_id>/search/<str:key_word>/', SearchProjectRequirementsAPIView.as_view()),
     path('projects/<str:project_id>/get-all/', GetProjectRequirementsAPIView.as_view()),
     path('projects/<str:project_id>/update/<str:requirement_id>/', UpdateProjectRequirementsAPIView.as_view()),
 
