@@ -20,7 +20,7 @@
             requirements = responseReq.data.data;
             requirementsCopy = requirements;
         } catch (error) {
-            if (error.response.status == 404) {
+            if (error.response.status == 403 || error.response.status == 404) {
                 window.location.href = '/not-found'
             }
         }
@@ -62,7 +62,7 @@
 </script>
 
 <svelte:head>
-    <title>Test-Tracker | Test Plans</title>
+    <title>Test-Tracker | Requirements</title>
 </svelte:head>
 
 <section>
