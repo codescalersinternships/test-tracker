@@ -7,8 +7,7 @@
 
         if (projectView) {
             let path = window.location.pathname;
-            let lastSlash = path.lastIndexOf('/');
-            projectID = path.substring(lastSlash + 1);
+            projectID = path.split("/")[2];
         }
 
 </script>
@@ -46,7 +45,7 @@
                             <Link to="/projects/{projectID}/test-plans/" class="nav-link">Test Plans</Link>
                         </li>
                         <li class="nav-item">
-                            <Link to="/requirements/" class="nav-link">Requirements</Link>
+                            <Link to="/projects/{projectID}/requirements/" class="nav-link">Requirements</Link>
                         </li>
                         <li class="nav-item">
                             <Link to="/test-suites/" class="nav-link">Test Suite</Link>
