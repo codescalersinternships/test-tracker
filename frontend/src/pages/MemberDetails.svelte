@@ -43,7 +43,7 @@
 </script>
 
 <svelte:head>
-    <title>Test-Tracker</title>
+    <title>Test-Tracker | Member Detail</title>
 </svelte:head>
 
 <section>

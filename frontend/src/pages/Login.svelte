@@ -22,6 +22,10 @@
 
 </script>
 
+<svelte:head>
+    <title>Test-Tracker | Login</title>
+</svelte:head>
+
 <section class="vh-100">
     <div class="container py-5 h-100">
         <Alert message = "Please make sure that you enter the correct email and password."/>

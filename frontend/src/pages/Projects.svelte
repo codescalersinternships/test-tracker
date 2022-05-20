@@ -39,7 +39,7 @@
 </script>
 
 <svelte:head>
-    <title>Test-Tracker | projects</title>
+    <title>Test-Tracker | Projects</title>
 </svelte:head>
 
 <section>

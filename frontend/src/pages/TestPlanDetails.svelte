@@ -81,7 +81,7 @@
 </script>
 
 <svelte:head>
-    <title>Test-Tracker | Test Plans</title>
+    <title>Test-Tracker | Test Plan Detail</title>
 </svelte:head>
 
 <section>
