@@ -25,9 +25,11 @@
 
     async function deletePlan(plan) {
         try {
+            const indx = testPlans.findIndex(v => v.id === plan);
             await axios.delete(`/test_plan/${projectID}/${planID}/detail/`, config)
             closeModal()
-            window.location.reload()
+            testPlans = testPlans;
+            testPlans.splice(indx, 1);
         } catch (err) {
             console.log(err);
         }
