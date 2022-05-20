@@ -34,10 +34,11 @@ class HasProjectAccess(permissions.BasePermission):
     """If request.user is a host or a member of the project can access"""
 
     def has_permission(self, request: Request, view: APIView,) -> bool:
-        project = get_project_by_id(view.get_renderer_context().get('kwargs').get('project_id'))
-        member = get_member_by_id(request.user.id)
         if request.user.is_authenticated:
-            if project.user == request.user or member in project.members.all():
-                return True
+            if view.get_renderer_context().get('kwargs').get('project_id'):
+                project = get_project_by_id(view.get_renderer_context().get('kwargs').get('project_id'))
+                member = get_member_by_id(request.user.id)
+                if project.user == request.user or member in project.members.all():
+                    return True
             raise PermissionDenied
         raise PermissionDenied
