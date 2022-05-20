@@ -95,7 +95,9 @@
                     {testPlansContents.title}
                 </p>
                 <p class="text-muted">
-                    There are <strong>{testPlansContents.temps.length}</strong> {testPlansContents.temps.length === 1 ? 'area' : 'areas'}
+                    {#if testPlansContents.temps}
+                        There are <strong>{testPlansContents.temps.length}</strong> {testPlansContents.temps.length === 1 ? 'area' : 'areas'}
+                    {/if}
                 </p>
             </div>
             <div class="row mt-4">
@@ -146,6 +148,12 @@
                             </div>
                         </div>
                     {/each}
+                {:else}
+                    <div class="col-12 last-projects-notfound pt-3">
+                        <p class="text-muted">
+                            -- There are no content areas in this test plan
+                        </p>
+                    </div>
                 {/if}
             </div>
         </div>
