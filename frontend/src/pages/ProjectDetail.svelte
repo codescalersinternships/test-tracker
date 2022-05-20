@@ -21,7 +21,7 @@
             project = await response.data.data;
             activity = project.activity
         }catch(err) {
-            if(err.response.status === 404){
+            if(err.response.status === 404 || err.response.status === 403){
                 window.location.href = '/not-found'
             }
         }
