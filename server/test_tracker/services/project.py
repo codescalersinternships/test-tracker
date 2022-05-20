@@ -28,10 +28,8 @@ def update_activity(
         Event: What is the event e.g. ['updated', 'created', 'delete']
         ON: Name of the object
     """
-    if date_time.date() == datetime.today().date():
-        date_time = "Today"
-    else:
-        date_time = str(datetime.date())
+
+    date_time = str(date_time.date())
 
     last_id = [id for id in project.activity.keys()]
 

@@ -5,13 +5,12 @@ from rest_framework.response import Response
 
 from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.dashboard import Member
 from server.test_tracker.services.dashboard import *
 from server.test_tracker.services.member import get_member_by_email
 from server.test_tracker.services.users import get_user_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
-from server.test_tracker.serializers.dashboard import (GetMemberSerializer, ProjectsSerializer, ProfileSerializers)
+from server.test_tracker.serializers.dashboard import *
 
 
 class ProjectsAPIView(GenericAPIView):
@@ -50,7 +49,7 @@ class ProjectsAPIView(GenericAPIView):
     
     def get(self, request: Request) -> Response:
         """Get all projects based on creator, Members users"""
-        projects = get_project_by_user(request.user)
+        projects = get_projects_by_user(request.user)
         serializer = ProjectsSerializer(projects, many=True)
         return CustomResponse.success(
             data = serializer.data,
@@ -125,14 +124,27 @@ class GetProfileAPIView(GenericAPIView):
             message="Profile not found",
         )
 
-class GetTotalProjectsAPIView(GenericAPIView):
+class MyProjectsAPIView(GenericAPIView):
     """This class to get total projects"""
     permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request) -> Response:
         """Returns total projects"""
-        total_projects = get_total_projects(request.user)
+        total_projects = my_projects(request.user)
         return CustomResponse.success(
             data=total_projects,
             message="Total projects found successfully",
+        )
+
+class GetRequestUserAPIView(GenericAPIView):
+    """Returns user information"""
+    permission_classes = (UserIsAuthenticated,)
+    serializer_class = GetRequestUserSerializers
+
+    def get(self, request:Request) -> Response:
+        """Returns request user information"""
+        user = request.user
+        return CustomResponse.success(
+            message="Success",
+            data=self.get_serializer(user).data
         )

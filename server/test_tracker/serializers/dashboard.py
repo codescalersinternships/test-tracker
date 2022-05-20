@@ -1,23 +1,42 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from server.test_tracker.models.dashboard import Member, Project
-from server.test_tracker.models.project import TEST_RUN_STATUS_CHOICES, ProjectRequirement, TestCases, TestPlan, TestRun, TestSuites
+from server.test_tracker.models.project import *
 from server.test_tracker.models.users import User
 from server.test_tracker.serializers.project import TestPlanSerializer
 from server.test_tracker.serializers.requirement import ProjectRequirementSerializer
 from server.test_tracker.serializers.test_cases import TestCaseSerializer
 from server.test_tracker.serializers.test_run import TestRunsSerializer
 from server.test_tracker.serializers.test_suites import TestSuitesSerializer
+from server.test_tracker.services.dashboard import my_projects
+from server.test_tracker.services.member import get_member_by_id
 
 
 
 class ProfileSerializers(ModelSerializer):
+
     class Meta:
         model = User
         fields = ['id','first_name','full_name','email','phone']
 
+class GetRequestUserSerializers(ModelSerializer):
+    permission = SerializerMethodField()
+    projects = SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id','first_name','full_name','email','phone', 'permission', 'projects']
+    
+    def get_permission(self, obj):
+        if get_member_by_id(obj.id) != None:
+            return "member"
+        return "admin"
+    
+    def get_projects(self, obj):
+        return len(my_projects(obj))
 
 class ProjectsSerializer(ModelSerializer):
     """class ProjectsSerializer to serialize the project obj"""
+    user = SerializerMethodField()
     teams = SerializerMethodField()
     modified = SerializerMethodField()
     created = SerializerMethodField()
@@ -31,11 +50,15 @@ class ProjectsSerializer(ModelSerializer):
 
     class Meta:
         model = Project
-        exclude = ('user', 'members',)
+        exclude = ('members',)
     
     def get_created(self, obj):
         """Return created date"""
         return obj.created.date()
+
+    def get_user(self, obj):
+        """Return created date"""
+        return obj.user.full_name
 
     def get_modified(self, obj):
         """Return created date"""
@@ -53,7 +76,11 @@ class ProjectsSerializer(ModelSerializer):
 
     def get_activity(self, obj):
         """Return all project activity"""
-        return obj.activity
+        result = []
+        for action, values in obj.activity.items():
+            result.append(values)
+        result = result[::-1]
+        return result[:11]
 
     def get_total_test_plan(self, obj):
         """Return all of test plan for its project"""
@@ -165,4 +192,6 @@ class GetMemberSerializer(ModelSerializer):
         test_cases = TestCases.objects.filter(
             test_suite__in = test_suites, assigned_user__id__in = [obj.id]
         ).order_by('-created').first()
-        return TestCaseSerializer(test_cases).data
+        if test_cases:
+            return TestCaseSerializer(test_cases).data
+        return None

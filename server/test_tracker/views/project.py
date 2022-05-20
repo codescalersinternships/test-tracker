@@ -13,7 +13,6 @@ from server.test_tracker.services.dashboard import find_project_name_based_on_us
 from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import project_member_validation, update_activity
 from server.test_tracker.utils.validations import Validator
-from django.db.models import Q
 
 
 
@@ -171,16 +170,17 @@ class GetLast5ProjectsUpdatedAPIView(GenericAPIView):
             Get last 5 projects updated based on user
             You must be authenticated to access this view
         """
-        user = get_member_by_id(str(request.user.id))
-        if user is not None and hasattr(user, 'permission'):
+        member = get_member_by_id(str(request.user.id))
+
+        if member is not None:
             # Thats mean the request from a member
-            if user is not None:
-                projects = Project.objects.filter(members__id__in=[request.user.id]).order_by('-modified')
+            user = member.host_user
+            projects = Project.objects.filter(
+                members__in=[request.user.id], user = user
+            ).order_by('-modified')
         else:
             projects = Project.objects.filter(user=request.user).order_by('-modified')
-
-        if len(projects) > 5:
-            projects = projects[:5]
+        projects = projects[:5]
 
         return CustomResponse.success(
             message = "Success projects found.",
@@ -197,27 +197,31 @@ class GetActivityOfLast5ProjectsAPIView(GenericAPIView):
     permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request) -> Response:
-        """A get methot that returns last update from last 5 projects activity"""
+        """A get method that returns last update from last 5 projects activity"""
         result = []
-        projects = Project.objects.filter(
-            Q(
-                members__id__in=[request.user.id]
-            )|
-            Q(user=request.user)
+        member = get_member_by_id(str(request.user.id))
+
+        if member is not None:
+            # Thats mean the request from a member
+            user = member.host_user
+            projects = Project.objects.filter(
+                members__in=[request.user.id], user = user
             ).order_by('-modified')
-        if len(projects) > 5:
-            projects = projects[:5]
-        elif len(projects) > 0:
-            for project in projects:
-                if len(list(project.activity.keys())) > 1:
-                    last_key = project.activity[list(project.activity.keys())[-1]]                    
-                    if last_key.get('date') and last_key.get('action'):
-                        result.append(
-                            {
-                                "date" : last_key.get('date'),
-                                "action" : last_key.get('action')
-                            }
-                        )
+
+        else:
+            projects = Project.objects.filter(user = request.user).order_by('-modified')
+        projects = projects[:5]
+
+        for project in projects:
+            if len(list(project.activity.keys())) > 1:
+                last_key = project.activity[list(project.activity.keys())[-1]]                    
+                if last_key.get('date') and last_key.get('action'):
+                    result.append(
+                        {
+                        "date" : last_key.get('date'),
+                        "action" : last_key.get('action')
+                        }
+                    )
         return CustomResponse.success(
             message="Success activity found.",
             data = result
@@ -236,7 +240,11 @@ class SearchProjectAPIView(GenericAPIView):
             Get all projects based on project name
             You must be authenticated to access this view
         """
-        projects = Project.objects.filter(name__icontains=project_name)
+        user = request.user
+        if hasattr(user, 'permission'):
+            member = get_member_by_id(user.id)
+            user = member.host_user
+        projects = Project.objects.filter(name__icontains=project_name, user=user)
         return CustomResponse.success(
             message="Success projects found.",
             data = ProjectsSerializer(projects, many=True).data

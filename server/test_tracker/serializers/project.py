@@ -13,16 +13,32 @@ class TestPlanSerializer(ModelSerializer):
         exclude = ('temps','project')
 
 class TestPlanDetailSerializer(ModelSerializer):
+    created = SerializerMethodField()
+    modified = SerializerMethodField()
+    temps = SerializerMethodField()
+
     class Meta:
         model = TestPlan
         exclude = ('project',)
+    
+    def get_created(self, obj):return obj.created.date()
+    def get_modified(self, obj):return obj.modified.date()
+    def get_temps(self, obj):
+        if obj.temps != None:
+            arr = []
+            for title, content in obj.temps.items():
+                arr.append({'title':title, 'content':content})
+            return arr
+
+
+
 
 class UpdateTestPlanSerializer(ModelSerializer):
     class Meta:
         model = TestPlan
         fields = ('title',)
 
-class AddOrUpdateTempsSerializer(ModelSerializer):
+class TestPlanTempsSerializer(ModelSerializer):
     title = CharField()
     content = CharField()
 

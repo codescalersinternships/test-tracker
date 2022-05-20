@@ -1,5 +1,7 @@
 from typing import Dict
 from uuid import UUID
+from django.db.models import Q
+
 from server.test_tracker.models.dashboard import PERMISSION_CHOICES, Member, Project
 from server.test_tracker.models.project import TestPlan
 from server.test_tracker.models.users import User
@@ -17,14 +19,15 @@ def get_project_by_id(project_id: str) -> Project or None:
     except Project.DoesNotExist:
         return None
 
-def get_project_by_user(user: User) -> Project or None:
+def get_projects_by_user(user: User or Member) -> Project or None:
     """Returns the project based on the user"""
-    projects = Project.objects.filter(members__id__in=[user.id])
-    if len(projects) > 0:
-        return projects
-    else:
-        projects = Project.objects.filter(user=user)
-        return projects
+    try:
+        member = get_member_by_id(user.id)
+        user = member.host_user
+    except:
+        user = user
+    projects = Project.objects.filter(user = user)
+    return projects
 
 def get_project_by_user_id(user_id: int) -> Project or None:
     """Returns the project based on the user id"""
@@ -77,20 +80,13 @@ def get_plans_based_on_project(project: Project) -> TestPlan:
     """Return all of test plans based on project"""
     return TestPlan.objects.filter(project=project)
 
-def get_total_projects(user: User or Member) -> Dict or int:
+def my_projects(user: User or Member) -> Dict or int:
     """Get total of projects based on user type"""
-    total = None
-    data = {'email': user.email, 'full_name': user.full_name, "id": user.id}
-    total = Project.objects.filter(members__id__in=[user.id]).count()
-    if total > 0:
-        user = get_member_by_id(str(user.id))
-    else:
-        total = Project.objects.filter(user=user).count()
+    try:
+        member = get_member_by_id(user.id)
+        user = member.host_user
+        projects = Project.objects.filter(members__in=[member], user=user)
+    except:
+        projects = Project.objects.filter(user=user)
 
-    if total != 0:
-        if hasattr(user, 'permission'):
-            data['type'] = "member"
-        else:
-            data['type'] = "admin"
-        data['total_projects'] = total
-    return data
+    return projects

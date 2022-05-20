@@ -31,17 +31,10 @@ class TestPlan(TimeStampedModel):
         choices=PLAN_CHOICES.choices,
         default=PLAN_CHOICES.TEMPLATE
     )
-    temps = models.JSONField(default=dict)
+    temps = models.JSONField(default=dict, null=True, blank=True)
 
     def __str__(self):
-        return self.name
-    
-    def add_or_update_temps(self, title: str, content: str) -> None:
-        """
-        This method adds or updates the temps of the test plan
-        """
-        self.temps[title] = content
-        self.save()
+        return self.title
 
     def delete_temp(self, title: str) -> None:
         """

@@ -9,10 +9,12 @@ from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.project import PLAN_CHOICES, TestPlan
 from server.test_tracker.serializers.project import *
 from server.test_tracker.services.project import update_activity
-from server.test_tracker.utils.testplan_handle import TestPlanHandeling
+from server.test_tracker.utils.testplan_handle import TestPlanHandling
 from server.test_tracker.utils.testplan_temp import TestPlanTemp
 from server.test_tracker.services.dashboard import get_plans_based_on_project, get_project_by_id
 import datetime
+
+from server.test_tracker.utils.validations import Validator
 
 
 class TestPlansAPIView(GenericAPIView):
@@ -69,7 +71,7 @@ class TestPlansDetailAPIView(GenericAPIView):
 
     def get(self, request: Request, project_id:str, test_plan_id: str) -> Response:
         """Get a test plan from the specified project"""
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
+        test_plan = TestPlanHandling.validate(project_id, test_plan_id)
         if isinstance(test_plan, TestPlan):
             return CustomResponse.success(
                 message="Test plan found successfully",
@@ -80,11 +82,11 @@ class TestPlansDetailAPIView(GenericAPIView):
 
     def delete(self, request: Request, project_id:str, test_plan_id: str) -> Response:
         """Delete a test plan from the specified project"""
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
+        test_plan = TestPlanHandling.validate(project_id, test_plan_id)
         if isinstance(test_plan, TestPlan):
             update_activity(
                 datetime.datetime.now(), request.user, get_project_by_id(project_id),
-                "Delete", "Test Plan", test_plan.name
+                "Delete", "Test Plan", test_plan.title
             )
             test_plan.delete()
             return CustomResponse.success(
@@ -99,7 +101,7 @@ class UpdateTestPlanAPIView(GenericAPIView):
 
     def put(self, request: Request, project_id:str, test_plan_id:str) -> Response:
         """Update test plan title"""
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
+        test_plan = TestPlanHandling.validate(project_id, test_plan_id)
         if isinstance(test_plan, TestPlan):
             serializer = self.get_serializer(test_plan, data = request.data)
             if serializer.is_valid():
@@ -118,23 +120,30 @@ class UpdateTestPlanAPIView(GenericAPIView):
             )
         return test_plan
 
-class AddOrUpdateTempsAPIView(GenericAPIView):
-    """Add or update content area to test plan"""
-    serializer_class = AddOrUpdateTempsSerializer
+class PostNewTestPlanContentAreaAPIView(GenericAPIView):
+    """
+        * Usage
+        Add or update content area to test plan
+    """
+    serializer_class = TestPlanTempsSerializer
     permission_classes = (UserIsAuthenticated,)
 
     def post (self, request: Request, project_id:str, test_plan_id: str) -> Response:
         """Add custom content area to test plan"""
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
+        test_plan = TestPlanHandling.validate(project_id, test_plan_id)
         if isinstance(test_plan, TestPlan):
             serializer = self.get_serializer(data = request.data)
             if serializer.is_valid():
                 title = serializer.validated_data.get('title')
                 content = serializer.validated_data.get('content')
-                test_plan.add_or_update_temps(title, content)
+                if test_plan.temps == None:
+                    test_plan.temps = {title:content}
+                else:
+                    test_plan.temps[title] = content
+                test_plan.save()
                 update_activity(
                     datetime.datetime.now(), request.user, get_project_by_id(project_id),
-                    "Create", "Test Plan Template", test_plan.name
+                    "Create", f"Test Plan Content Area {test_plan.title} Inside Test Plan", title
                 )
                 return CustomResponse.success(
                     message="Successfully added content area to test plan",
@@ -147,23 +156,73 @@ class AddOrUpdateTempsAPIView(GenericAPIView):
             )
         return test_plan
 
-
-class DeleteContentAreaAPIView(GenericAPIView):
+class TestPlanContentAreaAPIView(GenericAPIView):
+    """
+        * Usage
+        Delete and get test plan content area based on its title
+    """
     permission_classes = (UserIsAuthenticated,)
+    serializer_class = TestPlanTempsSerializer
 
-    """Delete content area from test plan"""
-    def delete(self, request: Request, project_id:str, test_plan_id: str, title:str) -> Response:
-        test_plan = TestPlanHandeling.valid(project_id, test_plan_id)
+    def put(self, request: Request, project_id:str, test_plan_id: str, title:str) -> Response:
+        """
+            As we do temps or contents saved in database as a json field so,
+                title = the old key to get this obj
+                new_content = a json field has a {title and content}
+            Update content area with new content area
+        """
+        test_plan = TestPlanHandling.validate(project_id, test_plan_id)
         if isinstance(test_plan, TestPlan):
-            deleted = test_plan.delete_temp(title)
-            if deleted:
+            serializer = self.get_serializer(data = request.data)
+            new_title = request.data.get('title')
+            content = request.data.get('content')
+            if Validator().validate_string(request.data.get('title')):
+                if test_plan.temps.get(title):
+                    del test_plan.temps[title]
+                test_plan.temps[new_title] = content
+                test_plan.save()
+                return CustomResponse.success(
+                    message="Success",
+                    data = {new_title:content},
+                )
+            return CustomResponse.bad_request(
+                error={"title":new_title},
+                message="Title must be a valid title name",
+            )
+        return test_plan
+
+    def delete(self, request: Request, project_id:str, test_plan_id: str, title:str) -> Response:
+        """Delete a content area from test plan"""
+        test_plan = TestPlanHandling.validate(project_id, test_plan_id)
+        if isinstance(test_plan, TestPlan):
+            if test_plan.temps != None:
                 update_activity(
                     datetime.datetime.now(), request.user, get_project_by_id(project_id),
-                    "Create", "Test Plan Template", test_plan.name
+                    "Delete", f"Test Plan Content Area {test_plan.temps[title]}", test_plan.title
                 )
+                test_plan.delete_temp(title)
                 return CustomResponse.success(
                     message="DELETED",
                     status_code=204
+                )
+            return CustomResponse.not_found(
+                message = 'There are no content area with this title'
+            )
+        return test_plan
+    
+    def get(self, request: Request, project_id:str, test_plan_id: str, title:str) -> Response:
+        """Get a content area from test plan"""
+        test_plan = TestPlanHandling.validate(project_id, test_plan_id)
+        response = []
+        if isinstance(test_plan, TestPlan):
+            if test_plan.temps != None:
+                keys = test_plan.temps.keys()
+                for key in keys:
+                    if title.lower() in key.lower():
+                        response.append({'title': key, 'content': test_plan.temps[key]})
+                return CustomResponse.success(
+                    message="Success",
+                    data = response,
                 )
             return CustomResponse.not_found(
                 message = 'There are no content area with this title'

@@ -3,10 +3,11 @@ from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.project import get_test_plan_by_id
 
 
-class TestPlanHandeling():
+class TestPlanHandling():
     """There was a duplication on the code thats why we create this class"""
     @staticmethod
-    def valid(project_id:str, test_plan_id:str):
+    def validate(project_id:str, test_plan_id:str):
+        """Validate project and test plan if right"""
         project = get_project_by_id(project_id)
         test_plan = get_test_plan_by_id(test_plan_id)
         if project is None:
