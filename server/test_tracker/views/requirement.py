@@ -3,22 +3,24 @@ import datetime
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
-from server.test_tracker.services.member import get_member_by_id
+from rest_framework.views import APIView
+from django.db.models import Q
 
+from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 from server.test_tracker.services.requirement import *
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.serializers.requirement import ProjectRequirementSerializer, RequirementsSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.project import update_activity
+from server.test_tracker.utils.handler import ProjectRequirementsHandling, RequirementHandling
 
 
 
 
-class ProjectRequirementsAPIView(GenericAPIView):
+class PostNewProjectRequirementsAPIView(GenericAPIView):
     """class project requirement view"""
     serializer_class = ProjectRequirementSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def post(self, request: Request, project_id: str) -> Response:
         """post a new requirement"""
@@ -42,13 +44,16 @@ class ProjectRequirementsAPIView(GenericAPIView):
             )
         return CustomResponse.not_found(message="Project not found")
 
-class GetProjectRequirementsAPIView(GenericAPIView):
+class GetAllProjectRequirementsAPIView(GenericAPIView):
     """class project requirement view"""
     serializer_class = ProjectRequirementSerializer
     permission_classes = (HasProjectAccess,)
 
     def get(self, request: Request, project_id: str) -> Response:
-        """get all requirements for a project"""
+        """
+            *Usage
+            get all requirements for a project
+        """
         project = get_project_by_id(project_id)
         if project is None:
             return CustomResponse.not_found(message = "Project not found")
@@ -84,26 +89,33 @@ class SearchProjectRequirementsAPIView(GenericAPIView):
             status_code=200
         )
 
-class UpdateProjectRequirementsAPIView(GenericAPIView):
-    """class project requirement view"""
+class ProjectRequirementsDetailsAPIView(GenericAPIView):
+    """
+        *Usage: Get
+        class project requirement view
+    """
     serializer_class = ProjectRequirementSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
+
+    def get(self, request: Request, project_id: str, requirement_id: str) -> Response:
+        """Use this endpoint to get requirement detail and sub requirements"""
+        project_requirement = ProjectRequirementsHandling.validate(project_id, requirement_id)
+        serializer = ProjectRequirementSerializer(project_requirement)
+        return CustomResponse.success(
+            message="Success Found Project Requirement",
+            data=serializer.data
+        )
 
     def put(self, request: Request, project_id: str, requirement_id: str) -> Response:
         """update a requirement"""
-        project = get_project_by_id(project_id)
-        requirement = get_requirements_by_id(requirement_id)
-        if project is None:
-            return CustomResponse.not_found(message = "Project not found")
-        if requirement is None:
-            return CustomResponse.not_found(message = "Requirement not found")
+        project_requirement = ProjectRequirementsHandling.validate(project_id, requirement_id)
+        serializer = self.get_serializer(project_requirement, data=request.data)
 
-        serializer = self.get_serializer(requirement, data=request.data)
         if serializer.is_valid():
-            requirements = serializer.save()
+            saved_project_requirement = serializer.save()
             update_activity(
-                datetime.datetime.now(), request.user, project,
-                "Update", "Project requirements", requirements.title
+                datetime.datetime.now(), request.user, get_project_by_id(project_id),
+                "Update", "Project requirement", saved_project_requirement.title
             )
             return CustomResponse.success(
                 data=serializer.data,
@@ -117,17 +129,12 @@ class UpdateProjectRequirementsAPIView(GenericAPIView):
     
     def delete(self, request: Request, project_id: str, requirement_id: str) -> Response:
         """delete a requirement"""
-        project = get_project_by_id(project_id)
-        requirements = get_requirements_by_id(requirement_id)
-        if project is None:
-            return CustomResponse.not_found(message = "Project not found")
-        if requirements is None:
-            return CustomResponse.not_found(message = "Requirement not found")
+        project_requirement = ProjectRequirementsHandling.validate(project_id, requirement_id)
         update_activity(
-            datetime.datetime.now(), request.user, project,
-            "DELETE", "Project requirements", requirements.title
+            datetime.datetime.now(), request.user, get_project_by_id(project_id),
+            "Delete", "Project requirements", project_requirement.title
         )
-        requirements.delete()
+        project_requirement.delete()
         return CustomResponse.success(
             data={},
             message="Requirement deleted successfully",
@@ -144,7 +151,7 @@ class RequirementAPIView(GenericAPIView):
             post a new requirement based on the requirements_id
             - requirements_id: the id of the parent requirements
         """
-        requirements = get_requirements_by_id(requirements_id)
+        requirements = get_project_requirement_by_id(requirements_id)
         if requirements is not None:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
@@ -169,7 +176,7 @@ class RequirementAPIView(GenericAPIView):
             get all requirements based on the requirements_id
             - requirements_id: the id of the parent requirements
         """
-        project_requirements = get_requirements_by_id(requirements_id)
+        project_requirements = get_project_requirement_by_id(requirements_id)
         requirements = filter_requirements_based_on_project_requirement(project_requirements)
         if project_requirements is None:
             return CustomResponse.not_found(message = "Project requirement not found")
@@ -181,15 +188,28 @@ class RequirementAPIView(GenericAPIView):
         )
 
 class RequirementsDetailAPIView(GenericAPIView):
-    """class project requirement view"""
+    """
+        *Usage 
+        class project requirement view
+    """
     serializer_class = RequirementsSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
-    def get(self, request: Request, requirement_id: str) -> Response:
-        """get a requirement"""
-        requirement = get_requirement_by_id(requirement_id)
-        if requirement is None:
-            return CustomResponse.not_found(message = "Requirement not found")
+    def get(
+        self, request: Request, project_id: str, project_requirement_id: str,
+        requirement_id: str
+        ) -> Response:
+        """
+            Get the requirement based on 3 things:
+                -1 project_id, this is the project id 
+                    to check if you have a permission for this action or not
+                -2 project_requirement_id, this is another required thing to get all sub requirements
+                -3 requirement_id, as logical this is the requirement id
+        """
+        requirement = RequirementHandling.validate(
+            project_id, project_requirement_id, requirement_id
+        )
+
         serializer = self.get_serializer(requirement)
         return CustomResponse.success(
             data=serializer.data,
@@ -197,12 +217,19 @@ class RequirementsDetailAPIView(GenericAPIView):
             status_code=200
         )
 
-    def put(self, request: Request, requirement_id: str) -> Response:
-        """update a requirement"""
-        requirement = get_requirement_by_id(requirement_id)
-
-        if requirement is None:
-            return CustomResponse.not_found(message = "Requirement not found")
+    def put(self, request: Request, project_id: str, project_requirement_id: str,
+        requirement_id: str
+        ) -> Response:
+        """
+            Update the requirement based on 3 things:
+                -1 project_id, this is the project id 
+                    to check if you have a permission for this action or not
+                -2 project_requirement_id, this is another required thing to get all sub requirements
+                -3 requirement_id, as logical this is the requirement id
+        """
+        requirement = RequirementHandling.validate(
+            project_id, project_requirement_id, requirement_id
+        )
 
         serializer = self.get_serializer(requirement, data=request.data)
         if serializer.is_valid():
@@ -221,19 +248,52 @@ class RequirementsDetailAPIView(GenericAPIView):
             error=serializer.errors
         )
     
-    def delete(self, request: Request, requirement_id: str) -> Response:
-        """delete a requirement"""
-        requirement = get_requirement_by_id(requirement_id)
-
-        if requirement is None:
-            return CustomResponse.not_found(message = "Requirement not found")
+    def delete(
+        self, request: Request, project_id: str, project_requirement_id: str,
+        requirement_id: str
+        ) -> Response:
+        """
+            Delete the requirement based on 3 things:
+                -1 project_id, this is the project id 
+                    to check if you have a permission for this action or not
+                -2 project_requirement_id, this is another required thing to get all sub requirements
+                -3 requirement_id, as logical this is the requirement id
+        """
+        requirement = RequirementHandling.validate(
+            project_id, project_requirement_id, requirement_id
+        )
         update_activity(
             datetime.datetime.now(), request.user, requirement.requirement.project,
-            "Update", "requirement", requirement.title
+            "Delete", "requirement", requirement.title
         )
         requirement.delete()
         return CustomResponse.success(
             data={},
             message="Requirement deleted successfully",
             status_code=204
+        )
+
+class SearchRequirementsInProjectRequirementsAPIView(APIView):
+    """
+        *Usage
+        Use this endpoint to filter any requirement based on title or description
+    """
+    def get(self, request: Request, project_id: str, key_word: str):
+        """
+            Keyword is the key you pass to filter
+        """
+        project = get_project_by_id(project_id)
+        requirement = Requirements.objects.filter(
+            Q(
+                title__icontains = key_word, 
+                requirement__id__in = project.project_requirements.all().values_list('id', flat=True)
+            )| 
+            Q(
+                description__icontains = key_word, 
+                requirement__id__in = project.project_requirements.all().values_list('id', flat=True)
+            )
+        )
+        return CustomResponse.success(
+            data=RequirementsSerializer(requirement, many=True).data,
+            message = "Successfully.",
         )

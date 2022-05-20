@@ -2,6 +2,7 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
@@ -124,7 +125,7 @@ class GetProfileAPIView(GenericAPIView):
             message="Profile not found",
         )
 
-class MyProjectsAPIView(GenericAPIView):
+class MyProjectsAPIView(APIView):
     """This class to get total projects"""
     permission_classes = (UserIsAuthenticated,)
 

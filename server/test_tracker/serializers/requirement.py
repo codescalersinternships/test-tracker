@@ -8,6 +8,7 @@ class ProjectRequirementSerializer(ModelSerializer):
     created = SerializerMethodField()
     updated = SerializerMethodField()
     requirements = SerializerMethodField()
+
     class Meta:
         """class meta"""
         model = ProjectRequirement
@@ -18,9 +19,16 @@ class ProjectRequirementSerializer(ModelSerializer):
     def get_requirements(self, obj):
         return RequirementsSerializer(obj.project_requirement, many=True).data
 
+
 class RequirementsSerializer(ModelSerializer):
     """This serializer is a sub requirement of ProjectRequirementSerializer"""
+    created = SerializerMethodField()
+    updated = SerializerMethodField()
+
     class Meta:
         """class meta"""
         model = Requirements
-        fields = ['id', 'title', 'description']
+        fields = ['id', 'title', 'description', 'created', 'updated',]
+
+    def get_created(self, obj):return obj.created.date()
+    def get_updated(self, obj):return obj.modified.date()

@@ -9,7 +9,7 @@ from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.project import PLAN_CHOICES, TestPlan
 from server.test_tracker.serializers.project import *
 from server.test_tracker.services.project import update_activity
-from server.test_tracker.utils.testplan_handle import TestPlanHandling
+from server.test_tracker.utils.handler import TestPlanHandling
 from server.test_tracker.utils.testplan_temp import TestPlanTemp
 from server.test_tracker.services.dashboard import get_plans_based_on_project, get_project_by_id
 import datetime

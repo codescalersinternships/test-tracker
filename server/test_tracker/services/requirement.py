@@ -13,9 +13,9 @@ def filter_requirements_by_project(project : Project) -> List[ProjectRequirement
     """
     return ProjectRequirement.objects.filter(project=project)
 
-def get_requirements_by_id(requirements_id : str) -> ProjectRequirement:
+def get_project_requirement_by_id(requirements_id : str) -> ProjectRequirement:
     """
-    This method gets all Project requirements
+        This method gets all Project requirements
     """
     if not requirements_id.isdigit():
         return None
@@ -40,3 +40,16 @@ def filter_requirements_based_on_project_requirement(requirement : ProjectRequir
     This method gets Requirements based on Project requirements
     """
     return Requirements.objects.filter(requirement=requirement)
+
+def get_requirement_by_id(requirement_id :str) -> Requirements:
+    """
+    This method gets Requirements based on id
+    """
+    if not requirement_id.isdigit():
+        return None
+    try:
+        return Requirements.objects.get(id=int(requirement_id))
+    except:
+        return None
+
+    
