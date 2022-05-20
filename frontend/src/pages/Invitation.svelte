@@ -1,6 +1,6 @@
 <script>
     import axios from '../healpers/axios'
-    import Modal from "../components/ui/Modal.svelte";
+    import Modal from "../components/ui/Alert.svelte";
     export let data;
 
     const urlParams = new URLSearchParams(window.location.search);
