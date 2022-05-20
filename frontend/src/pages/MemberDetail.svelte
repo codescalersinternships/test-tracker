@@ -2,8 +2,6 @@
     import { onMount } from 'svelte';
     import axios from '../healpers/axios'
     import NavBar from "../components/NavBar.svelte";
-    import ActivityTable from "../components/ActivityTable.svelte"
-    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte"
 
     export let user;
     let member, memberEmail;
@@ -14,8 +12,7 @@
     
     onMount(async () => {
         var path = window.location.pathname;
-        var lastSlash = path.lastIndexOf('/');
-        var memberID = path.substring(lastSlash + 1);
+        var memberID = path.split("/")[2];
         try {
             const response = await axios.get(`members/${memberID}/`, config)
             member = response.data.data
@@ -51,12 +48,12 @@
 
 <section>
     {#if user && member}
-        <NavBar user={user} projectView="true"/>
+        <NavBar user={user}/>
         <div class="container pb-5">
             <div class="pt-5">
                 <p class="h4">About <strong class="h4">{member.full_name}</strong></p>
             </div>
-            {#if user.type === "admin"}
+            {#if user.permission === "admin"}
                 <div class="col-4 pt-5">
                     <button type="button" class="btn btn-danger text-white text-decoration-none" 
                         on:click={openModal(member.email)}>
@@ -137,43 +134,43 @@
                     </div>
                 </div>
             </div>
-            <div class="card mt-4 p-4">
-                <div class="pt-4">
-                    <p class="h5 text-muted">Last Tests Assigned</p>
-                    <hr>
-                    <table class="table table-borderless">
-                        <tbody>
-                            <tr>
-                                <th scope="row">Name</th>
-                                <td class="text-primary">{member.last_tests_assigned.title.slice(0, 50)}</td>
-                                <th scope="row">Date</th>
-                                <td class="text-primary">{member.last_tests_assigned.created}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Description</th>
-                                <div class="card">
-                                    {member.last_tests_assigned.description}
-                                </div>
-                            </tr>
-                            <tr>
-                                <th scope="row">Steps</th>
-                                <div class="card">
-                                    {member.last_tests_assigned.test_steps}
-                                </div>
-                            </tr>
-                            <tr>
-                                <th scope="row">Expected Result</th>
-                                <div class="card">
-                                    {member.last_tests_assigned.expected_result}
-                                </div>
-                            </tr>
-                        </tbody>
-                    </table>
+            {#if member.last_tests_assigned}
+                <div class="card mt-4 p-4">
+                    <div class="pt-4">
+                        <p class="h5 text-muted">Last Tests Assigned</p>
+                        <hr>
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Name</th>
+                                    <td class="text-primary">{member.last_tests_assigned.title.slice(0, 50)}</td>
+                                    <th scope="row">Date</th>
+                                    <td class="text-primary">{member.last_tests_assigned.created}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Description</th>
+                                    <div class="card">
+                                        {member.last_tests_assigned.description}
+                                    </div>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Steps</th>
+                                    <div class="card">
+                                        {member.last_tests_assigned.test_steps}
+                                    </div>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Expected Result</th>
+                                    <div class="card">
+                                        {member.last_tests_assigned.expected_result}
+                                    </div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            {/if}
         </div>
-    {:else}
-        <LoodingSpiner />
     {/if}
     <!-- Modal -->
     <div class="modal" tabindex="-1" style="display: none;">
