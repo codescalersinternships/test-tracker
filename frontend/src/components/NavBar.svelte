@@ -12,6 +12,22 @@
 
 </script>
 
+<svelte:head>
+    <style>
+        .user_photo_nav{
+            display: inline-block;
+            background: #5a79b1;
+            margin-right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            line-height: 40px;
+            text-align: center;
+            color: #fff;
+        }
+    </style>
+</svelte:head>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         <button
@@ -32,7 +48,7 @@
                     <Link to="/" class="nav-link text-primary">Dashboard</Link>
                 </li>
                 <Router>
-                    {#if user.type == "admin"}
+                    {#if user.permission == "admin"}
                         <li class="nav-item">
                             <Link to="/members/" class="nav-link">Members</Link>
                         </li>
@@ -74,7 +90,10 @@
                     data-mdb-toggle="dropdown"
                     aria-expanded="false"
                 >
-                {user.full_name}
+                <span class="user_photo_nav">
+                    {user.first_name[0]}{user.last_name[0]}
+                </span>
+                <!-- {user.full_name} -->
                 </a>
                 <ul
                     class="dropdown-menu dropdown-menu-end"
