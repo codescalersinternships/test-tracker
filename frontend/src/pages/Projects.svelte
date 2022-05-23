@@ -4,10 +4,11 @@
     import NavBar from "../components/NavBar.svelte";
     import ProjectCard from "../components/ProjectCard.svelte";
     import Search from "../components/Search.svelte";
+    import DeleteModal from "../components/ui/DeleteModal.svelte"
     
     export let user;
 
-    let projects, projectsCopy, host;
+    let projects, projectsCopy, thisProject;
     
     let config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -17,25 +18,25 @@
         const responseProjects = await axios.get('/dashboard/projects/', config);
         projects = responseProjects.data.data;
         projectsCopy = projects;
-
-        for (let project of projects) {
-            host = project.user
-            project.name = project.name.slice(0,25)
-        }
     });
 
-    async function searchFunction(){
-        const projectName = document.getElementById("search-id").value;
-        if ( projectName.length > 0){
-            const response = await axios.get(
-                `/project/search/${projectName}/`,config
-            )
-            projects = response.data.data
-        }else{
-            console.log("Yes");
-            projects = projectsCopy
-        }
+    async function handleSearch(event) {
+        const searchProjects = event.detail.objects;
+        projects = searchProjects;
     }
+
+    async function handleDelete(event) {
+        const project = event.detail.obj;
+        const indx = projects.findIndex(v => v.id === project.id);
+        projects = projects;
+        projects.splice(indx, 1);
+    }
+
+    function setProject(project) {
+        thisProject = project
+        document.querySelector('.modal').style.display = 'block'
+    }
+
 </script>
 
 <svelte:head>
@@ -46,15 +47,21 @@
     {#if user}
         <NavBar user={user}/>
         <div class="container pt-4">
-            {#if projects && host}
+            {#if projects}
                 There are <strong>{projects.length}</strong> 
-                of {projects.length === 1 ? 'project' : 'projects'} created by <strong>{host}</strong>
-                <Search title="Search Projects" searchFunction={searchFunction}/>
+                {projects.length === 1 ? 'project' : 'projects'}
+                <div class="pt-4">
+                    <p>
+                        Search Projects
+                    </p>
+                    <Search request="/project/search/" objects={projects} config={config} objectsCopy={projectsCopy} on:message={handleSearch}/>
+                </div>
                 <div class="pt-5">
                     <div class="row p-1">
                         {#each projects as project}
-                            <ProjectCard title={project.name.length > 25 ? project.name.slice(0,25)+'..' : project.name} 
-                                date={project.created} link={`/projects/${project.id}`}/>
+                            <ProjectCard project={project} link={`/projects/${project.id}`}>
+                                <button class="dropdown-item text-danger" on:click={setProject(project)}>Delete</button>
+                            </ProjectCard>
                         {/each}
                     </div>
                 </div>
@@ -67,4 +74,10 @@
             {/if}
         </div>
     {/if}
+    <DeleteModal
+        on:message={handleDelete}
+        obj={thisProject}
+        onRequest='/project'
+        config={config}
+    />
 </section>
