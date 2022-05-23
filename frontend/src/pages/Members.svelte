@@ -1,13 +1,17 @@
 <script>
     import { onMount } from 'svelte';
+    import { Link } from "svelte-navigator";
+
     import axios from '../healpers/axios'
+
     import NavBar from "../components/NavBar.svelte";
     import Search from "../components/Search.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
+    import DeleteModal from "../components/ui/DeleteModal.svelte"
 
     export let user;
 
-    let members, membersCopy, memberEmail;
+    let members, membersCopy, thisMember;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -25,115 +29,121 @@
         }
     });
 
-
-    async function searchMembers(params) {
-        var inputValue = document.getElementById('search-id').value,
-            endPoint = `members/search/${inputValue}/`;
-        if (inputValue){
-            const result = await axios.get(endPoint, config)
-            members = result.data.data 
-        } else{
-            members = membersCopy
-        }
+    async function handleDelete(event) {
+        const member = event.detail.obj;
+        const indx = members.findIndex(v => v.id === member.id);
+        members = members;
+        members.splice(indx, 1);
     }
 
-    async function deleteMember(email){
-        try {
-            await axios.delete(`/members/${email}/`, config)
-            closeModal()
-            window.location.reload()
-        } catch (err) {
-            console.log(err);
-        }
+    async function handleSearch(event) {
+        const searchProjects = event.detail.objects;
+        members = searchProjects;
     }
 
-    function openModal(email) {
-        memberEmail = email;
+    function setMember(member) {
+        thisMember = member
         document.querySelector('.modal').style.display = 'block'
     }
-
-    function closeModal() {document.querySelector('.modal').style.display = 'none'}
-
 </script>
 
 <svelte:head>
     <title>Test-Tracker | Members</title>
+    <style>
+        .user_photo{
+            display: inline-block;
+            background: #5a79b1;
+            margin-right: 15px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            line-height: 60px;
+            text-align: center;
+            font-weight: 900;
+            color: #fff;
+        }
+        .info_user {
+            flex: 1;
+        }
+
+        .info_user strong{
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #5a79b1;
+        }
+    </style>
 </svelte:head>
 
 <section>
     {#if user}
-        {#if members}
-            <NavBar user={user}/>
-            <div class="container">
-                <div class="pt-5">
+        <NavBar user={user}/>
+        <div class="container pt-4 mb-4">
+            {#if members}
+                <div class="">
                     <strong class="h4">All Members</strong>
-                    There are <strong>{members.length}</strong> {user.total_projects === 1 ? 'member' : 'members'} registered
+                    <br>
+                    -- There are <strong>{members.length}</strong> {user.total_projects === 1 ? 'member' : 'members'} registered
                 </div>
-                <Search title="Search Members:" searchFunction={searchMembers}/>
+                <div class="pt-4">
+                    <p>
+                        Search Members
+                    </p>
+                    <Search request="/members/search/" objects={members} config={config} objectsCopy={membersCopy} on:message={handleSearch}/>
+                </div>
                 <div class="pt-5">
                     <div class="row">
-                        {#if members.length > 0}
-                            {#each members as member}
-                                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                                    <div class="card mt-4" style="width: 18rem;">
-                                        <div class="card-body">
-                                            <h5 class="card-title">{member.full_name}</h5>
-                                            {#if member.permission === "full_access"}
-                                                <h6 class="card-subtitle mb-2 text-muted">Full access</h6>
-                                            {:else if member.permission === "admin_access"}
-                                                <h6 class="card-subtitle mb-2 text-muted">Admin</h6>
-                                            {/if}
-                                            {#if member.last_project_working_on.name.length > 0}
-                                                <p class="card-text">Working on: <span class="text-primary">
-                                                    {member.last_project_working_on.name}
-                                                </span></p>
-                                            {:else}
-                                                <p class="card-text">Working on: <span class="text-primary">
-                                                    Not working on any project
-                                                </span></p>
-                                            {/if}
-                                            <p class="card-text text-muted">Joined on: {member.created}</p>
-                                            <a href={`/members/${member.id}`} class="btn btn-primary text-white text-decoration-none">View</a>
-                                            <button type="button" class="btn btn-danger text-white text-decoration-none" 
-                                                on:click={openModal(member.email)}>
-                                                Delete
-                                            </button>
-                                        </div>
+                        {#each members as member}
+                            <div class="col-12 mb-4">
+                                <div class="card">
+                                    <div class="dropdown p-1" style="position: absolute;font-size: 0;right: 0; top: 20px;">
+                                        <a
+                                            class="dropdown-toggle"
+                                            id="dropdownMenuButton"
+                                            data-mdb-toggle="dropdown"
+                                            aria-expanded="false"
+                                            >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                            </svg>
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li>
+                                                <button class="dropdown-item text-danger" on:click={setMember(member)}>Delete</button>
+                                            </li>
+                                        </ul>
                                     </div>
+                                    <Link to="/members/{member.id}/" class="text-dark d-block text-decoration-none">
+                                        <div class="card-body d-flex align-items-center">
+                                            <span class="user_photo">
+                                                {member.first_name[0]}{member.last_name[0]}
+                                            </span>
+                                            <div class="info_user">
+                                                <strong>{member.full_name}</strong>
+                                                <p class="text-muted mb-0">Member since: {member.created}</p>
+                                            </div>
+                                        </div>
+                                    </Link>
                                 </div>
-                            {/each}
-                        {:else}
-                            <div class="col-12 pt-5">
-                                <p class="text-muted">
-                                    -- There are no members
-                                </p>
                             </div>
-                        {/if}
+                        {/each}
                     </div>
                 </div>
-            </div>
-            <!-- Modal -->
-            <div class="modal" tabindex="-1" style="display: none;">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">You are about to delete this member.</h5>
-                        </div>
-                        <div class="modal-body">
-                            <p>Please note that <strong>{memberEmail}</strong> cannot access the whole Test-Tracker after you confirm.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" on:click={closeModal}>Close</button>
-                            <button type="button" class="btn btn-danger text-white text-decoration-none" 
-                                on:click={deleteMember(memberEmail)}>
-                                Delete
-                            </button>
-                        </div>
-                    </div>
+            {:else}
+                <div class="col-12 pt-5">
+                    <p class="text-muted">
+                        -- There are no members
+                    </p>
                 </div>
-            </div>
-        {/if}
+            {/if}
+        </div>
     {:else}
         <LoodingSpiner />
     {/if}
+    <DeleteModal
+        on:message={handleDelete}
+        obj={thisMember}
+        onRequest='/members'
+        config={config}
+    />
 </section>
