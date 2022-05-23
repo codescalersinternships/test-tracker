@@ -103,7 +103,7 @@ class ProjectsSerializer(ModelSerializer):
         test_suites = TestSuites.objects.filter(
             project = obj
         ).values_list("id", flat=True)
-        test_cases = TestRun.objects.filter(test_suite__id__in = test_suites, status = TEST_RUN_STATUS_CHOICES.NOT_STARTED)
+        test_cases = TestRun.objects.filter(test_suites__id__in = test_suites, status = TEST_RUN_STATUS_CHOICES.NOT_STARTED)
         return TestRunsSerializer(test_cases, many=True).data
 
     def get_in_progress_test_runs(self, obj):
@@ -121,14 +121,12 @@ class ProjectsSerializer(ModelSerializer):
         if request and hasattr(request, "user"):
             user = request.user
         if user:
-            test_suites = TestSuites.objects.filter(
-            project = obj
-            ).values_list("id", flat=True)
-            test_cases = TestCases.objects.filter(
-                test_suite__id__in = test_suites, completed=False,
-                assigned_user = user
-                ).order_by('-created')
-            return TestCaseSerializer(test_cases[:5], many=True).data
+            test_suites = TestSuites.objects.filter(project = obj)
+            test_runs = TestRun.objects.filter(
+                test_suites__in = test_suites, status=TEST_RUN_STATUS_CHOICES.NOT_STARTED, assigned_user=user).order_by('-created').first()
+            if test_runs:
+                return TestRunsSerializer(test_runs).data
+            return None
         return
 
     def get_people_with_the_most_incomplete_test_runs(self, obj):
@@ -138,11 +136,8 @@ class ProjectsSerializer(ModelSerializer):
         if request and hasattr(request, "user"):
             user = request.user
         if user:
-            test_suites = TestSuites.objects.filter(
-            project = obj
-            ).values_list("id", flat=True)
-            test_cases = TestCases.objects.filter(
-                test_suite__id__in = test_suites, completed=False,
-            ).order_by('-created')
-            return TestCaseSerializer(test_cases[:5], many=True).data
+            test_suites = TestSuites.objects.filter(project = obj)
+            test_runs = TestRun.objects.filter(
+                test_suites__in = test_suites, status=TEST_RUN_STATUS_CHOICES.NOT_STARTED).order_by('-created')
+            return TestRunsSerializer(test_runs[:5], many=True).data
         return

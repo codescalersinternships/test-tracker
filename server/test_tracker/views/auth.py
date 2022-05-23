@@ -54,7 +54,6 @@ class DecodeAndVerifySignatureAPIView(APIView):
                 'first_name': signature.first_name,
                 'last_name': signature.last_name,
             }
-            print(signature)
             return CustomResponse.success(
                 data = data
             )

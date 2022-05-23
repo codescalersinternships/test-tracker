@@ -14,14 +14,12 @@ class TestCaseSerializer(ModelSerializer):
     """class TestCaseSerializer to serialize the test case obj"""
     requirement = SerializerMethodField()
     created = SerializerMethodField()
-    assigned_user = SerializerMethodField()
 
     class Meta:
         model = TestCases
         exclude = (
             'verify_requirement', 'test_suite',
-            'comments', 'passed', 'failed', 'skipped', 'run',
-            'status', 'completed'
+            'comments', 'passed', 'failed', 'skipped', 'run', 'completed'
         )
 
     def get_requirement(self, obj):
@@ -30,9 +28,6 @@ class TestCaseSerializer(ModelSerializer):
     
     def get_created(self, obj):
         return obj.created.date()
-    
-    def get_assigned_user(self, obj):
-        return {"id": obj.assigned_user.id,"full_name":obj.assigned_user.full_name}
 
 
 class GetSingleTestCaseSerializer(ModelSerializer):

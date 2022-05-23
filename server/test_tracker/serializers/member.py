@@ -1,10 +1,8 @@
 """Everything related to Member"""
-from typing import Any, Dict
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from server.test_tracker.models.dashboard import Member, Project
-from server.test_tracker.models.project import TestCases, TestRun, TestSuites
-from server.test_tracker.serializers.dashboard import ProjectsSerializer
+from server.test_tracker.models.project import TestRun, TestSuites
 from server.test_tracker.serializers.test_run import TestRunsSerializer
 
 class MemberSetPasswordSerializer(ModelSerializer):
@@ -74,7 +72,7 @@ class MemberSerializers(ModelSerializer):
         project = Project.objects.filter(members__id__in = [obj.id])
         test_suites = TestSuites.objects.filter(project__id__in = project)
         test_run = TestRun.objects.filter(
-            test_suites__in = test_suites, assigned_user__id__in = [obj.id]
+            test_suites__in = test_suites, assigned_user = obj
         ).order_by('-created').first()
         if test_run:
             return TestRunsSerializer(test_run, many=True).data

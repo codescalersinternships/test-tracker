@@ -1,6 +1,5 @@
 """Everything related to TestRuns"""
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from server.test_tracker.models.dashboard import Member
 
 from server.test_tracker.models.project import TestCases, TestRun, TestSuites
 
@@ -8,7 +7,7 @@ from server.test_tracker.models.project import TestCases, TestRun, TestSuites
 
 class TestRunsSerializer(ModelSerializer):
     """Test run serializer class"""
-    user = SerializerMethodField()
+    assigned_user = SerializerMethodField()
     total_test_cases = SerializerMethodField()
     passed = SerializerMethodField()
     failed = SerializerMethodField()
@@ -19,7 +18,7 @@ class TestRunsSerializer(ModelSerializer):
     class Meta:
         model = TestRun
         fields = [
-            'id','title','test_suites','total_test_cases','user',
+            'id','title','test_suites','total_test_cases','assigned_user',
             'passed', 'failed','skipped', 'not_run', 'completed'
         ]
 
@@ -67,8 +66,7 @@ class TestRunsSerializer(ModelSerializer):
             return f"0.00 %"
         return f"{self.get_not_run(obj) / len(self.test_cases(obj.test_suites)) * 100} %"
 
-    def get_user(self, obj: TestRun) -> Member:
+    def get_assigned_user(self, obj):
         """Return assigned user"""
-        test_suite = obj.test_suites.all().values_list("id", flat=True)
-        test_cases = TestCases.objects.filter(test_suite__id__in = test_suite)
-        return test_cases.values_list("assigned_user", flat=True).distinct()
+        from server.test_tracker.serializers.member import ProjectTeamSerializer
+        return ProjectTeamSerializer(obj.assigned_user).data
