@@ -37,8 +37,9 @@ class HasProjectAccess(permissions.BasePermission):
         if request.user.is_authenticated:
             if view.get_renderer_context().get('kwargs').get('project_id'):
                 project = get_project_by_id(view.get_renderer_context().get('kwargs').get('project_id'))
-                member = get_member_by_id(request.user.id)
-                if project.user == request.user or member in project.members.all():
-                    return True
-            raise PermissionDenied
-        raise PermissionDenied
+                if project is not None:
+                    if request.user.id == project.user.id:
+                        return True
+                    elif request.user.id in project.members.values_list('id', flat=True):
+                        return True
+                    raise PermissionDeniedyyy
