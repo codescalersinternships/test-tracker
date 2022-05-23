@@ -89,22 +89,16 @@ class TestCases(TimeStampedModel):
         Class test suite model for create a new test suite for the project
     """
     test_suite = models.ForeignKey(TestSuites, related_name="test_suite_test_cases", on_delete=models.CASCADE)
-    assigned_user = models.ForeignKey(Member, related_name="assigned_user", on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     description = models.TextField(default="")
     test_steps = models.TextField(default="A list of steps to perform along with any sample data.")
     expected_result = models.TextField(default="Details of what the final result should be.")
-    verify_requirement = models.ForeignKey(ProjectRequirement, related_name="verifies_requirements", on_delete=models.CASCADE)
+    verify_requirement = models.ForeignKey(Requirements, related_name="verifies_requirements", on_delete=models.CASCADE)
     comments = models.TextField(default="")
     passed = models.BooleanField(default=False)
     failed = models.BooleanField(default=False)
     skipped = models.BooleanField(default=False)
     run = models.BooleanField(default=False)
-    status =  models.CharField(
-        max_length=100,
-        choices=TEST_RUN_STATUS_CHOICES.choices,
-        default=TEST_RUN_STATUS_CHOICES.NONE
-    )
     completed = models.BooleanField(default=False)
 
 
@@ -119,6 +113,12 @@ class TestRun(TimeStampedModel):
     """Test run model to run all of test cases based on test suites"""
     title = models.CharField(max_length=150)
     test_suites = models.ManyToManyField(TestSuites, related_name="run_suites")
+    assigned_user = models.ForeignKey(Member, related_name="test_run_assigned_user", on_delete=models.SET_NULL, null=True)
+    status =  models.CharField(
+        max_length=100,
+        choices=TEST_RUN_STATUS_CHOICES.choices,
+        default=TEST_RUN_STATUS_CHOICES.NONE
+    )
 
     def __str__(self):
         return self.title
