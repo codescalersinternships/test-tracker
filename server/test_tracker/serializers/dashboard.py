@@ -13,10 +13,16 @@ from server.test_tracker.services.member import get_member_by_id
 
 
 class ProfileSerializers(ModelSerializer):
+    created = SerializerMethodField()
 
     class Meta:
-        model = User
-        fields = ['id','first_name','full_name','email','phone']
+        model = Member
+        fields = ['id', 'first_name', 'last_name','full_name', 'email', 'phone', 'permission', 'created']
+    
+    def get_created(self, obj):
+        """Return created date"""
+        return obj.created.date()
+    
 
 class GetRequestUserSerializers(ModelSerializer):
     permission = SerializerMethodField()
@@ -24,7 +30,7 @@ class GetRequestUserSerializers(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','first_name','full_name','email','phone', 'permission', 'projects']
+        fields = ['id','first_name','full_name', 'last_name', 'email','phone', 'permission', 'projects']
     
     def get_permission(self, obj):
         if get_member_by_id(obj.id) != None:
@@ -108,19 +114,19 @@ class ProjectsSerializer(ModelSerializer):
         test_suites = TestSuites.objects.filter(
             project = obj
         ).values_list("id", flat=True)
-        test_cases = TestCases.objects.filter(test_suite__id__in = test_suites, status = TEST_RUN_STATUS_CHOICES.NOT_STARTED)
-        return TestCaseSerializer(test_cases, many=True).data
+        test_cases = TestRun.objects.filter(test_suite__id__in = test_suites, status = TEST_RUN_STATUS_CHOICES.NOT_STARTED)
+        return TestRunsSerializer(test_cases, many=True).data
 
     def get_in_progress_test_runs(self, obj):
         """Return project in progress"""
         test_suites = TestSuites.objects.filter(
             project = obj
         ).values_list("id", flat=True)
-        test_cases = TestCases.objects.filter(test_suite__id__in = test_suites, status = TEST_RUN_STATUS_CHOICES.IN_PROGRESS)
-        return TestCaseSerializer(test_cases, many=True).data
+        test_cases = TestRun.objects.filter(test_suite__id__in = test_suites, status = TEST_RUN_STATUS_CHOICES.IN_PROGRESS)
+        return TestRunsSerializer(test_cases, many=True).data
     
     def get_incomplete_test_runs_assigned_to_you(self, obj):
-        """Get total comleated runs based on user"""
+        """Get total complected runs based on user"""
         user = None
         request = self.context.get("request")
         if request and hasattr(request, "user"):
@@ -154,17 +160,20 @@ class ProjectsSerializer(ModelSerializer):
 
 class GetMemberSerializer(ModelSerializer):
     """class GetGetMemberSerializer to serialize the Member obj"""
+    first_name = SerializerMethodField()
+    last_name = SerializerMethodField()
     created = SerializerMethodField()
     last_project_working_on = SerializerMethodField()
     total_project_worked_on = SerializerMethodField()
-    last_tests_assigned = SerializerMethodField()
+    # last_tests_assigned = SerializerMethodField()
     phone = SerializerMethodField()
 
     class Meta:
         model = Member
         fields = (
             'id', 'permission','full_name', 'email', 'phone', 'created', 
-            'last_project_working_on', 'total_project_worked_on','last_tests_assigned'
+            'first_name', 'last_name', 'last_project_working_on',
+            'total_project_worked_on'
         )
 
     def get_created(self, obj):
@@ -185,13 +194,20 @@ class GetMemberSerializer(ModelSerializer):
         project = Project.objects.filter(members__id = obj.id).count()
         return project
 
-    def get_last_tests_assigned(self, obj):
-        """Get total projects worked on for member"""
-        project = Project.objects.filter(members__id__in = [obj.id])
-        test_suites = TestSuites.objects.filter(project__id__in = project)
-        test_cases = TestCases.objects.filter(
-            test_suite__in = test_suites, assigned_user__id__in = [obj.id]
-        ).order_by('-created').first()
-        if test_cases:
-            return TestCaseSerializer(test_cases).data
-        return None
+    def get_first_name(self, obj):
+        """Get first name of member"""
+        return obj.first_name.upper()
+    def get_last_name(self, obj):
+        """Get last name of member"""
+        return obj.last_name.upper()
+
+    # def get_last_tests_assigned(self, obj):
+    #     """Get total projects worked on for member"""
+    #     project = Project.objects.filter(members__id__in = [obj.id])
+    #     test_suites = TestSuites.objects.filter(project__id__in = project)
+    #     test_cases = TestCases.objects.filter(
+    #         test_suite__in = test_suites, assigned_user__id__in = [obj.id]
+    #     ).order_by('-created').first()
+    #     if test_cases:
+    #         return TestCaseSerializer(test_cases).data
+    #     return None

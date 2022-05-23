@@ -12,7 +12,7 @@ from server.test_tracker.api.permission import IsHost, UserIsAuthenticated
 
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import Member
-from server.test_tracker.serializers.dashboard import GetMemberSerializer, GetMemberSerializer
+from server.test_tracker.serializers.dashboard import GetMemberSerializer, GetMemberSerializer, ProfileSerializers
 from server.test_tracker.serializers.member import MemberSetPasswordSerializer
 from server.test_tracker.services.dashboard import *
 from server.test_tracker.services.project import update_activity
@@ -79,9 +79,9 @@ class MemberDetailAPIView(GenericAPIView):
     serializer_class = GetMemberSerializer
     permission_classes = (UserIsAuthenticated,)
 
-    def get(self, request: Request, member_key: str) -> Response:
+    def get(self, request: Request, member_id: str) -> Response:
         """Return a single member based on the request user, member_email"""
-        member: Member = get_member_by_id(member_key)
+        member: Member = get_member_by_id(member_id)
         if member is not None:
             serializer = GetMemberSerializer(member, context={
                 "this_user":member, 'request_user':request.user,
@@ -96,16 +96,16 @@ class MemberDetailAPIView(GenericAPIView):
             message="User not found",
         )
 
-    def delete(self, request: Request, member_key: str) -> Response:
+    def delete(self, request: Request, member_id: str) -> Response:
         """
             * Usage
             The host can delete the member, 
             but it will not deleted from the whole system (only from access)
         """
-        member: Member = get_member_by_user_and_member_email(
-            request.user, member_key
+        member: Member = get_member_by_id(
+            member_id
         )
-        if member is not None:
+        if member is not None and member.host_user == request.user:
             member.delete()
             return CustomResponse.success(
                 message="User deleted successfully",
@@ -145,7 +145,7 @@ class ADMINACCESSPermissionAPIView(GenericAPIView):
 
 class SearchMemberAPIView(GenericAPIView):
     """Search class to search about member with given search_input"""
-    serializer_class = GetMemberSerializer
+    serializer_class = ProfileSerializers
 
     def get(self, request: Request, search_input: str) -> Response:
         """search_input = str[email, first_name, last_name]"""

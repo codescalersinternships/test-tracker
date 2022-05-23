@@ -57,7 +57,7 @@ class User(AbstractBaseUser, TimeStampedModel):
     @property
     def full_name(self) -> str:
         """Normal method to concatonate first_name and last_name"""
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.first_name.title()} {self.last_name.title()}'
 
     def has_perm(self, perm : str , obj:Union[models.Model, AnonymousUser, None]=None) -> bool:
         """For checking permissions. to keep it simple all admin have ALL permissions"""

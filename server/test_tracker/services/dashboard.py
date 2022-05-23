@@ -12,8 +12,6 @@ from server.test_tracker.services.member import get_member_by_id
 
 def get_project_by_id(project_id: str) -> Project or None:
     """A service method to return a single project based on its id"""
-    if not project_id.isdigit():
-        return None
     try:
         return Project.objects.get(id=int(project_id))
     except Project.DoesNotExist:
@@ -23,10 +21,9 @@ def get_projects_by_user(user: User or Member) -> Project or None:
     """Returns the project based on the user"""
     try:
         member = get_member_by_id(user.id)
-        user = member.host_user
+        projects = Project.objects.filter(user = member.host_user, members__in = [member])
     except:
-        user = user
-    projects = Project.objects.filter(user = user)
+        projects = Project.objects.filter(user = user)
     return projects
 
 def get_project_by_user_id(user_id: int) -> Project or None:

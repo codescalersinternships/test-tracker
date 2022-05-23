@@ -7,7 +7,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from server.test_tracker.models.dashboard import Member, Project
 from server.test_tracker.serializers.dashboard import ProjectsSerializer
-from server.test_tracker.serializers.project import ActivitySerializer
 
 from server.test_tracker.services.dashboard import find_project_name_based_on_user, get_project_by_id
 from server.test_tracker.services.member import get_member_by_id
@@ -52,7 +51,7 @@ class ProjectsDetailAPIView(GenericAPIView):
                         project = serializer.save(user = request.user)
                         update_activity(
                             datetime.datetime.now(), request.user, project,
-                            "Create", "Project", project.name
+                            "Create", "Project", project.title
                         )
                         return CustomResponse.success(
                             data=serializer.data,
@@ -77,10 +76,13 @@ class ProjectsDetailAPIView(GenericAPIView):
 
     def delete(self, request: Request, project_id: int) -> Response:
         project = get_project_by_id(project_id)
-        if project is not None :
+        if project is not None and project.user == request.user:
+            update_activity(
+                datetime.datetime.now(), request.user, project,
+                f"Delete", "Project", project.title
+            )
             project.delete()
             return CustomResponse.success(
-                message="Project deleted successfully",
                 status_code=204
             )
         return CustomResponse.not_found(
@@ -89,7 +91,6 @@ class ProjectsDetailAPIView(GenericAPIView):
 
 class ProjectActivityAPIView(GenericAPIView):
     """Get all project activity"""
-    serializer_class = ActivitySerializer
     permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, project_id: str) -> Response:
@@ -129,7 +130,7 @@ class AddMemberToProjectAPIView(GenericAPIView):
             return project_member_validation(project, member, user)
         update_activity(
             datetime.datetime.now(), request.user, project,
-            f"added {member.first_name.title()} to", "Project", project.name
+            f"added {member.first_name.title()} to", "Project", project.title
         )
         project.members.add(member)
         return CustomResponse.success(
@@ -150,7 +151,7 @@ class AddMemberToProjectAPIView(GenericAPIView):
             return project_member_validation(project, member, user)
         update_activity(
             datetime.datetime.now(), request.user, project,
-            f"removed {member.first_name.title()} from", "Project", project.name
+            f"removed {member.first_name.title()} from", "Project", project.title
         )
         project.members.remove(member)
         return CustomResponse.success(
@@ -193,35 +194,26 @@ class GetActivityOfLast5ProjectsAPIView(GenericAPIView):
         * Usage
         This class to concatenate the activity of the last 5 projects updated.
     """
-    serializer_class = ActivitySerializer
     permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request) -> Response:
         """A get method that returns last update from last 5 projects activity"""
-        result = []
         member = get_member_by_id(str(request.user.id))
-
-        if member is not None:
-            # Thats mean the request from a member
-            user = member.host_user
+        if member:
             projects = Project.objects.filter(
-                members__in=[request.user.id], user = user
+                members__in=[member.id], user = member.host_user
             ).order_by('-modified')
-
         else:
             projects = Project.objects.filter(user = request.user).order_by('-modified')
         projects = projects[:5]
+        result = []
 
         for project in projects:
-            if len(list(project.activity.keys())) > 1:
-                last_key = project.activity[list(project.activity.keys())[-1]]                    
-                if last_key.get('date') and last_key.get('action'):
-                    result.append(
-                        {
-                        "date" : last_key.get('date'),
-                        "action" : last_key.get('action')
-                        }
-                    )
+            if len(project.activity) > 0:
+                activity = list(project.activity.values())[::-1][0]
+                activity["project_title"] = project.title
+                result.append(activity)
+        
         return CustomResponse.success(
             message="Success activity found.",
             data = result
@@ -241,10 +233,17 @@ class SearchProjectAPIView(GenericAPIView):
             You must be authenticated to access this view
         """
         user = request.user
-        if hasattr(user, 'permission'):
-            member = get_member_by_id(user.id)
+        member = get_member_by_id(request.user.id)
+        if member:
             user = member.host_user
-        projects = Project.objects.filter(name__icontains=project_name, user=user)
+            projects = Project.objects.filter(
+                title__icontains=project_name, user=user,
+                members__in=[member.id]
+            )
+        else:
+            projects = Project.objects.filter(
+                title__icontains=project_name, user=user
+            )
         return CustomResponse.success(
             message="Success projects found.",
             data = ProjectsSerializer(projects, many=True).data

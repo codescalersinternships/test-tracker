@@ -51,8 +51,3 @@ class TestPlanTempsSerializer(ModelSerializer):
     class Meta:
         model = TestPlan
         fields = ('title','content')
-
-class ActivitySerializer(ModelSerializer):
-    class Meta:
-        model = Project
-        fields = ('activity',)
