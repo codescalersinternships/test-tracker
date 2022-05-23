@@ -8,6 +8,7 @@ from server.test_tracker.api.response import CustomResponse
 
 from server.test_tracker.models.project import PLAN_CHOICES, TestPlan
 from server.test_tracker.serializers.project import *
+from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import update_activity
 from server.test_tracker.utils.handler import TestPlanHandling
 from server.test_tracker.utils.testplan_temp import TestPlanTemp
@@ -231,3 +232,39 @@ class TestPlanContentAreaAPIView(GenericAPIView):
                 message = 'There are no content area with this title'
             )
         return test_plan
+
+class SearchTestPlanAPIView(GenericAPIView):
+    """
+        * Usage
+        This class to filter all op projects based on project name.
+    """
+    serializer_class = TestPlanDetailSerializer
+    permission_classes = (UserIsAuthenticated,)
+
+    def get(self, request:Request, key_word: str):
+        """
+            Get all projects based on project name
+            You must be authenticated to access this view
+        """
+        user = request.user
+        member = get_member_by_id(request.user.id)
+        if member:
+            user = member.host_user
+            projects = Project.objects.filter(
+                members__id__in=[member.id],
+                user = user
+            )
+            plans = TestPlan.objects.filter(
+                title__icontains = key_word, project__in = projects
+            )
+        else:
+            projects = Project.objects.filter(
+                user = user
+            )
+            plans = TestPlan.objects.filter(
+                title__icontains = key_word, project__in = projects
+            )
+        return CustomResponse.success(
+            message="Success projects found.",
+            data = TestPlanDetailSerializer(plans, many=True).data
+        )

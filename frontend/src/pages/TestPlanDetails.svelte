@@ -4,7 +4,7 @@
     import NavBar from "../components/NavBar.svelte";
     import Search from "../components/Search.svelte";
     import Alert from "../components/ui/Alert.svelte";
-    import ModalUpdate from "../components/ModalUpdate.svelte";
+    import DeleteModal from "../components/ui/DeleteModal.svelte"
 
 
     export let user;
@@ -21,7 +21,7 @@
         projectID = path.split("/")[2];
         planID = path.split("/")[4];
         try {
-            const responseContents = await axios.get(`/test_plan/${projectID}/${planID}/detail/`, config);
+            const responseContents = await axios.get(`/test_plan/${projectID}/actions/${planID}/`, config);
             testPlansContents = responseContents.data.data;
             temps = testPlansContents.temps;
             tempsCopy = temps;
@@ -33,18 +33,21 @@
         }
     });
 
-    async function searchContentArea(){
-        // Search on test plan contents
-        const title = document.getElementById("search-id").value;
-        if(title.length > 0){
-            const response = await axios.get(
-                `/test_plan/${projectID}/${planID}/temps/${title}/`,config
-            )
-            let responseContent = response.data.data;
-            temps = responseContent;
-        }else{
-            temps = tempsCopy;
-        }
+    async function handleSearch(event) {
+        const searchContents = event.detail.objects;
+        temps = searchContents;
+    }
+
+    function setContent(contentArea) {
+        title = contentArea
+        document.querySelector('.modal').style.display = 'block'
+    }
+
+    async function handleDelete(event) {
+        const content = event.detail.obj;
+        const indx = temps.findIndex(v => v.title === content.title);
+        temps = temps;
+        temps.splice(indx, 1);
     }
 
     async function updateContentArea(newTitle, newBody){
@@ -67,15 +70,6 @@
                 }, 3000);
             }
         }
-    }
-        
-    function setTitleAndBody(Title, Body) {
-        // Just set the title and body global to get the current values and display the modal;
-        title = Title;
-        oldTitle = title
-        body = Body;
-        document.querySelector('.update-content-modal').style.display = 'block'
-        
     }
 
 </script>
@@ -116,7 +110,13 @@
                     </div>
                 </div>
             </div>
-            <Search title="Search On Contents" searchFunction={searchContentArea}/>
+            <div class="pt-4">
+                <p>
+                    Search On TestPlans Contents
+                </p>
+                <Search request="/test_plan/{projectID}/{planID}/temps/" objects={temps} 
+                    config={config} objectsCopy={tempsCopy} on:message={handleSearch}/>
+            </div>
             <div class="pt-5">
                 {#if temps}
                     {#each temps as contentArea }
@@ -134,12 +134,12 @@
                                     </svg>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li>
+                                        <!-- <li>
                                             <button on:click={setTitleAndBody(contentArea.title, contentArea.content)} 
                                                 class="dropdown-item text-black">Update</button>
-                                        </li>
+                                        </li> -->
                                         <li>
-                                            <button class="dropdown-item text-danger">Delete</button>
+                                            <button class="dropdown-item text-danger" on:click={setContent(contentArea)}>Delete</button>
                                         </li>
                                     </ul>
                                 </div>
@@ -158,5 +158,11 @@
             </div>
         </div>
     {/if}
-    <ModalUpdate updateFunctionOnClick={updateContentArea} title={title} body={body}/>
+    <!-- <ModalUpdate updateFunctionOnClick={updateContentArea} title={title} body={body}/> -->
+    <DeleteModal
+        on:message={handleDelete}
+        obj={title}
+        onRequest='/test_plan/{projectID}/{planID}/temps'
+        config={config}
+    />
 </section>

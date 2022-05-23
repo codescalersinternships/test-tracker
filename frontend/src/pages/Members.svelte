@@ -78,7 +78,7 @@
 <section>
     {#if user}
         <NavBar user={user}/>
-        <div class="container pt-4 mb-4">
+        <div class="container pt-4 pb-4">
             {#if members}
                 <div class="">
                     <strong class="h4">All Members</strong>

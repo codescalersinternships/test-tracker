@@ -16,7 +16,11 @@
 		});
 
         try {
-            await axios.delete(`${onRequest}/${obj.id}/`, config)
+            if (obj.id) {
+                await axios.delete(`${onRequest}/${obj.id}/`, config)
+            } else if (obj.title){
+                await axios.delete(`${onRequest}/${obj.title}/`, config) // We somtimes want to make request on object has no id
+            }
             closeModal()
             if (redirect){
                 window.location.href = redirect
@@ -34,14 +38,12 @@
             <div class="modal-body">
                 {#if obj}
                     {#if obj.title}
-                        <h5>Are you sure you want to delete {obj.title}?</h5>
+                        <h5>You are about to delete <strong class="text-danger">{obj.title}</strong>!!</h5>
                     {:else if obj.email}
-                        <h5>Are you sure you want to delete {obj.email}?</h5>
-                    {:else}
-                        <h5>Are you sure you want to delete this?</h5>
+                        <h5>You are about to delete <strong class="text-danger">{obj.email}</strong>!!</h5>
                     {/if}
                 {/if}
-                Please note that this action cannot be undone.
+                <span class="text-danger">* </span>Please note that this action cannot be undone.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" on:click={closeModal}>Close</button>
