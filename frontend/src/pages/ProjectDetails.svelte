@@ -1,11 +1,13 @@
 <script>
     import { onMount } from 'svelte';
-    import axios from '../healpers/axios'
+    import axios from "../healpers/axios"
     import NavBar from "../components/NavBar.svelte";
     import ActivityTable from "../components/ActivityTable.svelte"
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte"
+    import DeleteModal from "../components/ui/DeleteModal.svelte"
 
     export let user;
+
     let project, activity;
 
     const config = {
@@ -25,6 +27,16 @@
             }
         }
     })
+
+    function openModal() {
+        document.querySelector('.modal').style.display = 'block'
+    }
+
+    async function handleDeleteObj(event) {
+        consol.log(event.detail.obj)
+    }
+
+
 </script>
 
 <svelte:head>
@@ -35,11 +47,19 @@
     {#if user}
         <NavBar projectView="true" user={user}/>
         {#if project}
-            <div class="container">
-                <div class="pt-5">
-                    <strong class="h4">Project overview & activity of {project.name}</strong>
-                    <div class="card mt-4 p-4">
-                        <div class="pt-4">
+            <div class="container mt-4">
+                <div>
+                    <strong class="h4">Project overview & activity of {project.title}</strong>
+                    <div class="card">
+                        {#if user.permission === "admin"}
+                            <div class="col-4 pt-3">
+                                <button type="button" class="btn btn-danger text-white text-decoration-none" 
+                                    on:click={openModal}>
+                                    Delete
+                                </button>
+                            </div>
+                        {/if}
+                        <div class="pt-5">
                             <p class="h5 text-muted">Project statistics</p>
                             <hr>
                             <table class="table table-borderless">
@@ -120,6 +140,7 @@
                     <ActivityTable activity={activity} />
                 </div>
             </div>
+            <DeleteModal request="/project/{project.id}/" obj={project} redirect="/projects/"/>
         {/if}
     {:else}
         <LoodingSpiner />
