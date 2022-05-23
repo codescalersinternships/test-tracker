@@ -12,6 +12,7 @@ from server.test_tracker.services.users import get_user_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
 from server.test_tracker.serializers.dashboard import *
+from server.test_tracker.serializers.member import MemberSerializers
 
 
 class ProjectsAPIView(GenericAPIView):
@@ -63,7 +64,7 @@ class MemberAPIView(GenericAPIView):
     """
         Class MemberAPIView have all the functionality based on the user
     """
-    serializer_class = GetMemberSerializer
+    serializer_class = MemberSerializers
     permission_classes = (UserIsAuthenticated,)
 
     def post(self, request: Request) -> Response:
@@ -91,7 +92,7 @@ class MemberAPIView(GenericAPIView):
 
 class UpdateProfileAPIView(GenericAPIView):
     """This class to update profile info"""
-    serializer_class = ProfileSerializers
+    serializer_class = MemberSerializers
     permission_classes = (UserIsAuthenticated,)
 
     def put(self, request: Request) -> Response:
@@ -111,7 +112,7 @@ class UpdateProfileAPIView(GenericAPIView):
 
 class GetProfileAPIView(GenericAPIView):
     """This class to update profile info"""
-    serializer_class = ProfileSerializers
+    serializer_class = MemberSerializers
     permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, user_id:str) -> Response:
@@ -119,7 +120,7 @@ class GetProfileAPIView(GenericAPIView):
         user = get_user_by_id(user_id)
         if user is not None:
             return CustomResponse.success(
-                data=ProfileSerializers(user).data,
+                data=MemberSerializers(user).data,
                 message="Profile found successfully",
             )
         return CustomResponse.not_found(

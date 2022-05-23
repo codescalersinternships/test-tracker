@@ -12,11 +12,10 @@ from server.test_tracker.api.permission import IsHost, UserIsAuthenticated
 
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import Member
-from server.test_tracker.serializers.dashboard import GetMemberSerializer, GetMemberSerializer, ProfileSerializers
+from server.test_tracker.serializers.member import MemberSerializers
 from server.test_tracker.serializers.member import MemberSetPasswordSerializer
 from server.test_tracker.services.dashboard import *
-from server.test_tracker.services.project import update_activity
-
+    
 
 class GetMemberApiView(GenericAPIView):
     """
@@ -24,7 +23,7 @@ class GetMemberApiView(GenericAPIView):
         You may have to use this class when you want to get all of your Member
         You must be authenticated to access this view
     """
-    serializer_class = GetMemberSerializer
+    serializer_class = MemberSerializers
     permission_classes = (IsHost,)
 
     def get(self, request: Request) -> Response:
@@ -35,7 +34,7 @@ class GetMemberApiView(GenericAPIView):
         member: Member = get_member_based_on_user(request.user)
         if len(member) > 0:
             return CustomResponse.success(
-                data=GetMemberSerializer(member, many=True).data,
+                data=MemberSerializers(member, many=True).data,
                 message="Member found successfully",
             )
         return CustomResponse.success(
@@ -76,14 +75,14 @@ class MemberDetailAPIView(GenericAPIView):
         Class MemberDetailAPIView has all the functionality based on the Member added
         Methods [GET, PUT, DELETE]
     """
-    serializer_class = GetMemberSerializer
+    serializer_class = MemberSerializers
     permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, member_id: str) -> Response:
         """Return a single member based on the request user, member_email"""
         member: Member = get_member_by_id(member_id)
         if member is not None:
-            serializer = GetMemberSerializer(member, context={
+            serializer = MemberSerializers(member, context={
                 "this_user":member, 'request_user':request.user,
                 "profile_view":True
                 }
@@ -119,13 +118,13 @@ class FULLACCESSPermissionAPIView(GenericAPIView):
     """
         Class MemberPermissionAPIView have all the functionality based on the Member added
     """
-    serializer_class = GetMemberSerializer
+    serializer_class = MemberSerializers
     permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request) -> Response:
         member = get_full_access_permission_based_on_user(request.user)
         return CustomResponse.success(
-            data=GetMemberSerializer(member, many=True).data,
+            data=MemberSerializers(member, many=True).data,
             message="Member found successfully",
         )
 
@@ -133,19 +132,19 @@ class ADMINACCESSPermissionAPIView(GenericAPIView):
     """
         Class MemberPermissionAPIView have all the functionality based on the Member added
     """
-    serializer_class = GetMemberSerializer
+    serializer_class = MemberSerializers
     permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request) -> Response:
         member = get_admin_access_permission_based_on_user(request.user)
         return CustomResponse.success(
-            data=GetMemberSerializer(member, many=True).data,
+            data=MemberSerializers(member, many=True).data,
             message="Member found successfully",
         )
 
 class SearchMemberAPIView(GenericAPIView):
     """Search class to search about member with given search_input"""
-    serializer_class = ProfileSerializers
+    serializer_class = MemberSerializers
 
     def get(self, request: Request, search_input: str) -> Response:
         """search_input = str[email, first_name, last_name]"""
