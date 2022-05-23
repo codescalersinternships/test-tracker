@@ -3,7 +3,7 @@
     import { onMount } from 'svelte';
 
     import isAuthenticated from "./healpers/IsAuthenticated"
-    import axios from '././healpers/axios';
+    import axios from './healpers/axios';
     
     import Home from "./pages/Home.svelte";
     
@@ -56,7 +56,8 @@
         type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.0.0/mdb.min.js"
         defer
-    ></script>
+        >
+    </script>
     <style>
         body {
             padding: 0 8px !important;
