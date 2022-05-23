@@ -1,10 +1,10 @@
 import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
-import alias from 'rollup-plugin-alias';
+import resolve from '@rollup/plugin-node-resolve';
+import alias from '@rollup/plugin-alias';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -50,10 +50,11 @@ export default {
 		}),
 		alias({
 			entries:[
-			{find:'src', replacement: 'src/'},
-			{find:'components', replacement: 'src/components/'},
-			{find:'routes', replacement: 'src/routes/'},
-			{find:'static', replacement: 'public/static/'},
+				{find:'src', replacement: 'src/'},
+				{find:'helpers', replacement: './src/helpers'},
+				{find:'components', replacement: 'src/components/'},
+				{find:'routes', replacement: 'src/routes/'},
+				{find:'static', replacement: 'public/static/'},
 		]}),
 		commonjs(),
 		!production && serve(),
