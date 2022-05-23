@@ -18,11 +18,11 @@ class Project(TimeStampedModel):
     """Class project model for adding a new project to the database"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_projects")
     members = models.ManyToManyField('Member', related_name="project_members")
-    name = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
     activity = models.JSONField(default=dict)
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class Member(User):
