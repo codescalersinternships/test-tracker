@@ -2,9 +2,10 @@
     import { onMount } from 'svelte';
     import axios from '../healpers/axios'
     import NavBar from "../components/NavBar.svelte";
-
+    import DeleteModal from "../components/ui/DeleteModal.svelte"
     export let user;
-    let member, memberEmail;
+
+    let member;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -23,22 +24,9 @@
         }
     });
 
-    async function deleteMember(email){
-        try {
-            await axios.delete(`/members/${email}/`, config)
-            closeModal()
-            window.location.href = "/members"
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    function openModal(email) {
-        memberEmail = email;
+    function openModal(member) {
         document.querySelector('.modal').style.display = 'block'
     }
-
-    function closeModal() {document.querySelector('.modal').style.display = 'none'}
 
 </script>
 
@@ -56,7 +44,7 @@
             {#if user.permission === "admin"}
                 <div class="col-4 pt-5">
                     <button type="button" class="btn btn-danger text-white text-decoration-none" 
-                        on:click={openModal(member.email)}>
+                        on:click={openModal}>
                         Delete
                     </button>
                 </div>
@@ -103,7 +91,7 @@
                         <tbody>
                             <tr>
                                 <th scope="row">Name</th>
-                                <td class="text-primary">{member.last_project_working_on.name.slice(0, 50)}</td>
+                                <td class="text-primary">{member.last_project_working_on.title.slice(0, 50)}</td>
                                 <th scope="row">Updated date</th>
                                 <td class="text-primary">{member.last_project_working_on.modified}</td>
                             </tr>
@@ -126,8 +114,10 @@
                             <div class="col-6 text-muted">There are no teams yet, only you.</div>
                         {:else}
                             {#each member.last_project_working_on.teams as person }
-                            <div class="col-2 text-muted">
-                                <span class="text-muted ml-3"><a href="/members/{person.id}">@{person.first_name}</a></span>
+                            <div class="col-2">
+                                <span class="ml-3">
+                                    <a class="text-primary" href="/members/{person.id}">@{person.first_name}</a>
+                                </span>
                             </div>
                             {/each}
                         {/if}
@@ -172,24 +162,10 @@
             {/if}
         </div>
     {/if}
-    <!-- Modal -->
-    <div class="modal" tabindex="-1" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">You are about to delete this member.</h5>
-                </div>
-                <div class="modal-body">
-                    <p>Please note that <strong>{memberEmail}</strong> cannot access the whole Test-Tracker after you confirm.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" on:click={closeModal}>Close</button>
-                    <button type="button" class="btn btn-danger text-white text-decoration-none" 
-                        on:click={deleteMember(memberEmail)}>
-                        Delete
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <DeleteModal
+        obj={member}
+        onRequest='/members'
+        config={config}
+        redirect='/members'
+    />
 </section>
