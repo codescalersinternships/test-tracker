@@ -130,7 +130,7 @@
                                 </ul>
                             </div>
                             <div class="card-body pb-2">
-                                <h5 class="card-title" style="color: #5a79b1;">{requirement.title}</h5>
+                                <h5 class="card-title" style="color: #5a79b1;">{requirement.requirement_title}-{requirement.title}</h5>
                                 <p class="mt-4 text-muted">
                                     {requirement.description}
                                 </p>

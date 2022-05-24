@@ -68,7 +68,7 @@
                 <p>
                     Search Requirements Docs
                 </p>
-                <Search request="/requirements/projects/${projectID}/search/" objects={requirements} config={config} 
+                <Search request="/requirements/projects/{projectID}/search/" objects={requirements} config={config} 
                     objectsCopy={requirementsCopy} on:message={handleSearch}/>
             </div>
             <div class="pt-5">
@@ -110,7 +110,7 @@
                                         </div>
                                         <div class="col-12 col-md-4 col-sm-6 col-xs-8">
                                             <p class="text-muted">
-                                                Requirements: <strong>{requirement.requirements.length}</strong>
+                                                Number of requirements: <strong>{requirement.requirements.length}</strong>
                                             </p>
                                         </div>
                                     </div>
