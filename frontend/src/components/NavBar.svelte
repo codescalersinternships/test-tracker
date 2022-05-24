@@ -25,6 +25,10 @@
             text-align: center;
             color: #fff;
         }
+        a{
+            text-decoration: none !important;
+            color: #5a79b1 !important;
+        }
     </style>
 </svelte:head>
 
@@ -44,10 +48,10 @@
         
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <Link to="/" class="nav-link text-primary">Dashboard</Link>
-                </li>
                 <Router>
+                    <li class="nav-item">
+                        <Link to="/" class="nav-link">Dashboard</Link>
+                    </li>
                     {#if user.permission == "admin"}
                         <li class="nav-item">
                             <Link to="/members/" class="nav-link">Members</Link>
@@ -64,7 +68,7 @@
                             <Link to="/projects/{projectID}/requirements/" class="nav-link">Requirements</Link>
                         </li>
                         <li class="nav-item">
-                            <Link to="/projects/{projectID}/test-suites/" class="nav-link">Test Suite</Link>
+                            <Link to="/projects/{projectID}/test-suites/" class="nav-link">Test Suites</Link>
                         </li>
                         <li class="nav-item">
                             <Link to="/test-runs/" class="nav-link">Test Runs</Link>
@@ -99,17 +103,12 @@
                     class="dropdown-menu dropdown-menu-end"
                     aria-labelledby="navbarDropdownMenuAvatar"
                 >
-                {#if user.type != "admin"}
-                    <li>
-                        <a class="dropdown-item text-primary" href="/members/{user.id}">{user.full_name}</a>
-                    </li>
-                {/if}
-                    <li>
-                        <a class="dropdown-item text-primary" href="#">Settings</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item text-primary" href="/auth/logout/">Logout</a>
-                    </li>
+                <li>
+                    <a class="dropdown-item" href="#">Settings</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/auth/logout/">Logout</a>
+                </li>
                 </ul>
             </div>
         </div>
