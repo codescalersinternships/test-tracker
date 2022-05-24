@@ -9,7 +9,7 @@ from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthentic
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import Project
 from server.test_tracker.models.project import TestSuites
-from server.test_tracker.serializers.test_suites import TestSuitesSerializer
+from server.test_tracker.serializers.test_suites import TestSuitesDetailSerializer, TestSuitesSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import update_activity
@@ -60,7 +60,7 @@ class TestSuitesAPIView(GenericAPIView):
 
 class TestSuitesDetailAPIView(GenericAPIView):
     """Create a new test suite"""
-    serializer_class = TestSuitesSerializer
+    serializer_class = TestSuitesDetailSerializer
     permission_classes = (HasProjectAccess,)
 
     def put(self, request: Request, project_id: str,  test_suite_id: str) -> Response:
@@ -92,7 +92,7 @@ class TestSuitesDetailAPIView(GenericAPIView):
         test_suite = get_test_suite_by_id(test_suite_id)
         if test_suite is None:
             return CustomResponse.not_found(message="Test suite not found")
-        serializer = TestSuitesSerializer(test_suite)
+        serializer = TestSuitesDetailSerializer(test_suite)
         return CustomResponse.success(
             message="Success suites found.",
             data=serializer.data
@@ -105,7 +105,7 @@ class TestSuitesDetailAPIView(GenericAPIView):
             return CustomResponse.not_found(message="Test suite not found")
         update_activity(
             datetime.datetime.now(), request.user, test_suite.project,
-            "DELETE", "Test suite", test_suite.title
+            "Delete", "Test suite", test_suite.title
         )
         test_suite.delete()
         return CustomResponse.success(
@@ -119,7 +119,7 @@ class SearchTestSuiteAPIView(GenericAPIView):
         This class to filter all project test suites that matches the key word.
     """
     serializer_class = TestSuitesSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def get(self, request:Request, project_id: str, key_word: str):
         """
