@@ -61,7 +61,8 @@
                     <p>
                         Search Plans
                     </p>
-                    <Search request="/test_plan/search/" objects={testPlans} config={config} objectsCopy={testPlansCopy} on:message={handleSearch}/>
+                    <Search request="/test_plan/{projectID}/search/" objects={testPlans} config={config} 
+                        objectsCopy={testPlansCopy} on:message={handleSearch}/>
                 </div>
                 <div class="pt-5">
                     <p class="search-result" style="display: none">Search Result</p>
@@ -87,7 +88,7 @@
                             </div>
                             <Link to="/projects/{projectID}/test-plans/{plan.id}" class="text-dark d-block text-decoration-none">
                                 <div class="card-body pb-2">
-                                    <h5 class="card-title">{plan.title}</h5>
+                                    <h5 class="card-title" style="color: #5a79b1;">{plan.title}</h5>
                                     <div class="pt-4">
                                         <div class="row">
                                             <div class="col-6 col-md-6 col-sm-6 col-xs-8">

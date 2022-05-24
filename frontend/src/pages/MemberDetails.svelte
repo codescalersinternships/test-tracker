@@ -57,26 +57,26 @@
                         <tbody>
                             <tr>
                                 <th scope="row">Full Name</th>
-                                <td class="text-primary">{member.full_name}</td>
+                                <td class="text-dark">{member.full_name}</td>
                                 <th scope="row">Email</th>
-                                <td class="text-primary">{member.email}</td>
+                                <td class="text-dark">{member.email}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Phone Number</th>
                                 {#if member.phone.length === 0}
                                     <td class="text-muted">Not set yet</td>
                                 {:else}
-                                    <td class="text-primary">{member.phone}</td>
+                                    <td class="text-dark">{member.phone}</td>
                                 {/if}
                                 <th scope="row">Joined date</th>
-                                <td class="text-primary">{member.created}</td>
+                                <td class="text-dark">{member.created}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Permission</th>
                                 {#if member.permission == "full_access"}
-                                    <td class="text-primary">Full Access</td>
+                                    <td class="text-dark">Full Access</td>
                                 {:else}
-                                    <td class="text-primary">Admin</td>
+                                    <td class="text-dark">Admin</td>
                                 {/if}
                             </tr>
                         </tbody>
@@ -91,9 +91,13 @@
                         <tbody>
                             <tr>
                                 <th scope="row">Name</th>
-                                <td class="text-primary">{member.last_project_working_on.title.slice(0, 50)}</td>
+                                <td class="text-primary">
+                                    <a href="/projects/{member.last_project_working_on.id}">
+                                        {member.last_project_working_on.title.slice(0, 50)}
+                                    </a>
+                                </td>
                                 <th scope="row">Updated date</th>
-                                <td class="text-primary">{member.last_project_working_on.modified}</td>
+                                <td class="text-dark">{member.last_project_working_on.modified}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Pinding tasks</th>
@@ -103,7 +107,7 @@
                                     <td class="text-muted">There are no pinding tasks.</td>
                                 {/if}
                                 <th scope="row">Created date</th>
-                                <td class="text-primary">{member.last_project_working_on.created}</td>
+                                <td class="text-dark">{member.last_project_working_on.created}</td>
                             </tr>
                         </tbody>
                     </table>
