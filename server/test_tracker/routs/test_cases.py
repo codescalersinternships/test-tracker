@@ -10,4 +10,8 @@ urlpatterns = [
     path('test_suite/<str:test_suite>/', GetAllTestCasesAPIView.as_view()),
     path('detail/<str:test_case>/', TestCaseDetailAPIView.as_view()),
     path('<str:test_case_id>/', GetSingleTestCaseAPIView.as_view()),
+    path(
+        '<str:project_id>/search/<str:key_word>/',
+        SearchTestCaseAPIView.as_view()
+    ),
 ]
