@@ -32,15 +32,24 @@
 
 </script>
 
+<svelte:head>
+    <style>
+        .alert_delete{
+            font-size: 17px;
+            color: #ec1b1be8;
+        }
+    </style>
+</svelte:head>
+
 <div class="modal delete-modal" tabindex="-1" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
                 {#if obj}
                     {#if obj.title}
-                        <h5>You are about to delete <strong class="text-danger">{obj.title}</strong>!!</h5>
+                        <h5>You are about to delete <strong class="alert_delete">" {obj.title} " </strong>!!</h5>
                     {:else if obj.email}
-                        <h5>You are about to delete <strong class="text-danger">{obj.email}</strong>!!</h5>
+                        <h5>You are about to delete <strong class="alert_delete">" {obj.email} " </strong>!!</h5>
                     {/if}
                 {/if}
                 <span class="text-danger">* </span>Please note that this action cannot be undone.
