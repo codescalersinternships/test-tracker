@@ -2,7 +2,7 @@
 from django.db import models
 from server.test_tracker.models.abstracts import TimeStampedModel
 from server.test_tracker.models.dashboard import Member, Project
-from server.test_tracker.models.users import User
+from django.db.models import UniqueConstraint
 
 
 
@@ -64,6 +64,7 @@ class Requirements(TimeStampedModel):
     based on the project
     """
     requirement = models.ForeignKey(RequirementDocs, related_name="project_requirement", on_delete=models.CASCADE)
+    requirement_title = models.CharField(max_length=50)
     title = models.CharField(max_length=150)
     description = models.TextField(default="")
 
@@ -72,7 +73,7 @@ class Requirements(TimeStampedModel):
         verbose_name_plural = "Requirements"
 
     def __str__(self):
-        return self.title
+        return "{} - {}".format(self.requirement_title, self.title)
 
 class TestSuites(TimeStampedModel):
     """
@@ -90,6 +91,8 @@ class TestCases(TimeStampedModel):
         Class test suite model for create a new test suite for the project
     """
     test_suite = models.ForeignKey(TestSuites, related_name="test_suite_test_cases", on_delete=models.CASCADE)
+    last_saved = models.ForeignKey(Member, related_name="last_saved_test_cases", on_delete=models.CASCADE, null=True)
+    testcase_title = models.CharField(max_length=50)
     title = models.CharField(max_length=150)
     description = models.TextField(default="")
     test_steps = models.TextField(default="A list of steps to perform along with any sample data.")
@@ -108,7 +111,7 @@ class TestCases(TimeStampedModel):
         verbose_name_plural = "TestCases"
 
     def __str__(self):
-        return self.title
+        return "{} - {}".format(self.testcase_title, self.title)
 
 class TestRun(TimeStampedModel):
     """Test run model to run all of test cases based on test suites"""

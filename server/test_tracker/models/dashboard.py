@@ -20,6 +20,8 @@ class Project(TimeStampedModel):
     members = models.ManyToManyField('Member', related_name="project_members")
     title = models.CharField(max_length=100)
     activity = models.JSONField(default=dict)
+    TC_Title = models.JSONField(default=list)
+    REQ_Title = models.JSONField(default=list)
 
     def __str__(self):
         return self.title
