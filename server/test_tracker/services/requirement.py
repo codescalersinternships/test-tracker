@@ -39,7 +39,7 @@ def filter_requirements_based_on_project_requirement(requirement : RequirementDo
     """
     This method gets Requirements based on Project requirements
     """
-    return Requirements.objects.filter(requirement=requirement)
+    return Requirements.objects.filter(requirement=requirement).order_by('-created')
 
 def get_requirement_by_id(requirement_id :str) -> Requirements:
     """

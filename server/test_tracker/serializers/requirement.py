@@ -17,7 +17,7 @@ class RequirementDocsSerializer(ModelSerializer):
     def get_created(self, obj):return obj.created.date()
     def get_updated(self, obj):return obj.modified.date()
     def get_requirements(self, obj):
-        return RequirementsSerializer(obj.project_requirement, many=True).data
+        return RequirementsSerializer(obj.project_requirement.order_by('-created'), many=True).data
 
 
 class RequirementsSerializer(ModelSerializer):
@@ -28,7 +28,7 @@ class RequirementsSerializer(ModelSerializer):
     class Meta:
         """class meta"""
         model = Requirements
-        fields = ['id', 'title', 'description', 'created', 'updated',]
+        fields = ['id', 'title', 'description', 'created', 'updated','requirement_title']
 
     def get_created(self, obj):return obj.created.date()
     def get_updated(self, obj):return obj.modified.date()

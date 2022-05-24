@@ -151,13 +151,23 @@ class RequirementAPIView(GenericAPIView):
             post a new requirement based on the requirements_id
             - requirements_id: the id of the parent requirements
         """
-        requirements = get_project_requirement_by_id(requirements_id)
-        if requirements is not None:
+        requirement = get_project_requirement_by_id(requirements_id)
+        if requirement is not None:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
-                requirement = serializer.save(requirement=requirements)
+                req_id_project = requirement.project.REQ_Title
+                if len(req_id_project) > 0:
+                    last_title = int(req_id_project[-1][3:])
+                else:
+                    last_title = 0
+                if last_title < 9:
+                    last_title = '0' + str(last_title + 1)
+                else:
+                    last_title = str(last_title + 1)
+                req_id_project.append(f'REQ{last_title}')
+                requirement = serializer.save(requirement=requirement, requirement_title=f'REQ{last_title}')
                 update_activity(
-                    datetime.datetime.now(), request.user, requirements.project,
+                    datetime.datetime.now(), request.user, requirement.requirement.project,
                     "Create", "requirement", requirement.title
                 )
                 return CustomResponse.success(
@@ -283,17 +293,22 @@ class SearchRequirementsInRequirementDocssAPIView(APIView):
             Keyword is the key you pass to filter
         """
         project = get_project_by_id(project_id)
-        requirement = Requirements.objects.filter(
+        print(key_word)
+        requirements = Requirements.objects.filter(
             Q(
-                title__icontains = key_word, 
+                title__icontains = key_word,
                 requirement__id__in = project.project_requirements.all().values_list('id', flat=True)
             )| 
             Q(
-                description__icontains = key_word, 
+                description__icontains = key_word,
+                requirement__id__in = project.project_requirements.all().values_list('id', flat=True)
+            )| 
+            Q(
+                requirement_title__icontains = key_word,
                 requirement__id__in = project.project_requirements.all().values_list('id', flat=True)
             )
         )
         return CustomResponse.success(
-            data=RequirementsSerializer(requirement, many=True).data,
+            data=RequirementsSerializer(requirements, many=True).data,
             message = "Successfully.",
         )
