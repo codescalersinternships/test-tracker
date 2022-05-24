@@ -1,9 +1,9 @@
 """Everything related to requirements"""
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from server.test_tracker.models.project import Requirements, ProjectRequirement
+from server.test_tracker.models.project import Requirements, RequirementDocs
 
-class ProjectRequirementSerializer(ModelSerializer):
+class RequirementDocsSerializer(ModelSerializer):
     """class RequirementsSerializer to serialize the project requirement"""
     created = SerializerMethodField()
     updated = SerializerMethodField()
@@ -11,7 +11,7 @@ class ProjectRequirementSerializer(ModelSerializer):
 
     class Meta:
         """class meta"""
-        model = ProjectRequirement
+        model = RequirementDocs
         fields = ['id', 'title', 'created', 'updated', 'requirements']
     
     def get_created(self, obj):return obj.created.date()
@@ -21,7 +21,7 @@ class ProjectRequirementSerializer(ModelSerializer):
 
 
 class RequirementsSerializer(ModelSerializer):
-    """This serializer is a sub requirement of ProjectRequirementSerializer"""
+    """This serializer is a sub requirement of RequirementDocsSerializer"""
     created = SerializerMethodField()
     updated = SerializerMethodField()
 

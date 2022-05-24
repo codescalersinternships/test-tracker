@@ -46,7 +46,7 @@ class TestPlan(TimeStampedModel):
             return True
         return False
 
-class ProjectRequirement(TimeStampedModel):
+class RequirementDocs(TimeStampedModel):
     """
     Class test requirements model for adding a new requirements to the database
     based on the project
@@ -63,7 +63,7 @@ class Requirements(TimeStampedModel):
     Class test requirement model for adding a new requirement to the database
     based on the project
     """
-    requirement = models.ForeignKey(ProjectRequirement, related_name="project_requirement", on_delete=models.CASCADE)
+    requirement = models.ForeignKey(RequirementDocs, related_name="project_requirement", on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     description = models.TextField(default="")
 
@@ -79,6 +79,7 @@ class TestSuites(TimeStampedModel):
         Class test suite model for create a new test suite for the project
     """
     project = models.ForeignKey(Project, related_name="project_test_suites", on_delete=models.CASCADE)
+    test_plan = models.ForeignKey(TestPlan, related_name="test_plan_test_suites", on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
 
     def __str__(self):

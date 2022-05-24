@@ -4,11 +4,14 @@ import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from server.test_tracker.api.permission import UserIsAuthenticated
+from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 
 from server.test_tracker.api.response import CustomResponse
+from server.test_tracker.models.dashboard import Project
+from server.test_tracker.models.project import TestSuites
 from server.test_tracker.serializers.test_suites import TestSuitesSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
+from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import update_activity
 from server.test_tracker.services.test_suites import get_test_suite_by_id
 
@@ -16,7 +19,7 @@ from server.test_tracker.services.test_suites import get_test_suite_by_id
 class TestSuitesAPIView(GenericAPIView):
     """Create a new test suite"""
     serializer_class = TestSuitesSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def post(self, request: Request, project_id: str) -> Response:
         """
@@ -47,7 +50,7 @@ class TestSuitesAPIView(GenericAPIView):
         project = get_project_by_id(project_id)
         if project is None:
             return CustomResponse.not_found(message="Project not found")
-        suites = project.project_test_suites.all()
+        suites = project.project_test_suites.all().order_by('-created')
         serializer = TestSuitesSerializer(suites, many=True)
         return CustomResponse.success(
             message="Success suites found.",
@@ -58,13 +61,13 @@ class TestSuitesAPIView(GenericAPIView):
 class TestSuitesDetailAPIView(GenericAPIView):
     """Create a new test suite"""
     serializer_class = TestSuitesSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
-    def put(self, request: Request, test_suite: str) -> Response:
+    def put(self, request: Request, project_id: str,  test_suite_id: str) -> Response:
         """
             Use this endpoint to create a new test suite
         """
-        test_suite = get_test_suite_by_id(test_suite)
+        test_suite = get_test_suite_by_id(test_suite_id)
         serializer = self.get_serializer(test_suite, data=request.data)
         if test_suite is None:
             return CustomResponse.not_found(message="Test suite not found")
@@ -84,9 +87,9 @@ class TestSuitesDetailAPIView(GenericAPIView):
             status_code=201
         )
 
-    def get(self, request: Request, test_suite: str) -> Response:
-        """Method get to get all of test suites based on the project"""
-        test_suite = get_test_suite_by_id(test_suite)
+    def get(self, request: Request, project_id: str, test_suite_id: str) -> Response:
+        """Get a test suite based on its id, project id"""
+        test_suite = get_test_suite_by_id(test_suite_id)
         if test_suite is None:
             return CustomResponse.not_found(message="Test suite not found")
         serializer = TestSuitesSerializer(test_suite)
@@ -95,16 +98,38 @@ class TestSuitesDetailAPIView(GenericAPIView):
             data=serializer.data
         )
 
-    def delete(self, request: Request, test_suite: str) -> Response:
-        """Method get to get all of test suites based on the project"""
-        test_suite = get_test_suite_by_id(test_suite)
+    def delete(self, request: Request, project_id: str, test_suite_id: str) -> Response:
+        """Delete a test suite based on its id, project id"""
+        test_suite = get_test_suite_by_id(test_suite_id)
         if test_suite is None:
             return CustomResponse.not_found(message="Test suite not found")
         update_activity(
             datetime.datetime.now(), request.user, test_suite.project,
             "DELETE", "Test suite", test_suite.title
         )
+        test_suite.delete()
         return CustomResponse.success(
             message="Test suite deleted successfully",
             status_code=204
+        )
+
+class SearchTestSuiteAPIView(GenericAPIView):
+    """
+        * Usage
+        This class to filter all project test suites that matches the key word.
+    """
+    serializer_class = TestSuitesSerializer
+    permission_classes = (UserIsAuthenticated,)
+
+    def get(self, request:Request, project_id: str, key_word: str):
+        """
+            Search on any testsuite that matches this key word.
+        """
+        project = get_project_by_id(project_id)
+        suites = TestSuites.objects.filter(
+            title__icontains = key_word, project__id = project.id
+        )
+        return CustomResponse.success(
+            message="Success suites found.",
+            data = TestSuitesSerializer(suites, many=True).data
         )

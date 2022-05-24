@@ -25,7 +25,7 @@ class TestPlanHandling():
             )
         return test_plan
 
-class ProjectRequirementsHandling():
+class RequirementDocssHandling():
     """
         There was a duplication on the code thats why we create this class
     """

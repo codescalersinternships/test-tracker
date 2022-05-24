@@ -3,7 +3,7 @@ from server.test_tracker.models.dashboard import Member, Project
 from server.test_tracker.models.project import *
 from server.test_tracker.models.users import User
 from server.test_tracker.serializers.project import TestPlanSerializer
-from server.test_tracker.serializers.requirement import ProjectRequirementSerializer
+from server.test_tracker.serializers.requirement import RequirementDocsSerializer
 from server.test_tracker.serializers.test_cases import TestCaseSerializer
 from server.test_tracker.serializers.test_run import TestRunsSerializer
 from server.test_tracker.serializers.test_suites import TestSuitesSerializer
@@ -84,8 +84,8 @@ class ProjectsSerializer(ModelSerializer):
     
     def get_total_requirements_docs(self, obj):
         """Return project requirement"""
-        requirements = ProjectRequirement.objects.filter(project = obj)
-        return ProjectRequirementSerializer(requirements, many=True).data
+        requirements = RequirementDocs.objects.filter(project = obj)
+        return RequirementDocsSerializer(requirements, many=True).data
 
     def get_total_suites(self, obj):
         """Return project suites"""

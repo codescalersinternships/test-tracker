@@ -236,35 +236,22 @@ class TestPlanContentAreaAPIView(GenericAPIView):
 class SearchTestPlanAPIView(GenericAPIView):
     """
         * Usage
-        This class to filter all op projects based on project name.
+        This class to filter all project test plans that matches the key word.
     """
     serializer_class = TestPlanDetailSerializer
     permission_classes = (UserIsAuthenticated,)
 
-    def get(self, request:Request, key_word: str):
+    def get(self, request:Request, project_id: str, key_word: str):
         """
-            Get all projects based on project name
-            You must be authenticated to access this view
+            Search on any testsuite that matches this key word.
         """
-        user = request.user
-        member = get_member_by_id(request.user.id)
-        if member:
-            user = member.host_user
-            projects = Project.objects.filter(
-                members__id__in=[member.id],
-                user = user
-            )
-            plans = TestPlan.objects.filter(
-                title__icontains = key_word, project__in = projects
-            )
-        else:
-            projects = Project.objects.filter(
-                user = user
-            )
-            plans = TestPlan.objects.filter(
-                title__icontains = key_word, project__in = projects
-            )
+        project = get_project_by_id(project_id)
+        if project is None:
+            return CustomResponse.not_found(message = "Project not found")
+        plans = TestPlan.objects.filter(
+            title__icontains = key_word, project__id = project.id
+        )
         return CustomResponse.success(
-            message="Success projects found.",
+            message="Success plans found.",
             data = TestPlanDetailSerializer(plans, many=True).data
         )

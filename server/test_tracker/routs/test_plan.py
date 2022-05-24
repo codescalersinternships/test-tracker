@@ -24,7 +24,7 @@ urlpatterns = [
         TestPlanContentAreaAPIView.as_view()
     ),
     path(
-        'search/<str:key_word>/',
+        '<str:project_id>/search/<str:key_word>/',
         SearchTestPlanAPIView.as_view()
     ),
 ]
