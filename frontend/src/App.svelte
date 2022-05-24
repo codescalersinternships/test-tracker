@@ -23,6 +23,9 @@
     import TestPlans from "./pages/TestPlans.svelte";
     import TestPlanDetails from "./pages/TestPlanDetails.svelte";
 
+    import TestSuite from "./pages/TestSuite.svelte";
+    import TestSuiteDetails from "./pages/TestSuiteDetails.svelte";
+
     import NotFound from "./pages/NotFound.svelte";
 
     let user;
@@ -73,13 +76,17 @@
         <Route path="auth/logout/" primary={false}><Logout/></Route>
         
         <Route path="projects/" primary={false}><Projects user={user}/></Route>
+        <Route path="projects/:id/" primary={false}><ProjectDetails user={user}/></Route>
+
         <Route path="projects/:id/test-plans/" primary={false}><TestPlans user={user}/></Route>
+        <Route path="projects/:id/test-plans/:id/" primary={false}><TestPlanDetails user={user}/></Route>
+
         <Route path="projects/:id/requirements/" primary={false}><Requirements user={user}/></Route>
         <Route path="projects/:id/requirements/:id/" primary={false}><RequirementsDetails user={user}/></Route>
-        <Route path="projects/:id/test-plans/:id/" primary={false}><TestPlanDetails user={user}/></Route>
-        <Route path="projects/:id/" primary={false}><ProjectDetails user={user}/></Route>
-        
 
+        <Route path="projects/:id/test-suites/" primary={false}><TestSuite user={user}/></Route>
+        <Route path="projects/:id/test-suites/:id/" primary={false}><TestSuiteDetails user={user}/></Route>
+        
         <Route path="members/" primary={false}><Members user={user}/></Route>
         <Route path="members/:id/" primary={false}><MemberDetails user={user}/></Route>
         

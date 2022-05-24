@@ -64,7 +64,7 @@
                             <Link to="/projects/{projectID}/requirements/" class="nav-link">Requirements</Link>
                         </li>
                         <li class="nav-item">
-                            <Link to="/test-suites/" class="nav-link">Test Suite</Link>
+                            <Link to="/projects/{projectID}/test-suites/" class="nav-link">Test Suite</Link>
                         </li>
                         <li class="nav-item">
                             <Link to="/test-runs/" class="nav-link">Test Runs</Link>
