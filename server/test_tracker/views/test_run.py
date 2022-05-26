@@ -3,11 +3,13 @@ import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from server.test_tracker.api.permission import UserIsAuthenticated
+from django.db.models import Q
 
+from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.project import TestRun
+from server.test_tracker.models.project import TEST_RUN_STATUS_CHOICES, TestCases, TestRun, TestSuites
 from server.test_tracker.serializers.test_run import TestRunsSerializer
+from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.project import get_test_run_by_id, update_activity
 
 
@@ -17,9 +19,9 @@ from server.test_tracker.services.project import get_test_run_by_id, update_acti
 class TestRunAPIView(GenericAPIView):
     """Class TestRunAPIView to handle test runs endpoints"""
     serializer_class = TestRunsSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
-    def post(self, request:Request) -> Response:
+    def post(self, request:Request, project_id: str) -> Response:
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             run = serializer.save()
@@ -32,20 +34,22 @@ class TestRunAPIView(GenericAPIView):
             )
         return CustomResponse.bad_request(serializer.errors)
     
-    def get(self, request:Request) -> Response:
+    def get(self, request:Request, project_id:str) -> Response:
         """
         This method is used to get all the test runs
         """
-        test_runs = TestRun.objects.all()
+        test_runs = TestRun.objects.filter(
+            test_suites__project__id = project_id
+        ).order_by('-created')
         serializer = self.serializer_class(test_runs, many=True)
         return CustomResponse.success(data=serializer.data)
 
 class TestRunDetailAPIView(GenericAPIView):
     """Class TestRunAPIView to handle test runs endpoints"""
     serializer_class = TestRunsSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
     
-    def get(self, request:Request, test_run_id: str) -> Response:
+    def get(self, request:Request, project_id:str, test_run_id: str) -> Response:
         """
         This method is used to get all the test runs
         """
@@ -56,3 +60,107 @@ class TestRunDetailAPIView(GenericAPIView):
             )
         serializer = self.serializer_class(test_runs)
         return CustomResponse.success(data=serializer.data)
+
+    def delete(self, request: Request, project_id:str, test_run_id: str) -> Response:
+        """Method get to get all of test suites based on the project"""
+        test_run = get_test_run_by_id(test_run_id)
+        test_suites = test_run.test_suites.all()
+        project = get_project_by_id(project_id)
+        for test_suite in test_suites:
+            if test_suite.project != project:
+                return CustomResponse.unauthorized()
+        if test_run is None:
+            return CustomResponse.not_found(message="Test Run not found")
+        if project is None:
+            return CustomResponse.not_found(message="Project not found")
+
+        update_activity(
+            datetime.datetime.now(), request.user, project,
+            "DELETE", "Test Run", test_run.title
+        )
+        test_run.delete()
+        return CustomResponse.success(
+            message="Test Run deleted successfully",
+            status_code=204
+        )
+
+class SearchOnTestRunAPIView(GenericAPIView):
+    """
+        *Usage
+        This class will filter all test runs based on user and status.
+    """
+    serializer_class = TestRunsSerializer
+    permission_classes = (HasProjectAccess,)
+
+    def get(self, request: Request, project_id: str) -> Response:
+        """
+        This method is used to get all the test runs
+        """
+        params = request.query_params
+        member = params.get('member')
+        status = params.get('status')
+        if member:
+            test_runs = TestRun.objects.filter(
+                test_suites__project_id=project_id,
+                assigned_user__id=int(member)
+            )
+        
+        if member and status:
+            test_runs = TestRun.objects.filter(
+                test_suites__project_id=project_id,
+                status=status,
+                assigned_user__id=int(member)
+            )
+        if status and not member:
+            test_runs = TestRun.objects.filter(
+                test_suites__project_id=project_id,
+                status=status,
+            )
+        serializer = self.serializer_class(test_runs, many=True)
+        return CustomResponse.success(data=serializer.data)
+
+class LastWeekTestRunReportSheetAPIView(GenericAPIView):
+    # serializer_class = LastWeekTestRunReportSheetSerializer
+    permission_classes = (HasProjectAccess,)
+
+    def get(self, request: Request, project_id: str) -> Response:
+        """
+        This method is used to get all the test runs report based on last week
+        """
+        today = datetime.datetime.today().date()
+        test_runs = TestRun.objects.filter(
+            test_suites__project_id=project_id,
+            modified__gte=today - datetime.timedelta(days=7)
+        ).values_list('id', flat=True)
+        test_suites = TestSuites.objects.filter(
+            project_id=project_id,
+            run_suites__id__in=test_runs
+        ).values_list('id', flat=True)
+        test_cases = TestCases.objects.filter(
+            test_suite__id__in=test_suites
+        )
+        data = {
+            'not_run':test_cases.filter(run=False).count(),
+            'passed':test_cases.filter(run=True, passed=True).count(),
+            'failed':test_cases.filter(run=True, passed=False, failed=True).count(),
+            'skipped':test_cases.filter(run=True, passed=False, failed=False, skipped=True).count(),
+            'not_started_test_runs':{
+                'involve_you':test_runs.filter(
+                    status=TEST_RUN_STATUS_CHOICES.NOT_STARTED, 
+                    assigned_user=request.user
+                ).count(),
+                'total_not_started':test_runs.filter(
+                    status=TEST_RUN_STATUS_CHOICES.NOT_STARTED, 
+                ).count()
+            },
+            'in_progress_test_runs':{
+                'involve_you':test_runs.filter(
+                    status=TEST_RUN_STATUS_CHOICES.IN_PROGRESS, 
+                    assigned_user=request.user
+                ).count(),
+                'total_in_progress':test_runs.filter(
+                    status=TEST_RUN_STATUS_CHOICES.IN_PROGRESS, 
+                ).count()
+            }
+        }
+        return CustomResponse.success(data=data)

@@ -11,7 +11,6 @@ class PLAN_CHOICES(models.TextChoices):
     BLANK = "blank", "blank"
 
 class TEST_RUN_STATUS_CHOICES(models.TextChoices):
-    NONE = '',''
     NOT_STARTED = "not_started", "not started"
     IN_PROGRESS = "in_progress", "in progress"
     COMPLETED = "completed", "completed"
@@ -121,7 +120,7 @@ class TestRun(TimeStampedModel):
     status =  models.CharField(
         max_length=100,
         choices=TEST_RUN_STATUS_CHOICES.choices,
-        default=TEST_RUN_STATUS_CHOICES.NONE
+        default=TEST_RUN_STATUS_CHOICES.NOT_STARTED
     )
 
     def __str__(self):

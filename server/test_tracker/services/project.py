@@ -46,12 +46,10 @@ def update_activity(
 
 def get_test_run_by_id(test_run_id: str):
     """Try to return a test run based on its id."""
-    if test_run_id.isdigit():
-        try:
-            return TestRun.objects.get(id = int(test_run_id))
-        except TestRun.DoesNotExist:
-            return None
-    return None
+    try:
+        return TestRun.objects.get(id = int(test_run_id))
+    except TestRun.DoesNotExist:
+        return None
 
 def project_member_validation(project: Project, member: Member, user: User, remove=False):
     """Validate if the user is a member of the project."""
