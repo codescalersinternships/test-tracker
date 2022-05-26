@@ -26,6 +26,8 @@
     import TestSuite from "./pages/TestSuite.svelte";
     import TestSuiteDetails from "./pages/TestSuiteDetails.svelte";
 
+    import TestRun from "./pages/TestRun.svelte";
+
     import NotFound from "./pages/NotFound.svelte";
 
     let user;
@@ -90,6 +92,8 @@
         <Route path="members/" primary={false}><Members user={user}/></Route>
         <Route path="members/:id/" primary={false}><MemberDetails user={user}/></Route>
         
+        <Route path="projects/:id/runs/" primary={false}><TestRun user={user}/></Route>
+
         <Route> 
             <NotFound/>
         </Route>
