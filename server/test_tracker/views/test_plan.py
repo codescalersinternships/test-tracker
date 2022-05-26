@@ -239,7 +239,7 @@ class SearchTestPlanAPIView(GenericAPIView):
         This class to filter all project test plans that matches the key word.
     """
     serializer_class = TestPlanDetailSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
     def get(self, request:Request, project_id: str, key_word: str):
         """
