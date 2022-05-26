@@ -65,17 +65,6 @@
         h3 {
             font-size: 20px;
         }
-        code {
-            font-size: .875em;
-            color: #ffffff;
-            word-wrap: break-word;
-            background: #242c30;
-            padding: 0.5em 0.7em;
-            margin-top: 1em;
-            margin-bottom: 1em;
-            border: 1px solid #949494;
-            border-radius: 4px;
-        }
         .card_info{
             display: flex;
             flex-direction: column;

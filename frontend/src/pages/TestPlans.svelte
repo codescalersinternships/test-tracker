@@ -6,6 +6,7 @@
     import NavBar from "../components/NavBar.svelte";
     import Search from "../components/Search.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte"
+    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
 
     export let user;
     let testPlans, testPlansCopy, projectID, thisTestPlan;
@@ -116,11 +117,13 @@
                 </div>
             {/if}
         </div>
+    {:else}
+        <LoodingSpiner />
     {/if}
     <DeleteModal
         on:message={handleDelete}
         obj={thisTestPlan}
-        onRequest='/test_plan/actions/{projectID}'
+        onRequest='/test_plan/{projectID}/actions'
         config={config}
     />
 </section>
