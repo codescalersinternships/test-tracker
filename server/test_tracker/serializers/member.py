@@ -16,7 +16,7 @@ class ProjectTeamSerializer(ModelSerializer):
     """Class Member to get project teams"""
     class Meta:
         model = Member
-        fields = ['id', 'first_name']
+        fields = ['id', 'first_name', 'last_name']
 
 class MemberSerializers(ModelSerializer):
     created = SerializerMethodField()
@@ -75,5 +75,5 @@ class MemberSerializers(ModelSerializer):
             test_suites__in = test_suites, assigned_user = obj
         ).order_by('-created').first()
         if test_run:
-            return TestRunsSerializer(test_run, many=True).data
+            return TestRunsSerializer(test_run).data
         return None
