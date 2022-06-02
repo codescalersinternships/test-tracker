@@ -4,7 +4,6 @@
     import NavBar from "../components/NavBar.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import Search from "../components/Search.svelte";
-    import Alert from "../components/ui/Alert.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte"
 
     import snarkdown from 'snarkdown'
@@ -54,86 +53,14 @@
 
 </script>
 
-<svelte:head>
-    <title>Test-Tracker | Test Suite Detail</title>
-    <style>
-        ul{
-            margin: 0;
-        }
-        h1{
-            font-size: 1.5rem;
-        }
-        h3 {
-            font-size: 20px;
-        }
-        .card_info{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            background-color: #f5f5f5;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .card_info p{
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .test_case_card{
-            position: relative;
-            background-color: #f5f5f5;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
-        .test_case_card a{
-            text-decoration: none;
-            color: #5a79b1;
-            display: block;
-            font-weight: 700;
-        }
-        .collapse_span{
-            position: absolute;
-            right: 30px;
-            height: 30px;
-            width: 30px;
-            text-align: center;
-            border-radius: 50%;
-        }
-        .collapse_span:hover{
-            box-shadow: 0px 1px 4px 1px #d0d0d0;
-            background: #f5f5f5;
-        }
-        .test_case_info{
-            margin-top: 10px;
-            background: #fcfcfc;
-            padding: 5px;
-        }
-        .collapse-style{
-            margin-left: 25px;
-            margin-top: 15px;
-            margin-bottom: 20px;
-        }
-        .collapse-style a{
-            display: inline;
-            color: #5a79b1;
-            font-size: 17px;
-        }
-    </style>
-</svelte:head>
-
-
 {#if user}
     <NavBar projectView="true" user={user}/>
     {#if testSuite}
         <div class="container pb-5">
             <div class="pt-4">
-                <p class="h5">
-                    Test suites: {testSuite.title}
+                <p class="h4 mb-2">
+                    Test Runs | 
+                    <strong class="h4 title">{testSuite.title}</strong>
                 </p>
                 <p class="text-muted">
                     There are <strong>{testSuite.number_of_test_cases}</strong> test {testSuite.number_of_test_cases === 1 ? 'case' : 'cses'}
@@ -268,3 +195,80 @@
     onRequest='/test_cases/detail'
     config={config}
 />
+
+<svelte:head>
+    <title>Test-Tracker | Test Suite Detail</title>
+    <style>
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #5a79b1;
+        }
+        ul{
+            margin: 0;
+        }
+        h1{
+            font-size: 1.5rem;
+        }
+        h3 {
+            font-size: 20px;
+        }
+        .card_info{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card_info p{
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .test_case_card{
+            position: relative;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .test_case_card a{
+            text-decoration: none;
+            color: #5a79b1;
+            display: block;
+            font-weight: 700;
+        }
+        .collapse_span{
+            position: absolute;
+            right: 30px;
+            height: 30px;
+            width: 30px;
+            text-align: center;
+            border-radius: 50%;
+        }
+        .collapse_span:hover{
+            box-shadow: 0px 1px 4px 1px #d0d0d0;
+            background: #f5f5f5;
+        }
+        .test_case_info{
+            margin-top: 10px;
+            background: #fcfcfc;
+            padding: 5px;
+        }
+        .collapse-style{
+            margin-left: 25px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        .collapse-style a{
+            display: inline;
+            color: #5a79b1;
+            font-size: 17px;
+        }
+    </style>
+</svelte:head>

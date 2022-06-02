@@ -75,10 +75,6 @@
 
 </script>
 
-<svelte:head>
-    <title>Test-Tracker | Test Plan Detail</title>
-</svelte:head>
-
 <section>
     {#if user && testPlansContents}
         <NavBar projectView="true" user={user}/>
@@ -86,12 +82,14 @@
 
         <div class="container pb-5">
             <div class="pt-4">
-                <p class="h5">
-                    {testPlansContents.title}
+                <p class="h4 mb-2">
+                    Test Plans | 
+                    <strong class="h4 title">{testPlansContents.title}</strong>
                 </p>
+
                 <p class="text-muted">
                     {#if testPlansContents.temps}
-                        There are <strong>{testPlansContents.temps.length}</strong> {testPlansContents.temps.length === 1 ? 'area' : 'areas'}
+                        There are <strong class="text-dark">{testPlansContents.temps.length}</strong> {testPlansContents.temps.length === 1 ? 'area' : 'areas'}
                     {/if}
                 </p>
             </div>
@@ -168,3 +166,14 @@
         config={config}
     />
 </section>
+
+<svelte:head>
+    <title>Test-Tracker | Test Plan Detail</title>
+    <style>
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #5a79b1;
+        }
+    </style>
+</svelte:head>

@@ -53,10 +53,6 @@
     }
 </script>
 
-<svelte:head>
-    <title>Test-Tracker | Requirements Detail</title>
-</svelte:head>
-
 <section>
     {#if user && RequirementDocs}
         <NavBar projectView="true" {user} />
@@ -64,9 +60,11 @@
 
         <div class="container pb-5">
             <div class="pt-4">
-                <p class="h5">
-                    {RequirementDocs.title}
+                <p class="h4 mb-2">
+                    Requirement Docs | 
+                    <strong class="h4 title">{RequirementDocs.title}</strong>
                 </p>
+
                 <p class="text-muted">
                     {#if RequirementDocs.requirements.length}
                         There are <strong
@@ -170,3 +168,14 @@
         config={config}
     />
 </section>
+
+<svelte:head>
+    <title>Test-Tracker | Requirements Detail</title>
+    <style>
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #5a79b1;
+        }
+    </style>
+</svelte:head>

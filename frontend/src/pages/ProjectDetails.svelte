@@ -34,16 +34,15 @@
     }
 </script>
 
-<svelte:head>
-    <title>Test-Tracker | Project Detail</title>
-</svelte:head>
-
 <section>
     {#if user}
         <NavBar projectView="true" user={user}/>
         {#if project}
             <div class="container mt-4">
-                <h5 class="h4">Project overview & activity of {project.title}</h5>
+                <p class="h4 mb-2">
+                    Project overview & activity of 
+                    <strong class="h4 title">{project.title}</strong>
+                </p>
                 {#if user.permission === "admin"}
                     <div class="col-4 mt-3">
                         <button type="button" class="btn btn-danger text-white text-decoration-none" 
@@ -149,3 +148,14 @@
         <LoodingSpiner />
     {/if}
 </section>
+
+<svelte:head>
+    <title>Test-Tracker | Project Detail</title>
+    <style>
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #5a79b1;
+        }
+    </style>
+</svelte:head>
