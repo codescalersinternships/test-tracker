@@ -35,6 +35,10 @@ class TestSuitesDetailSerializer(ModelSerializer):
     number_of_test_cases = SerializerMethodField()
     test_cases = SerializerMethodField()
     test_plan = SerializerMethodField()
+    passed = SerializerMethodField()
+    failed = SerializerMethodField()
+    skipped = SerializerMethodField()
+    not_run = SerializerMethodField()
 
     class Meta:
         model = TestSuites
@@ -51,12 +55,7 @@ class TestSuitesDetailSerializer(ModelSerializer):
     def get_number_of_test_cases(self, obj):
         """Method to get the number of test cases"""
         return TestCases.objects.filter(test_suite=obj).count()
-    
-    def get_test_cases(self, obj):
-        """Method to get the test cases"""
-        test_cases = TestCases.objects.filter(test_suite=obj).order_by('-created')
-        return TestCaseSerializer(test_cases, many=True).data
-    
+
     def get_test_plan(self, obj):
         """Method to get the test plan"""
         data = {
@@ -64,3 +63,45 @@ class TestSuitesDetailSerializer(ModelSerializer):
             'title': obj.test_plan.title,
         }
         return data
+
+    def get_test_cases(self, obj: TestSuites) -> int:
+        """
+        This method is used to get the total number of test cases
+        """
+        return TestCaseSerializer(
+                obj.test_suite_test_cases.all()
+                .order_by('-created'), many=True
+            ).data
+
+    def get_passed(self, obj: TestSuites) -> int:
+        """Return length of passed test cases"""
+        return len(obj.test_suite_test_cases.filter(
+            passed=True,
+            failed=False,
+            skipped=False
+        ))
+
+    def get_failed(self, obj: TestSuites) -> int:
+        """Return length of passed test cases"""
+        return len(obj.test_suite_test_cases.filter(
+            failed=True,
+            passed=False,
+            skipped=False
+        ))
+
+    def get_skipped(self, obj: TestSuites) -> int:
+        """Return length of passed test cases"""
+        return len(obj.test_suite_test_cases.filter(
+            failed=False,
+            passed=False,
+            skipped=True
+        ))
+
+    def get_not_run(self, obj: TestSuites) -> int:
+        """Return length of passed test cases"""
+        return len(obj.test_suite_test_cases.filter(
+            run=False,
+            failed=False,
+            passed=False,
+            skipped=False,
+        ))

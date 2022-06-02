@@ -3,7 +3,8 @@ from os import truncate
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from server.test_tracker.models.project import TestCases, TestRun, TestSuites
-from server.test_tracker.serializers.test_cases import GetSingleTestCaseSerializer
+from server.test_tracker.serializers.test_cases import TestCaseSerializer
+from server.test_tracker.serializers.test_suites import TestSuitesDetailSerializer
 from server.test_tracker.services.test_cases import get_test_cases_based_on_test_suites
 
 
@@ -44,7 +45,7 @@ class LastWeekTestRunReportSheetSerializer(ModelSerializer):
 class TestRunsSerializer(ModelSerializer):
     """Test run serializer class"""
     assigned_user = SerializerMethodField()
-    all_test_cases = SerializerMethodField()
+    test_suites = SerializerMethodField()
     total_test_cases = SerializerMethodField()
     passed = SerializerMethodField()
     failed = SerializerMethodField()
@@ -60,7 +61,7 @@ class TestRunsSerializer(ModelSerializer):
         fields = [
             'id','title','test_suites','total_test_cases','assigned_user',
             'passed', 'failed','skipped', 'not_run', 'completed','status',
-            'created','modified', 'project_id', 'all_test_cases'
+            'created','modified', 'project_id', 'test_suites'
         ]
 
     def get_created(self, obj):
@@ -124,8 +125,8 @@ class TestRunsSerializer(ModelSerializer):
         """Return project id"""
         return obj.test_suites.first().project_id
 
-    def get_all_test_cases(self, obj):
+    def get_test_suites(self, obj):
         """Returns a list of test cases"""
         test_suites = obj.test_suites.all()
-        test_cases = get_test_cases_based_on_test_suites(test_suites)
-        return GetSingleTestCaseSerializer(test_cases, many=True).data
+        # test_cases = get_test_cases_based_on_test_suites(test_suites)
+        return TestSuitesDetailSerializer(test_suites, many=True).data
