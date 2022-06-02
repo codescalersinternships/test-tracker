@@ -5,7 +5,7 @@
     import axios from '../healpers/axios';
     import NavBar from "../components/NavBar.svelte";
     import Search from "../components/Search.svelte";
-    import DeleteModal from "../components/ui/DeleteModal.svelte"
+    import DeleteModal from "../components/ui/DeleteModal.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
 
     export let user;

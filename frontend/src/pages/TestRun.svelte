@@ -56,71 +56,6 @@
     }
 </script>
 
-<svelte:head>
-    <title>Test-Tracker | Test runs</title>
-    <style>
-        .nav-style {
-            width: 50%;
-            text-align: center;
-        }
-        .card-style {
-            border: 1px solid #dadada;
-            margin-bottom: 15px;
-        }
-        .svg{
-            color: #5a79b1;
-            margin-bottom:3px;
-        }
-        .report-span-style{
-            align-items: center;
-            border-radius: 20px;
-            color: #FFF;
-            display: flex;
-            font-weight: bold;
-            height: 40px;
-            justify-content: center;
-            line-height: 1;
-            max-width: 70px;
-            min-width: 70px;
-        }
-        .report-graid{
-            align-items: center;
-            display: flex;
-            text-decoration: none;
-        }
-        .report-span-text{
-            display: block;
-            font-size: 1.57em;
-            font-weight: bold;
-            padding: 0 0 5px 0;
-            margin-left: 10px;
-        }
-        .pass{
-            background-color: #7fb24b;
-        }
-        .fail{
-            background-color: #f1495d;
-        }
-        .skip{
-            background-color: #f5a623;
-        }
-        .not_run{
-            background-color: #5a79b1;
-        }
-        .report-details{
-            background-color: #549dfa;
-        }
-        .number{
-            display: inline-block;
-            height: 8px;
-            width: 8px;
-            margin: 0px 5px 0.8px 0;
-            border-radius: 50%;
-        }
-
-    </style>
-</svelte:head>
-
 <section>
     {#if user}
         <NavBar projectView="true" user={user}/>
@@ -380,3 +315,69 @@
         config={config}
     />
 </section>
+
+
+<svelte:head>
+    <title>Test-Tracker | Test runs</title>
+    <style>
+        .nav-style {
+            width: 50%;
+            text-align: center;
+        }
+        .card-style {
+            border: 1px solid #dadada;
+            margin-bottom: 15px;
+        }
+        .svg{
+            color: #5a79b1;
+            margin-bottom:3px;
+        }
+        .report-span-style{
+            align-items: center;
+            border-radius: 20px;
+            color: #FFF;
+            display: flex;
+            font-weight: bold;
+            height: 40px;
+            justify-content: center;
+            line-height: 1;
+            max-width: 70px;
+            min-width: 70px;
+        }
+        .report-graid{
+            align-items: center;
+            display: flex;
+            text-decoration: none;
+        }
+        .report-span-text{
+            display: block;
+            font-size: 1.57em;
+            font-weight: bold;
+            padding: 0 0 5px 0;
+            margin-left: 10px;
+        }
+        .pass{
+            background-color: #7fb24b;
+        }
+        .fail{
+            background-color: #f1495d;
+        }
+        .skip{
+            background-color: #f5a623;
+        }
+        .not_run{
+            background-color: #5a79b1;
+        }
+        .report-details{
+            background-color: #549dfa;
+        }
+        .number{
+            display: inline-block;
+            height: 8px;
+            width: 8px;
+            margin: 0px 5px 0.8px 0;
+            border-radius: 50%;
+        }
+
+    </style>
+</svelte:head>
