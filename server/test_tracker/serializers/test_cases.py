@@ -57,7 +57,7 @@ class GetSingleTestCaseSerializer(ModelSerializer):
         fields = (
             'title', 'description', 'test_steps', 'expected_result',
             'requirement', 'test_suite','comments', 'passed', 'failed',
-            'skipped', 'run', 'completed', 'last_saved'
+            'skipped', 'run', 'completed', 'last_saved','created','modified'
         )
 
     def get_requirement(self, obj):

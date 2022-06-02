@@ -51,28 +51,33 @@ class TestRunDetailAPIView(GenericAPIView):
     
     def get(self, request:Request, project_id:str, test_run_id: str) -> Response:
         """
-        This method is used to get all the test runs
+        This method is used to get all the test cases based on test run id
         """
-        test_runs = get_test_run_by_id(test_run_id)
-        if test_runs is None:
+        project = get_project_by_id(project_id)
+        if not project:
+            return CustomResponse.not_found(message="Project not found")
+        test_run = get_test_run_by_id(test_run_id)
+        if test_run is None:
             return CustomResponse.not_found(
                 message="Test run with id {} not found".format(test_run_id)
             )
-        serializer = self.serializer_class(test_runs)
+        serializer = self.serializer_class(test_run)
         return CustomResponse.success(data=serializer.data)
 
     def delete(self, request: Request, project_id:str, test_run_id: str) -> Response:
-        """Method get to get all of test suites based on the project"""
+        """Method delete to delete test run"""
         test_run = get_test_run_by_id(test_run_id)
-        test_suites = test_run.test_suites.all()
         project = get_project_by_id(project_id)
+
+        if not test_run:
+            return CustomResponse.not_found(message="Test Run not found")
+        if not project:
+            return CustomResponse.not_found(message="Project not found")
+
+        test_suites = test_run.test_suites.all()
         for test_suite in test_suites:
             if test_suite.project != project:
                 return CustomResponse.unauthorized()
-        if test_run is None:
-            return CustomResponse.not_found(message="Test Run not found")
-        if project is None:
-            return CustomResponse.not_found(message="Project not found")
 
         update_activity(
             datetime.datetime.now(), request.user, project,
@@ -96,6 +101,10 @@ class SearchOnTestRunAPIView(GenericAPIView):
         """
         This method is used to get all the test runs
         """
+        project = get_project_by_id(project_id)
+        if not project:
+            return CustomResponse.not_found(message="Project not found")
+
         params = request.query_params
         member = params.get('member')
         status = params.get('status')
@@ -120,22 +129,27 @@ class SearchOnTestRunAPIView(GenericAPIView):
         return CustomResponse.success(data=serializer.data)
 
 class LastWeekTestRunReportSheetAPIView(GenericAPIView):
-    # serializer_class = LastWeekTestRunReportSheetSerializer
     permission_classes = (HasProjectAccess,)
 
     def get(self, request: Request, project_id: str) -> Response:
         """
         This method is used to get all the test runs report based on last week
         """
+        project = get_project_by_id(project_id)
+        if not project:
+            return CustomResponse.not_found(message="Project not found")
         today = datetime.datetime.today().date()
+
         test_runs = TestRun.objects.filter(
             test_suites__project_id=project_id,
             modified__gte=today - datetime.timedelta(days=7)
         ).values_list('id', flat=True)
+
         test_suites = TestSuites.objects.filter(
             project_id=project_id,
             run_suites__id__in=test_runs
         ).values_list('id', flat=True)
+
         test_cases = TestCases.objects.filter(
             test_suite__id__in=test_suites
         )
