@@ -8,7 +8,7 @@ from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthentic
 
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.project import TestCases
-from server.test_tracker.serializers.test_cases import GetSingleTestCaseSerializer, TestCaseSerializer
+from server.test_tracker.serializers.test_cases import TestCaseSerializer, TestCaseSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.project import update_activity
 from server.test_tracker.services.requirement import get_requirement_by_id
@@ -128,7 +128,7 @@ class TestCaseDetailAPIView(GenericAPIView):
 
 
 class GetSingleTestCaseAPIView(GenericAPIView):
-    serializer_class = GetSingleTestCaseSerializer
+    serializer_class = TestCaseSerializer
     permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, test_case_id: str):
