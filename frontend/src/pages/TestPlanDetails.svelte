@@ -13,7 +13,8 @@
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     };
 
-    let testPlansContents, temps, tempsCopy, projectID, planID, title, body, oldTitle, errorMessage;
+    let testPlansContents, temps, tempsCopy, projectID, planID, title, oldTitle, errorMessage;
+    let show = false;
 
     onMount(async () => {
         // Loading test plan
@@ -40,7 +41,7 @@
 
     function setContent(contentArea) {
         title = contentArea
-        document.querySelector('.modal').style.display = 'block'
+        show = true;
     }
 
     async function handleDelete(event) {
@@ -160,6 +161,7 @@
     {/if}
     <!-- <ModalUpdate updateFunctionOnClick={updateContentArea} title={title} body={body}/> -->
     <DeleteModal
+        bind:show
         on:message={handleDelete}
         obj={title}
         onRequest='/test_plan/{projectID}/{planID}/temps'

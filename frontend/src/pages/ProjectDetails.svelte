@@ -9,6 +9,7 @@
     export let user;
 
     let project, activity;
+    let show = false;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -29,14 +30,8 @@
     })
 
     function openModal() {
-        document.querySelector('.modal').style.display = 'block'
+        show = true;
     }
-
-    async function handleDeleteObj(event) {
-        consol.log(event.detail.obj)
-    }
-
-
 </script>
 
 <svelte:head>
@@ -144,7 +139,11 @@
                 </div>
                 <ActivityTable activity={activity} />
             </div>
-            <DeleteModal request="/project/{project.id}/" obj={project} redirect="/projects/"/>
+            <DeleteModal
+                bind:show
+                onRequest="project" 
+                obj={project} redirect="/projects/"
+            />
         {/if}
     {:else}
         <LoodingSpiner />

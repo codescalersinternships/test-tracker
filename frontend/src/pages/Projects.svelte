@@ -9,6 +9,7 @@
     export let user;
 
     let projects, projectsCopy, thisProject;
+    let show = false;
     
     let config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -33,8 +34,8 @@
     }
 
     function setProject(project) {
-        thisProject = project
-        document.querySelector('.modal').style.display = 'block'
+        thisProject = project;
+        show = true;
     }
 
 </script>
@@ -59,7 +60,7 @@
                 <div class="pt-5">
                     <div class="row p-1">
                         {#each projects as project}
-                            <ProjectCard project={project} link={`/projects/${project.id}`}>
+                            <ProjectCard project={project}>
                                 <button class="dropdown-item text-danger" on:click={setProject(project)}>Delete</button>
                             </ProjectCard>
                         {/each}
@@ -75,6 +76,7 @@
         </div>
     {/if}
     <DeleteModal
+        bind:show
         on:message={handleDelete}
         obj={thisProject}
         onRequest='/project'

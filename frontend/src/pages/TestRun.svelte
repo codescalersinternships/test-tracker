@@ -9,6 +9,7 @@
 
     export let user;
     let members, status, member, projectID, testRuns, testRunsCopy, thisTestRun, report;
+    let show = false;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -29,7 +30,7 @@
 
     async function setRun(run) {
         thisTestRun = run;
-        document.querySelector('.modal').style.display = 'block';
+        show = true;
     }
 
     async function handleDelete(event) {
@@ -372,6 +373,7 @@
         <LoodingSpiner />
     {/if}
     <DeleteModal
+        bind:show
         on:message={handleDelete}
         obj={thisTestRun}
         onRequest='/test_runs/projects/{projectID}/runs'

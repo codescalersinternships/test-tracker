@@ -10,6 +10,7 @@
 
     export let user;
     let testPlans, testPlansCopy, projectID, thisTestPlan;
+    let show = false;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -32,7 +33,7 @@
 
     function setPlan(plan) {
         thisTestPlan = plan
-        document.querySelector('.modal').style.display = 'block'
+        show = true;
     }
 
     async function handleDelete(event) {
@@ -121,6 +122,7 @@
         <LoodingSpiner />
     {/if}
     <DeleteModal
+        bind:show
         on:message={handleDelete}
         obj={thisTestPlan}
         onRequest='/test_plan/{projectID}/actions'

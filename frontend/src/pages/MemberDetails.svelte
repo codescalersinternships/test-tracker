@@ -6,6 +6,7 @@
     export let user;
 
     let member;
+    let show = false;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -24,8 +25,8 @@
         }
     });
 
-    function openModal(member) {
-        document.querySelector('.modal').style.display = 'block'
+    function openModal() {
+        show = true;
     }
 
 </script>
@@ -43,7 +44,7 @@
             </div>
             {#if user.permission === "admin"}
                 <div class="col-4 pt-5">
-                    <button type="button" class="btn btn-danger text-white text-decoration-none" 
+                    <button type="button" class="btn btn-danger text-white text-decoration-none"
                         on:click={openModal}>
                         Delete
                     </button>
@@ -83,81 +84,65 @@
                     </table>
                 </div>
             </div>
-            <div class="card mt-4 p-4">
-                <div class="pt-4">
-                    <p class="h5 text-muted">Last Project Worked on</p>
-                    <hr>
-                    <table class="table table-borderless">
-                        <tbody>
-                            <tr>
-                                <th scope="row">Name</th>
-                                <td class="text-primary">
-                                    <a href="/projects/{member.last_project_working_on.id}">
-                                        {member.last_project_working_on.title.slice(0, 50)}
-                                    </a>
-                                </td>
-                                <th scope="row">Updated date</th>
-                                <td class="text-dark">{member.last_project_working_on.modified}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Pinding tasks</th>
-                                {#if member.incomplete_test_runs_assigned_to_you}
-                                    <td class="text-primary">{member.incomplete_test_runs_assigned_to_you}</td>
-                                {:else}
-                                    <td class="text-muted">There are no pinding tasks.</td>
-                                {/if}
-                                <th scope="row">Created date</th>
-                                <td class="text-dark">{member.last_project_working_on.created}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <strong class="pl-3 text-muted">Team</strong>
-                    <br/><hr>
-                    <div class="row">
-                        {#if member.last_project_working_on.teams.length === 0 }
-                            <div class="col-6 text-muted">There are no teams yet, only you.</div>
-                        {:else}
-                            {#each member.last_project_working_on.teams as person }
-                            <div class="col-2">
-                                <span class="ml-3">
-                                    <a class="text-primary" href="/members/{person.id}">@{person.first_name}</a>
-                                </span>
-                            </div>
-                            {/each}
-                        {/if}
+            {#if member.last_project_working_on}
+                <div class="card mt-4 p-4">
+                    <div class="pt-4">
+                        <p class="h5 text-muted">Last Project Worked on</p>
+                        <hr>
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Name</th>
+                                        <td class="text-primary">
+                                            <a href="/projects/{member.last_project_working_on.id}">
+                                                {member.last_project_working_on.title.slice(0, 50)}
+                                            </a>
+                                        </td>
+                                        <th scope="row">Updated date</th>
+                                        <td class="text-dark">{member.last_project_working_on.modified}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Pinding tasks</th>
+                                        {#if member.incomplete_test_runs_assigned_to_you}
+                                            <td class="text-primary">{member.incomplete_test_runs_assigned_to_you}</td>
+                                        {:else}
+                                            <td class="text-muted">There are no pinding tasks.</td>
+                                        {/if}
+                                        <th scope="row">Created date</th>
+                                        <td class="text-dark">{member.last_project_working_on.created}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        <strong class="pl-3 text-muted">Team</strong>
+                        <br/><hr>
+                        <div class="row">
+                            {#if member.last_project_working_on.teams.length === 0 }
+                                <div class="col-6 text-muted">There are no teams yet, only you.</div>
+                            {:else}
+                                {#each member.last_project_working_on.teams as person }
+                                <div class="col-2">
+                                    <span class="ml-3">
+                                        <a class="text-primary" href="/members/{person.id}">@{person.first_name}</a>
+                                    </span>
+                                </div>
+                                {/each}
+                            {/if}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {/if}
             {#if member.last_tests_assigned}
                 <div class="card mt-4 p-4">
                     <div class="pt-4">
-                        <p class="h5 text-muted">Last Tests Assigned</p>
+                        <p class="h5 text-muted">Last Test Run Assigned</p>
                         <hr>
                         <table class="table table-borderless">
                             <tbody>
                                 <tr>
                                     <th scope="row">Name</th>
-                                    <td class="text-primary">{member.last_tests_assigned.title.slice(0, 50)}</td>
+                                    <td><a href="/projects/{member.last_tests_assigned.project_id}/runs/{member.last_tests_assigned.id}" class="text-primary">{member.last_tests_assigned.title.slice(0, 50)}</a></td>
                                     <th scope="row">Date</th>
                                     <td class="text-primary">{member.last_tests_assigned.created}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Description</th>
-                                    <div class="card">
-                                        {member.last_tests_assigned.description}
-                                    </div>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Steps</th>
-                                    <div class="card">
-                                        {member.last_tests_assigned.test_steps}
-                                    </div>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Expected Result</th>
-                                    <div class="card">
-                                        {member.last_tests_assigned.expected_result}
-                                    </div>
                                 </tr>
                             </tbody>
                         </table>
@@ -167,9 +152,10 @@
         </div>
     {/if}
     <DeleteModal
+        bind:show
         obj={member}
-        onRequest='/members'
+        onRequest='/members/'
         config={config}
-        redirect='/members'
+        redirect='/members/'
     />
 </section>

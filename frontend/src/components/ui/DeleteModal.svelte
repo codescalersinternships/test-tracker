@@ -2,13 +2,14 @@
     import { createEventDispatcher } from 'svelte';
     import axios from '../../healpers/axios'
     
-    export let onRequest; // [request] for the endpoint
-    export let obj; // [obj] is the object to be deleted
-    export let config; // [config] is the config for the request
+    export let onRequest = null; // [request] for the endpoint
+    export let obj = null; // [obj] is the object to be deleted
+    export let config = null; // [config] is the config for the request
     export let redirect = null; // [redirect] is the url to redirect to after deleting
 
     const dispatch = createEventDispatcher();
-    function closeModal() {document.querySelector('.delete-modal').style.display = 'none'}
+    export let show = false;
+    // function closeModal() {document.querySelector('.delete-modal').style.display = 'none'}
     
     async function deleteObj() {
         dispatch('message', {
@@ -21,7 +22,8 @@
             } else if (obj.title){
                 await axios.delete(`${onRequest}/${obj.title}/`, config) // We somtimes want to make request on object has no id
             }
-            closeModal()
+            show = false;
+            // closeModal()
             if (redirect){
                 window.location.href = redirect
             }
@@ -41,7 +43,7 @@
     </style>
 </svelte:head>
 
-<div class="modal delete-modal" tabindex="-1" style="display: none;">
+<div class="modal delete-modal" tabindex="-1" style={`display: ${show ? "block" : "none"};`}>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -55,7 +57,7 @@
                 <span class="text-danger">* </span>Please note that this action cannot be undone.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" on:click={closeModal}>Close</button>
+                <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" on:click={() => show = false}>Close</button>
                 <button type="button" class="btn btn-danger text-white text-decoration-none" 
                     on:click={deleteObj}>
                     Delete

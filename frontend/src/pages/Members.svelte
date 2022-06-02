@@ -12,6 +12,7 @@
     export let user;
 
     let members, membersCopy, thisMember;
+    let show = false;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -43,7 +44,7 @@
 
     function setMember(member) {
         thisMember = member
-        document.querySelector('.modal').style.display = 'block'
+        show = true;
     }
 </script>
 
@@ -141,6 +142,7 @@
         <LoodingSpiner />
     {/if}
     <DeleteModal
+        bind:show
         on:message={handleDelete}
         obj={thisMember}
         onRequest='/members'

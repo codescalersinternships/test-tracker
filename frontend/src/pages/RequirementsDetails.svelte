@@ -16,6 +16,7 @@
     let path = window.location.pathname;
     let projectID = path.split("/")[2];
     let projectReqID = path.split("/")[4];
+    let show = false;
 
     onMount(async () => {
         // Loading Project RequirementsDetails
@@ -35,8 +36,8 @@
     });
 
     function setRequirement(requirement) {
-        thisReq = requirement
-        document.querySelector('.modal').style.display = 'block'
+        thisReq = requirement;
+        show = true;
     }
 
     async function handleDelete(event) {
@@ -162,6 +163,7 @@
         </div>
     {/if}
     <DeleteModal
+        bind:show
         on:message={handleDelete}
         obj={thisReq}
         onRequest='/requirements/projects/{projectID}/{projectReqID}'

@@ -50,13 +50,14 @@ class TestRunsSerializer(ModelSerializer):
     completed = SerializerMethodField()
     created = SerializerMethodField()
     modified = SerializerMethodField()
+    project_id = SerializerMethodField()
 
     class Meta:
         model = TestRun
         fields = [
             'id','title','test_suites','total_test_cases','assigned_user',
             'passed', 'failed','skipped', 'not_run', 'completed','status',
-            'created','modified'
+            'created','modified', 'project_id'
         ]
 
     def get_created(self, obj):
@@ -115,3 +116,7 @@ class TestRunsSerializer(ModelSerializer):
         """Return assigned user"""
         from server.test_tracker.serializers.member import ProjectTeamSerializer
         return ProjectTeamSerializer(obj.assigned_user).data
+
+    def get_project_id(self, obj):
+        """Return project id"""
+        return obj.test_suites.first().project_id

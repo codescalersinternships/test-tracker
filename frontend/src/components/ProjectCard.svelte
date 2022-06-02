@@ -5,7 +5,7 @@
 
 </script>
 {#if project}
-    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-5 mb-md-0">
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-5 mb-md-2">
         <div class="card">
             <div class="dropdown p-1" style="position: absolute;font-size: 0;right: 0; top: 20px;">
                 <a

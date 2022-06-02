@@ -10,6 +10,7 @@
 
     export let user;
     let testSuites, testSuitesCopy, projectID, thisSuite;
+    let show = false;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -31,8 +32,8 @@
     }
 
     function setSuite(suite) {
-        thisSuite = suite
-        document.querySelector('.modal').style.display = 'block'
+        thisSuite = suite;
+        show = true;
     }
 
     async function handleDelete(event) {
@@ -127,6 +128,7 @@
         <LoodingSpiner />
     {/if}
     <DeleteModal
+        bind:show
         on:message={handleDelete}
         obj={thisSuite}
         onRequest='/test_suites/{projectID}/actions'

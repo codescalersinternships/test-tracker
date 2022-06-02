@@ -51,7 +51,7 @@ class ProjectsAPIView(GenericAPIView):
     
     def get(self, request: Request) -> Response:
         """Get all projects based on creator, Members users"""
-        projects = get_projects_by_user(request.user)
+        projects = get_projects_by_user(request.user).order_by('-created')
         serializer = ProjectsSerializer(projects, many=True)
         return CustomResponse.success(
             data = serializer.data,

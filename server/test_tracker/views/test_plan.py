@@ -57,7 +57,7 @@ class TestPlansAPIView(GenericAPIView):
         project = get_project_by_id(project_id)
         if project is None:
             return CustomResponse.not_found(message = "Project not found")
-        plans = get_plans_based_on_project(project)
+        plans = get_plans_based_on_project(project).order_by('-created')
         serializer = TestPlanSerializer(plans, many=True)
         return CustomResponse.success(
             message = "Success plans found.",

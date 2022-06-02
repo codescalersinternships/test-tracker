@@ -8,6 +8,7 @@
 
     export let user;
     let requirements, requirementsCopy, projectID, thisRequirement
+    let show = false;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -30,7 +31,7 @@
 
     function setRequirement(requirement) {
         thisRequirement = requirement
-        document.querySelector('.modal').style.display = 'block'
+        show = true;
     }
 
     async function handleDelete(event) {
@@ -123,6 +124,7 @@
         </div>
     {/if}
     <DeleteModal
+        bind:show
         on:message={handleDelete}
         obj={thisRequirement}
         onRequest='/requirements/projects/{projectID}/details'

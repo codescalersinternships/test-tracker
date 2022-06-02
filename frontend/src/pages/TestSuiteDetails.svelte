@@ -16,6 +16,7 @@
     };
 
     let testSuite, testSuiteCopy, projectID, suiteID, thisTestCase;
+    let show = false;
 
     onMount(async () => {
         // Loading test suite
@@ -41,7 +42,7 @@
 
     function setTestCase(testCase) {
         thisTestCase = testCase
-        document.querySelector('.modal').style.display = 'block'
+        show = true;
     }
 
     async function handleDelete(event) {
@@ -261,6 +262,7 @@
     <LoodingSpiner />
 {/if}
 <DeleteModal
+    bind:show
     on:message={handleDelete}
     obj={thisTestCase}
     onRequest='/test_cases/detail'
