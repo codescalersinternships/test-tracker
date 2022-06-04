@@ -29,7 +29,7 @@
         }
     });
 
-    function openModal() {
+    function openDeleteModal() {
         showDeleteModal = true;
     }
 </script>
@@ -48,14 +48,14 @@
                         <button
                             type="button"
                             class="btn btn-danger text-white text-decoration-none"
-                            on:click={openModal}
+                            on:click={openDeleteModal}
                         >
                             Delete
                         </button>
                         <button
                             type="button"
                             class="btn btn-success text-white text-decoration-none"
-                            on:click={openModal}
+                            on:click={openDeleteModal}
                         >
                             Add Member
                         </button>
