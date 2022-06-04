@@ -10,14 +10,14 @@
 
     let project, activity;
     let show = false;
+    var path = window.location.pathname;
+    var projectID = path.split("/")[2];
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     };
     
     onMount(async () => {
-        var path = window.location.pathname;
-        var projectID = path.split("/")[2];
         try {
             const response = await axios.get(`project/${projectID}/`, config)
             project = await response.data.data;
@@ -81,6 +81,25 @@
                 </div>
                 <div class="card mt-4 p-4">
                     <div class="pt-4">
+                        <div class="col-6">
+                            <p class="h5 text-muted">Project Team</p>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="row">
+                        {#each project.teams as member }
+                            <div class="col-2">
+                                <a href="/members/{member.id}">@{member.first_name}</a>
+                            </div>
+                        {:else}
+                            <p class="text-muted">
+                                There are no members.
+                            </p>
+                        {/each}
+                    </div>
+                </div>
+                <div class="card mt-4 p-4">
+                    <div class="pt-4">
                         <div class="row">
                             <div class="col-6">
                                 <p class="h5 text-muted">Incomplete test runs assigned to you</p>
@@ -116,7 +135,7 @@
                                         <tr>
                                             <td class="text-primary">
                                                 <strong class="text-dark">TestRun: </strong>
-                                                <a href="/members/{task.assigned_user.id}">{task.title}</a>
+                                                <a href="/projects/{projectID}/runs/{task.id}">{task.title}</a>
                                             </td>
                                             <td class="text-primary">
                                                 <strong class="text-dark">User: </strong>
