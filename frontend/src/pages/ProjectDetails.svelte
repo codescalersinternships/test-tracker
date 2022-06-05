@@ -5,11 +5,13 @@
     import ActivityTable from "../components/ActivityTable.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
+    import AddProjectMemberModal from "../components/ui/AddProjectMemberModal.svelte";
 
     export let user;
 
     let project, activity;
     let showDeleteModal = false;
+    let showAddMemberModal = false;
     var path = window.location.pathname;
     var projectID = path.split("/")[2];
 
@@ -32,6 +34,12 @@
     function openDeleteModal() {
         showDeleteModal = true;
     }
+    function openAddMemberModal() {
+        showAddMemberModal = true;
+    }
+    async function handleAddMember(event) {
+        project.teams = event.detail.members;
+    }
 </script>
 
 <section>
@@ -44,20 +52,27 @@
                     <strong class="h4 title">{project.title}</strong>
                 </p>
                 {#if user.permission === "admin"}
-                    <div class="col-4 mt-3">
+                    <div class="col-6 mt-3 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-warning text-white text-decoration-none"
+                            on:click={openDeleteModal}
+                        >
+                            Update Project
+                        </button>
                         <button
                             type="button"
                             class="btn btn-danger text-white text-decoration-none"
                             on:click={openDeleteModal}
                         >
-                            Delete
+                            Delete Project
                         </button>
                         <button
                             type="button"
                             class="btn btn-success text-white text-decoration-none"
-                            on:click={openDeleteModal}
+                            on:click={openAddMemberModal}
                         >
-                            Add Member
+                            Add member
                         </button>
                     </div>
                 {/if}
@@ -210,6 +225,10 @@
                 onRequest="project"
                 obj={project}
                 redirect="/projects/"
+            />
+            <AddProjectMemberModal
+                on:message={handleAddMember}
+                bind:showAddMemberModal
             />
         {/if}
     {:else}

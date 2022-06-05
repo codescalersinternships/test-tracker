@@ -1,18 +1,20 @@
 """Everything related to the project."""
-import datetime
-from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
-from server.test_tracker.api.response import CustomResponse
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
+
+from server.test_tracker.api.response import CustomResponse
+from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 from server.test_tracker.models.dashboard import Member, Project
 from server.test_tracker.serializers.dashboard import ProjectsSerializer
+from server.test_tracker.serializers.member import MemberSerializers, ProjectTeamSerializer
+from server.test_tracker.utils.validations import Validator
 
 from server.test_tracker.services.dashboard import find_project_name_based_on_user, get_project_by_id
 from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import project_member_validation, update_activity
-from server.test_tracker.utils.validations import Validator
 
+import datetime
 
 
 
@@ -113,9 +115,11 @@ class ProjectActivityAPIView(GenericAPIView):
         )
 
 class AddMemberToProjectAPIView(GenericAPIView):
-    """Add Member to project"""
-    permission_classes = (UserIsAuthenticated,)
-    serializer_class = ProjectsSerializer
+    """
+        * Usage
+        Add Member to project
+    """
+    permission_classes = (HasProjectAccess,)
 
     def put(self, request:Request, project_id: Project, member_id: Member) -> Response:
         """
@@ -125,7 +129,6 @@ class AddMemberToProjectAPIView(GenericAPIView):
         project = get_project_by_id(project_id)
         member = get_member_by_id(member_id)
         user = request.user
-
         if project_member_validation(project, member, user) != True:
             return project_member_validation(project, member, user)
         update_activity(
@@ -135,7 +138,8 @@ class AddMemberToProjectAPIView(GenericAPIView):
         project.members.add(member)
         return CustomResponse.success(
             message = "Member added to project successfully",
-            status_code = 201
+            status_code = 201,
+            data = ProjectTeamSerializer(project.members.all(), many=True).data
         )
 
     def delete(self, request:Request, project_id: Project, member_id: Member) -> Response:
@@ -248,3 +252,32 @@ class SearchProjectAPIView(GenericAPIView):
             message="Success projects found.",
             data = ProjectsSerializer(projects, many=True).data
         )
+
+class AccountMembersNotInProjectAPIView(GenericAPIView):
+    """
+        * Usage
+        Class to get all account members where members not in project
+    """
+    permission_classes = (HasProjectAccess,)
+    serializer_class = ProjectTeamSerializer
+
+    def get(self, request: Request, project_id: str):
+        """Get all members of user account where members not in project"""
+        project = get_project_by_id(project_id)
+        if not project:
+            return CustomResponse.not_found(message="Project not found")
+        user = request.user
+        if project.user == user:
+            account_members = Member.objects.filter(host_user = user).values_list('id', flat=True)
+            project_members = Member.objects.filter(id__in = project.members.values_list('id', flat=True))
+            not_in_project = Member.objects.exclude(
+                id__in = project_members.values_list(
+                    'id', flat=True
+                )
+            )
+            not_in_project = not_in_project.filter(id__in = account_members)
+            return CustomResponse.success(
+                data=ProjectTeamSerializer(not_in_project, many=True).data,
+                message="Successfully Added"
+            )
+        return CustomResponse.unauthorized(message="You are not authorized to access this view")

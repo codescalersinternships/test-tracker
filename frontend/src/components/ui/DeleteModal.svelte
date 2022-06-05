@@ -47,7 +47,7 @@
     tabindex="-1"
     style={`display: ${showDeleteModal ? "block" : "none"};`}
 >
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 {#if obj}

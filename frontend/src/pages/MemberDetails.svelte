@@ -38,13 +38,13 @@
     {#if user && member}
         <NavBar {user} />
         <div class="container pb-5">
-            <div class="pt-5">
+            <div class="pt-3 pb-2">
                 <p class="h4">
                     About <strong class="h4">{member.full_name}</strong>
                 </p>
             </div>
             {#if user.permission === "admin"}
-                <div class="col-4 pt-5">
+                <div class="col-4">
                     <button
                         type="button"
                         class="btn btn-danger text-white text-decoration-none"
