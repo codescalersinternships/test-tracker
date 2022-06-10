@@ -8,7 +8,6 @@
     const dispatch = createEventDispatcher();
 
     let members, member;
-    let addMemberBtn = true;
 
     var path = window.location.pathname;
     var projectID = path.split("/")[2];
@@ -21,10 +20,6 @@
         try {
             const response = await axios.get(`project/${projectID}/account-members-not-in-project-members/`, config);
             members = response.data.data;
-            if (members.length === 0) {
-                members = false;
-                addMemberBtn = false;
-            }
         } catch (err) {
             if (err.response.status === 404) {
                 window.location.href = "/not-found";
@@ -56,7 +51,7 @@
                             <label for="#select-status">Add New Member</label>
                         </strong>
                     </div>
-                    {#if members}
+                    {#if members && members.length > 0}
                         <select
                             bind:value={member}
                             class="form-select"
@@ -81,14 +76,15 @@
                     data-mdb-dismiss="modal"
                     on:click={() => (showAddMemberModal = false)}>Close</button
                 >
-                <button
-                    style={`display: ${addMemberBtn ? "block" : "none"};`}
-                    type="button"
-                    class="btn btn-success text-white text-decoration-none"
-                    on:click={addMember}
-                >
-                    Add Member
-                </button>
+                {#if members && members.length > 0}
+                    <button
+                        type="button"
+                        class="btn btn-success text-white text-decoration-none"
+                        on:click={addMember}
+                    >
+                        Add Member
+                    </button>
+                {/if}
             </div>
         </div>
     </div>

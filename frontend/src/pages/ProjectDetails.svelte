@@ -1,19 +1,19 @@
 <script>
     import { Router, Link } from "svelte-navigator";
     import { onMount } from "svelte";
+
     import axios from "../healpers/axios";
+    
     import NavBar from "../components/NavBar.svelte";
     import ActivityTable from "../components/ActivityTable.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
     import AddProjectMemberModal from "../components/ui/AddProjectMemberModal.svelte";
     import Dropdown from "../components/ui/Dropdown.svelte";
-    import Alert from "../components/ui/Alert.svelte";
 
     export let user;
 
     let project, activity, showDeleteModal, showAddMemberModal;
-    let showAlert, message, _class;
     var path = window.location.pathname;
     var projectID = path.split("/")[2];
 
