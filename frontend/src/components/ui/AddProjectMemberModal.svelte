@@ -2,10 +2,14 @@
     import { createEventDispatcher } from "svelte";
     import { onMount } from "svelte";
     import axios from "../../healpers/axios";
+
     export let showAddMemberModal = false;
 
     const dispatch = createEventDispatcher();
+
     let members, member;
+    let addMemberBtn = true;
+
     var path = window.location.pathname;
     var projectID = path.split("/")[2];
 
@@ -17,6 +21,10 @@
         try {
             const response = await axios.get(`project/${projectID}/account-members-not-in-project-members/`, config);
             members = response.data.data;
+            if (members.length === 0) {
+                members = false;
+                addMemberBtn = false;
+            }
         } catch (err) {
             if (err.response.status === 404) {
                 window.location.href = "/not-found";
@@ -25,25 +33,15 @@
     })
 
     async function addMember(){
-        try {
-            if (member) {
-                const response = await axios.put(`project/${projectID}/members/${member}/`, [], config);
-                dispatch("message", {
-                    members: response.data.data,
-                });
-                showAddMemberModal = false;
-            }else{
-                alert("Please select a member");
-            }
-        } catch (err) {
-            if (err.response.status == 400){
-                alert("Member already in project");
-            }
-        }
+        await axios.put(`project/${projectID}/members/${member}/`, [], config);
+        const indx = members.findIndex((v) => v.id === member);
+        dispatch("message", {member:members[indx]});
+        members = members;
+        members.splice(indx, 1);
+        showAddMemberModal = false;
     }
 
 </script>
-
 <div
     class="modal set-project-member-modal"
     tabindex="-1"
@@ -65,11 +63,14 @@
                             aria-label="select-status"
                             id="select-status"
                         >
-                            <option selected />
                             {#each members as member}
                                 <option value={member.id}>{member.first_name} {member.last_name}</option>
                             {/each}
                         </select>
+                    {:else}
+                        <div class="col-12">
+                            <p class="text-center">No members to add.</p>
+                        </div>
                     {/if}
                 </div>
             </div>
@@ -81,6 +82,7 @@
                     on:click={() => (showAddMemberModal = false)}>Close</button
                 >
                 <button
+                    style={`display: ${addMemberBtn ? "block" : "none"};`}
                     type="button"
                     class="btn btn-success text-white text-decoration-none"
                     on:click={addMember}
