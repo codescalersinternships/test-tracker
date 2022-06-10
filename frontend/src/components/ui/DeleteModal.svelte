@@ -6,10 +6,9 @@
     export let obj = null; // [obj] is the object to be deleted
     export let config = null; // [config] is the config for the request
     export let redirect = null; // [redirect] is the url to redirect to after deleting
+    export let showDeleteModal = false;
 
     const dispatch = createEventDispatcher();
-    export let showDeleteModal = false;
-    // function closeModal() {document.querySelector('.delete-modal').style.display = 'none'}
 
     async function deleteObj() {
         dispatch("message", {
