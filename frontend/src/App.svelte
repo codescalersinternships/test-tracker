@@ -13,6 +13,7 @@
 
     import Projects from "./pages/Projects.svelte";
     import ProjectDetails from "./pages/ProjectDetails.svelte";
+    import UpdateProject from "./pages/UpdateProject.svelte";
 
     import Members from "./pages/Members.svelte";
     import MemberDetails from "./pages/MemberDetails.svelte";
@@ -80,6 +81,7 @@
         
         <Route path="projects/" primary={false}><Projects user={user}/></Route>
         <Route path="projects/:id/" primary={false}><ProjectDetails user={user}/></Route>
+        <Route path="projects/:id/update/" primary={false}><UpdateProject user={user}/></Route>
 
         <Route path="projects/:id/test-plans/" primary={false}><TestPlans user={user}/></Route>
         <Route path="projects/:id/test-plans/:id/" primary={false}><TestPlanDetails user={user}/></Route>
