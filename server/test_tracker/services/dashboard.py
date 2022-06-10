@@ -30,13 +30,14 @@ def get_project_by_user_id(user_id: int) -> Project or None:
     """Returns the project based on the user id"""
     return Project.objects.filter(user_id=user_id)
 
-def find_project_name_based_on_user(user: User, project_name: str) -> bool:
-    """Get the project name based on the user"""
-    try:
-        Project.objects.get(user=user, name=project_name)
-        return False
-    except Project.DoesNotExist:
+def is_success_project(user: User, project: Project, new_title: str) -> bool:
+    """Try to search if there are project have the same title"""
+    projects = Project.objects.filter(
+        user=user, title=new_title
+    )
+    if projects.count() == 1 and projects[0].id == project.id or projects.count() == 0:
         return True
+    return False
 
 def get_member_based_on_user(user: User) -> Member:
     """Return all of Member based on the request user"""

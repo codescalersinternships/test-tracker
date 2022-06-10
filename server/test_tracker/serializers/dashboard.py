@@ -44,7 +44,7 @@ class ProjectsSerializer(ModelSerializer):
 
     class Meta:
         model = Project
-        exclude = ('members',)
+        exclude = ('members', 'TC_Title', 'REQ_Title')
     
     def get_created(self, obj):
         """Return created date"""

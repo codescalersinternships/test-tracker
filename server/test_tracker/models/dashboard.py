@@ -19,6 +19,7 @@ class Project(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_projects")
     members = models.ManyToManyField('Member', related_name="project_members")
     title = models.CharField(max_length=100)
+    short_description = models.TextField(max_length=500)
     activity = models.JSONField(default=dict)
     TC_Title = models.JSONField(default=list)
     REQ_Title = models.JSONField(default=list)

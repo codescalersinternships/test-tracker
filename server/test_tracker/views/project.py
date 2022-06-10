@@ -7,10 +7,10 @@ from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 from server.test_tracker.models.dashboard import Member, Project
 from server.test_tracker.serializers.dashboard import ProjectsSerializer
-from server.test_tracker.serializers.member import MemberSerializers, ProjectTeamSerializer
+from server.test_tracker.serializers.member import ProjectTeamSerializer
 from server.test_tracker.utils.validations import Validator
 
-from server.test_tracker.services.dashboard import find_project_name_based_on_user, get_project_by_id
+from server.test_tracker.services.dashboard import is_success_project, get_project_by_id
 from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import project_member_validation, update_activity
 
@@ -42,39 +42,39 @@ class ProjectsDetailAPIView(GenericAPIView):
     def put(self, request: Request, project_id: int) -> Response:
         """Put some data into the project"""
         project = get_project_by_id(project_id)
-        if project is not None:
-            serializer = self.get_serializer(project, data=request.data)
-            if serializer.is_valid():
-                project_name: str = serializer.validated_data.get('name')
-                validate_name: str = Validator().validate_string(project_name)
-                if validate_name:
-                    no_project = find_project_name_based_on_user(request.user, project_name)
-                    if no_project:
-                        project = serializer.save(user = request.user)
-                        update_activity(
-                            datetime.datetime.now(), request.user, project,
-                            "Create", "Project", project.title
-                        )
-                        return CustomResponse.success(
-                            data=serializer.data,
-                            message="Project updated successfully",
-                            status_code=203
-                        )
-                    return CustomResponse.bad_request(
-                        message = "Project already exists",
-                        status_code = 400
-                    )
-                return CustomResponse.bad_request(
-                    error = f"Name '{project_name}' is not a valid name",
-                    message = "Project creation failed",
-                )
+        if project is None:
+            return CustomResponse.not_found(message="Project not found")
+
+        serializer = self.get_serializer(project, data=request.data)
+        if not serializer.is_valid():
             return CustomResponse.bad_request(
                 error=serializer.errors,
                 message="Project update failed",
             )
-        return CustomResponse.not_found(
-            message="Project not found",
+
+        project_title: str = serializer.validated_data.get('title')
+        validate_name: str = Validator().validate_string(project_title)
+        if not validate_name:
+            return CustomResponse.bad_request(
+                message = f"Name '{project_title}' is not a valid name, Please choose a valid project name.",
+            )
+
+        project = is_success_project(request.user, project, project_title)
+        if not project:
+            return CustomResponse.bad_request(
+                message = "Please choose a project name that does not exist in your projects.",
+                status_code = 400
+            )
+        project = serializer.save(user = request.user)
+        update_activity(
+            datetime.datetime.now(), request.user, project,
+            "Create", "Project", project.title
         )
+        return CustomResponse.success(
+            data=serializer.data,
+            message="Project updated successfully",
+            status_code=203
+                )
 
     def delete(self, request: Request, project_id: int) -> Response:
         project = get_project_by_id(project_id)
