@@ -1,4 +1,5 @@
 <script>
+    import { Router, Link } from "svelte-navigator";
     import { onMount } from "svelte";
     import axios from "../healpers/axios";
     import NavBar from "../components/NavBar.svelte";
@@ -6,12 +7,13 @@
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
     import AddProjectMemberModal from "../components/ui/AddProjectMemberModal.svelte";
+    import Dropdown from "../components/ui/Dropdown.svelte";
+    import Alert from "../components/ui/Alert.svelte";
 
     export let user;
 
-    let project, activity;
-    let showDeleteModal = false;
-    let showAddMemberModal = false;
+    let project, activity, showDeleteModal, showAddMemberModal;
+    let showAlert, message, _class;
     var path = window.location.pathname;
     var projectID = path.split("/")[2];
 
@@ -38,7 +40,8 @@
         showAddMemberModal = true;
     }
     async function handleAddMember(event) {
-        project.teams = event.detail.members;
+        project.teams = project.teams;
+        project.teams.push(event.detail.member);
     }
 </script>
 
@@ -47,33 +50,51 @@
         <NavBar projectView="true" {user} />
         {#if project}
             <div class="container mt-4">
-                <p class="h4 mb-2">
-                    Project overview & activity of
-                    <strong class="h4 title">{project.title}</strong>
-                </p>
                 {#if user.permission === "admin"}
-                    <div class="col-6 mt-3 mb-3">
-                        <button
-                            type="button"
-                            class="btn btn-warning text-white text-decoration-none"
-                            on:click={openDeleteModal}
-                        >
-                            Update Project
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-danger text-white text-decoration-none"
-                            on:click={openDeleteModal}
-                        >
-                            Delete Project
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-success text-white text-decoration-none"
-                            on:click={openAddMemberModal}
-                        >
-                            Add member
-                        </button>
+                    <div class="col-12 mt-3 mb-3">
+                        <div class="row">
+                            <div class="col-10">
+                                <p class="h4">
+                                    Project overview & activity of
+                                    <strong class="h4 title">{project.title}</strong>
+                                </p>
+                                {#if project.short_description}
+                                    <i class="text-danger">--- </i>
+                                    <small class="text-muted">
+                                        <strong> {project.short_description}</strong>
+                                    </small>
+                                {/if}
+                            </div>
+                            <div class="col-2 coldrop">
+                                <Dropdown>
+                                    <Router>
+                                        <li>
+                                            <Link 
+                                                class="dropdown-item text-dark" 
+                                                to={`/projects/${project.id}/update/`}>
+                                                Update project
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link 
+                                                to=""
+                                                on:click={openAddMemberModal} 
+                                                class="dropdown-item text-dark">
+                                                Add member
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link 
+                                                to=""
+                                                class="dropdown-item text-danger" 
+                                                on:click={openDeleteModal}
+                                                >Delete Project
+                                            </Link>
+                                        </li>
+                                    </Router>
+                                </Dropdown>
+                            </div>
+                        </div>
                     </div>
                 {/if}
                 <div class="card mt-4 p-4">
@@ -243,6 +264,13 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: #5a79b1;
+        }
+        .dropdowncustom{
+            font-size: 0;
+        }
+        .coldrop{
+            text-align: end;
+            padding-right: 30px;
         }
     </style>
 </svelte:head>
