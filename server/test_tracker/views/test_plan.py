@@ -34,6 +34,12 @@ class TestPlansAPIView(GenericAPIView):
             project = get_project_by_id(project_id)
             if project is None:
                 return CustomResponse.not_found(message = "Project not found")
+            title: str = serializer.validated_data.get('title')
+            validate_name: str = Validator().validate_string(title)
+            if not validate_name:
+                return CustomResponse.bad_request(
+                    message = f"Name '{title}' is not a valid name, Please choose a valid project name.",
+                )
             if type == PLAN_CHOICES.TEMPLATE.value:
                 temps = TestPlanTemp.create_temps()
                 serializer.save(project = project, temps = temps)
