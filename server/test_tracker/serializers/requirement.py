@@ -24,6 +24,7 @@ class RequirementsSerializer(ModelSerializer):
     """This serializer is a sub requirement of RequirementDocsSerializer"""
     created = SerializerMethodField()
     updated = SerializerMethodField()
+    requirement_title = SerializerMethodField()
 
     class Meta:
         """class meta"""
@@ -32,3 +33,4 @@ class RequirementsSerializer(ModelSerializer):
 
     def get_created(self, obj):return obj.created.date()
     def get_updated(self, obj):return obj.modified.date()
+    def get_requirement_title(self, obj):return obj.requirement_title
