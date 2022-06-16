@@ -4,14 +4,12 @@ import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
+from server.test_tracker.api.permission import HasProjectAccess
 
 from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.dashboard import Project
 from server.test_tracker.models.project import TestSuites
 from server.test_tracker.serializers.test_suites import TestSuitesDetailSerializer, TestSuitesSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
-from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import update_activity
 from server.test_tracker.services.test_suites import get_test_suite_by_id
 
