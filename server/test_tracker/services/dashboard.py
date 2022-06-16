@@ -39,6 +39,14 @@ def is_success_project(user: User, project: Project, new_title: str) -> bool:
         return True
     return False
 
+def user_has_same_project_title(user: User, title: str):
+    """Check if user has same project name"""
+    try:
+        Project.objects.get(user=user, title=title)
+        return True
+    except Project.DoesNotExist:
+        return False
+
 def get_member_based_on_user(user: User) -> Member:
     """Return all of Member based on the request user"""
     return Member.objects.filter(host_user=user)
