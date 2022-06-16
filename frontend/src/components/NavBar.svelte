@@ -1,5 +1,8 @@
 <script>
         import { Router, Link } from "svelte-navigator";
+        import NavBarDropdown from './ui/NavBarDropdown.svelte'
+        import AddNewObject from './ui/AddNewObject.svelte'
+
         export let projectView = false;
         export let user;
 
@@ -9,22 +12,10 @@
             let path = window.location.pathname;
             projectID = path.split("/")[2];
         }
-
 </script>
 
 <svelte:head>
     <style>
-        .user_photo_nav{
-            display: inline-block;
-            background: #5a79b1;
-            margin-right: 15px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            line-height: 40px;
-            text-align: center;
-            color: #fff;
-        }
         a{
             text-decoration: none !important;
             color: #5a79b1 !important;
@@ -84,33 +75,20 @@
                 </Router>
             </ul>
         </div>
-        <div class="d-flex align-items-center">
-            <div class="dropdown">
-                <a
-                    class="dropdown-toggle d-flex align-items-center hidden-arrow"
-                    href="#"
-                    id="navbarDropdownMenuAvatar"
-                    role="button"
-                    data-mdb-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                <span class="user_photo_nav">
-                    {user.first_name[0]}{user.last_name[0]}
-                </span>
-                <!-- {user.full_name} -->
-                </a>
-                <ul
-                    class="dropdown-menu dropdown-menu-end"
-                    aria-labelledby="navbarDropdownMenuAvatar"
-                >
+        <AddNewObject />
+        <NavBarDropdown>
+            <span slot="dropdown-toggle" 
+                class="user_photo_nav">
+                {user.first_name[0]}{user.last_name[0]}
+            </span>
+            <span slot="dropdown-li">
                 <li>
-                    <a class="dropdown-item" href="#">Settings</a>
+                    <Link to="#" class="dropdown-item">Settings</Link>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="/auth/logout/">Logout</a>
+                    <Link to="/auth/logout/" class="dropdown-item">Logout</Link>
                 </li>
-                </ul>
-            </div>
-        </div>
+            </span>
+        </NavBarDropdown>
     </div>
 </nav>
