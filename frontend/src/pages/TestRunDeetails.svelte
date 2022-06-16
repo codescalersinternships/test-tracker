@@ -142,7 +142,7 @@
                     <!-- Tabs content -->
                     <div class="tab-content" id="ex1-content">
                         <div
-                            class="tab-pane fade showDeleteModal active"
+                            class="tab-pane fade show active"
                             id="ex1-tabs-1"
                             role="tabpanel"
                             aria-labelledby="ex1-tab-1"
