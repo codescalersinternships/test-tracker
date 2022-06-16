@@ -117,6 +117,7 @@ class TestRun(TimeStampedModel):
     title = models.CharField(max_length=150)
     test_suites = models.ManyToManyField(TestSuites, related_name="run_suites")
     assigned_user = models.ForeignKey(Member, related_name="test_run_assigned_user", on_delete=models.SET_NULL, null=True)
+    test_plan = models.ForeignKey(TestPlan, related_name="test_run_test_plan", on_delete=models.SET_NULL, null=True)
     status =  models.CharField(
         max_length=100,
         choices=TEST_RUN_STATUS_CHOICES.choices,
