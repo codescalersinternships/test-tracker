@@ -13,11 +13,12 @@ from server.test_tracker.serializers.requirement import RequirementDocsSerialize
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.project import update_activity
 from server.test_tracker.utils.handler import RequirementDocssHandling, RequirementHandling
+from server.test_tracker.utils.validations import Validator
 
 
 
 
-class PostNewRequirementDocssAPIView(GenericAPIView):
+class PostNewRequirementDocsAPIView(GenericAPIView):
     """class project requirement view"""
     serializer_class = RequirementDocsSerializer
     permission_classes = (HasProjectAccess,)
@@ -28,6 +29,12 @@ class PostNewRequirementDocssAPIView(GenericAPIView):
         if project is not None:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
+                title: str = serializer.validated_data.get('title')
+                validate_name: str = Validator().validate_string(title)
+                if not validate_name:
+                    return CustomResponse.bad_request(
+                        message = f"Name '{title}' is not a valid name, Please choose a valid project name.",
+                    )
                 requirements = serializer.save(project=project)
                 update_activity(
                     datetime.datetime.now(), request.user, project,
@@ -44,7 +51,7 @@ class PostNewRequirementDocssAPIView(GenericAPIView):
             )
         return CustomResponse.not_found(message="Project not found")
 
-class GetAllRequirementDocssAPIView(GenericAPIView):
+class GetAllRequirementDocsAPIView(GenericAPIView):
     """class project requirement view"""
     serializer_class = RequirementDocsSerializer
     permission_classes = (HasProjectAccess,)
@@ -89,7 +96,7 @@ class SearchRequirementDocssAPIView(GenericAPIView):
             status_code=200
         )
 
-class RequirementDocssDetailsAPIView(GenericAPIView):
+class RequirementDocsDetailsAPIView(GenericAPIView):
     """
         *Usage: Get
         class project requirement view
@@ -144,44 +151,47 @@ class RequirementDocssDetailsAPIView(GenericAPIView):
 class RequirementAPIView(GenericAPIView):
     """This class is a sub requirement for project requirements"""
     serializer_class = RequirementsSerializer
-    permission_classes = (UserIsAuthenticated,)
+    permission_classes = (HasProjectAccess,)
 
-    def post(self, request: Request, requirements_id: str) -> Response:
+    def post(self, request: Request, project_id:str, requirements_id: str) -> Response:
         """
             post a new requirement based on the requirements_id
-            - requirements_id: the id of the parent requirements
+            - project_id: project that requirement will create inside
+            - requirements_id: the id of the parent requirement document
         """
+        project = get_project_by_id(project_id)
         requirement = get_project_requirement_by_id(requirements_id)
-        if requirement is not None:
-            serializer = self.get_serializer(data=request.data)
-            if serializer.is_valid():
-                req_id_project = requirement.project.REQ_Title
-                if len(req_id_project) > 0:
-                    last_title = int(req_id_project[-1][3:])
-                else:
-                    last_title = 0
-                if last_title < 9:
-                    last_title = '0' + str(last_title + 1)
-                else:
-                    last_title = str(last_title + 1)
-                req_id_project.append(f'REQ{last_title}')
-                requirement = serializer.save(requirement=requirement, requirement_title=f'REQ{last_title}')
-                update_activity(
-                    datetime.datetime.now(), request.user, requirement.requirement.project,
-                    "Create", "requirement", requirement.title
-                )
-                return CustomResponse.success(
-                    data=serializer.data,
-                    message="Requirement created successfully",
-                    status_code=201
-                )
-            return CustomResponse.bad_request(
-                message="Requirement creation failed",
-                error=serializer.errors
-            )
-        return CustomResponse.not_found(message="Requirement not found")
+        if project is None:
+            return CustomResponse.not_found("Project not found.")
+        if requirement is None:
+            return CustomResponse.not_found("Project requirement document not found.")
+        if requirement.project != project:
+            return CustomResponse.unauthorized()
 
-    def get(self, request: Request, requirements_id: str) -> Response:
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            req_id_project = requirement.project.REQ_Title
+            if len(req_id_project) > 0:
+                last_title = int(req_id_project[-1][3:])
+            else:
+                last_title = 0
+            if last_title < 9:
+                last_title = '0' + str(last_title + 1)
+            else:
+                last_title = str(last_title + 1)
+            req_id_project.append(f'REQ{last_title}')
+            requirement = serializer.save(requirement=requirement, requirement_title=f'REQ{last_title}')
+            update_activity(
+                datetime.datetime.now(), request.user, requirement.requirement.project,
+                "Create", "requirement", requirement.title
+            )
+            return CustomResponse.success(
+                data=serializer.data,
+                message="Requirement created successfully",
+                status_code=201
+            )
+
+    def get(self, request: Request, project_id:str, requirements_id: str) -> Response:
         """
             get all requirements based on the requirements_id
             - requirements_id: the id of the parent requirements
@@ -288,6 +298,7 @@ class SearchRequirementsInRequirementDocssAPIView(APIView):
         *Usage
         Use this endpoint to filter any requirement based on title or description
     """
+    permission_classes = (HasProjectAccess,)
     def get(self, request: Request, project_id: str, key_word: str):
         """
             Keyword is the key you pass to filter
