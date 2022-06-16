@@ -3,9 +3,8 @@ import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from django.db.models import Q
 
-from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
+from server.test_tracker.api.permission import HasProjectAccess
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.project import TEST_RUN_STATUS_CHOICES, TestCases, TestRun, TestSuites
 from server.test_tracker.serializers.test_run import TestRunsSerializer
