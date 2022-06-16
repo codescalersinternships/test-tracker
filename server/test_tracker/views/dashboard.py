@@ -1,4 +1,5 @@
 """Everything related to dashboard."""
+import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -8,6 +9,7 @@ from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.services.dashboard import *
 from server.test_tracker.services.member import get_member_by_email
+from server.test_tracker.services.project import update_activity
 from server.test_tracker.services.users import get_user_by_id
 from server.test_tracker.utils.send_mail import send_email
 from server.test_tracker.utils.validations import Validator
@@ -17,38 +19,44 @@ from server.test_tracker.serializers.member import MemberSerializers
 
 class ProjectsAPIView(GenericAPIView):
     """
-        Class ProjectsAPIView have a create method which creates a new project
+        Class ProjectsAPIView has a post method which creates an new project
     """
     serializer_class = ProjectsSerializer
     permission_classes = (UserIsAuthenticated,)
 
     def post(self, request: Request) -> Response:
+        """Create a new project"""
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            project_name: str = serializer.validated_data.get('name')
-            validate_name: str = Validator().validate_string(project_name)
-            if validate_name:
-                no_project = find_project_name_based_on_user(request.user, project_name)
-                if no_project:
-                    serializer.save(user = request.user)
-                    return CustomResponse.success(
-                        data = serializer.data, 
-                        message = "Project created successfully", 
-                        status_code = 203
-                    )
-                return CustomResponse.bad_request(
-                    message = "Project already exists",
-                    status_code = 400
-                )
+        if not serializer.is_valid():
             return CustomResponse.bad_request(
-                error = f"Name '{project_name}' is not a valid name",
-                message = "Project creation failed",
+                error=serializer.errors,
+                message="Project update failed, please make sure that you entered a valid data",
             )
-        return CustomResponse.bad_request(
-            error = serializer.errors,
-            message = "Project creation failed"
+
+        project_title: str = serializer.validated_data.get('title')
+        validate_name: str = Validator().validate_string(project_title)
+        if not validate_name:
+            return CustomResponse.bad_request(
+                message = f"Name '{project_title}' is not a valid name, Please choose a valid project name.",
+            )
+
+        same_title = user_has_same_project_title(request.user, project_title)
+        if same_title:
+            return CustomResponse.bad_request(
+                message = "Please choose a project name that does not exist in your projects.",
+                status_code = 400
+            )
+        project = serializer.save(user = request.user)
+        update_activity(
+            datetime.datetime.now(), request.user, project,
+            "Create", "Project", project.title
         )
-    
+        return CustomResponse.success(
+            data=serializer.data,
+            message="Project updated successfully",
+            status_code=203
+                )
+
     def get(self, request: Request) -> Response:
         """Get all projects based on creator, Members users"""
         projects = get_projects_by_user(request.user).order_by('-created')
