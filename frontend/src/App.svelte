@@ -69,6 +69,22 @@
         body {
             padding: 0 8px !important;
         }
+        .form-check-input[type=radio]:after {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%)
+        }
+        .form-check-input:checked:before,
+        .form-check-input:before{
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%)
+        }
+
+        .form-check-input:checked:focus:before,
+        .form-check-input:focus:before {
+            transform: scale(1) translate(-50%, -50%);
+        }
     </style>
 </svelte:head>
 
