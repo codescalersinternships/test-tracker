@@ -16,12 +16,13 @@ class TestCaseSerializer(ModelSerializer):
     created = SerializerMethodField()
     modified = SerializerMethodField()
     last_saved = SerializerMethodField()
+    testcase_title = SerializerMethodField()
 
     class Meta:
         model = TestCases
         exclude = (
             'verify_requirement', 'test_suite',
-            'comments', 'passed', 'failed', 'skipped', 'run', 'completed'
+            'comments', 'passed', 'failed', 'skipped', 'run', 'completed',
         )
 
     def get_requirement(self, obj):
@@ -35,6 +36,10 @@ class TestCaseSerializer(ModelSerializer):
     def get_modified(self, obj):
         """Method to get the modified date"""
         return obj.modified.date()
+    
+    def get_testcase_title(self, obj):
+        """Method to get the testcase_title """
+        return obj.testcase_title
     
     def get_last_saved(self, obj):
         """Method to get the last saved user"""
