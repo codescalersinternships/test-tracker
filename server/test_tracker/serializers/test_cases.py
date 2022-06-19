@@ -27,7 +27,9 @@ class TestCaseSerializer(ModelSerializer):
 
     def get_requirement(self, obj):
         """Method to get the requirement obj"""
-        return RequirementsSerializer(obj.verify_requirement).data
+        return RequirementsSerializer(
+            obj.verify_requirement
+        ).data if obj.verify_requirement else None
     
     def get_created(self, obj):
         """Method to get the created date"""
@@ -43,8 +45,9 @@ class TestCaseSerializer(ModelSerializer):
     
     def get_last_saved(self, obj):
         """Method to get the last saved user"""
-        data = {
-            'id': obj.last_saved.id,
-            "full_name" : obj.last_saved.full_name,
-        }
-        return data
+        if obj.last_saved:
+            data = {
+                'id': obj.last_saved.id,
+                "full_name" : obj.last_saved.full_name,
+            }
+            return data

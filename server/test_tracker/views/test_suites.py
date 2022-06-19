@@ -11,6 +11,7 @@ from server.test_tracker.models.project import TestSuites
 from server.test_tracker.serializers.test_suites import TestSuitesDetailSerializer, TestSuitesSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.project import update_activity
+from server.test_tracker.services.test_plans import filter_test_plans_based_on_project
 from server.test_tracker.services.test_suites import get_test_suite_by_id
 
 
@@ -25,16 +26,22 @@ class TestSuitesAPIView(GenericAPIView):
         """
         serializer = self.get_serializer(data=request.data)
         project = get_project_by_id(project_id)
+        test_plans = filter_test_plans_based_on_project(project).values_list('id', flat=True)
         if project is None:
             return CustomResponse.not_found(message="Project not found")
         if serializer.is_valid():
+            if serializer.validated_data.get('test_plan').id not in test_plans:
+                return CustomResponse.bad_request(
+                    message="Wrong Test Plan, Please Select or Load Another Test Plan For ` {} `"
+                    .format(project.title)
+                )
             suite = serializer.save(project=project)
             update_activity(
                 datetime.datetime.now(), request.user, project,
                 "Create", "Test suite", suite.title
             )
             return CustomResponse.success(
-                data=serializer.validated_data,
+                data=serializer.data,
                 message="Test suite created successfully"
             )
         return CustomResponse.bad_request(

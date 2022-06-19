@@ -7,7 +7,8 @@ from django.db.models import Q
 from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 
 from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.project import TestCases
+from server.test_tracker.models.project import Requirements, TestCases
+from server.test_tracker.serializers.requirement import RequirementsSerializer
 from server.test_tracker.serializers.test_cases import TestCaseSerializer, TestCaseSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.project import update_activity
@@ -25,17 +26,14 @@ class TestCasesAPIView(GenericAPIView):
     serializer_class = TestCaseSerializer
     permission_classes = (UserIsAuthenticated,)
 
-    def post(self, request: Request, test_suite: str, requirement_id: str) -> Response:
+    def post(self, request: Request, test_suite: str) -> Response:
         """
             Use this endpoint to create a new test case
         """
         serializer = self.get_serializer(data=request.data)
         test_suite = get_test_suite_by_id(test_suite)
-        requirement = get_requirement_by_id(requirement_id)
         if test_suite is None:
             return CustomResponse.not_found(message="Test suite not found")
-        if requirement is None:
-            return CustomResponse.not_found(message="Requirement not found")
         if serializer.is_valid():
             tc_id_project = test_suite.project.TC_Title
             if len(tc_id_project) > 0:
@@ -47,7 +45,18 @@ class TestCasesAPIView(GenericAPIView):
             else:
                 last_title = str(last_title + 1)
             tc_id_project.append(f'TC{last_title}')
-            testcase = serializer.save(test_suite=test_suite, verify_requirement=requirement, testcase_title=f'TC{last_title}')
+            testcase = serializer.save(
+                test_suite=test_suite, 
+                testcase_title=f'TC{last_title}',
+                last_saved = request.user
+            )
+            print(request.query_params)
+            if request.query_params.get('requirement'):
+                requirement = get_requirement_by_id(request.query_params.get('requirement'))
+                if requirement is None:
+                    return CustomResponse.not_found(message="Requirement not found")
+                testcase.verify_requirement = requirement
+                testcase.save()
             update_activity(
                 datetime.datetime.now(), request.user, test_suite.project,
                 "Create", "Test Case", testcase.title
@@ -166,4 +175,23 @@ class SearchTestCaseAPIView(GenericAPIView):
         return CustomResponse.success(
             message="Success suites found.",
             data = TestCaseSerializer(cases, many=True).data
+        )
+
+class GetAllProjectRequirementsAPIView(GenericAPIView):
+    """Get all of test cases"""
+    serializer_class = RequirementsSerializer
+    permission_classes = (HasProjectAccess,)
+
+    def get(self, request: Request, project_id: str) -> Response:
+        """Method get to get all of test cases based on the test suite"""
+        project = get_project_by_id(project_id)
+        if project is None:
+            return CustomResponse.not_found(message="Project not found")
+        requirements = Requirements.objects.filter(
+            requirement__project = project
+        ).order_by("-created")
+        serializer = RequirementsSerializer(requirements, many=True)
+        return CustomResponse.success(
+            message="Success requirements found.",
+            data=serializer.data
         )

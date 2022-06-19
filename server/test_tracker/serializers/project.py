@@ -30,12 +30,9 @@ class TestPlanDetailSerializer(ModelSerializer):
     def get_created(self, obj):return obj.created.date()
     def get_modified(self, obj):return obj.modified.date()
     def get_temps(self, obj):
-        if obj.temps != None:
-            arr = []
-            for title, content in obj.temps.items():
-                arr.append({'title':title, 'content':content})
-            return arr
-
+        if obj.type == 'blank':
+            return obj.temps[::-1]
+        return obj.temps
 
 
 

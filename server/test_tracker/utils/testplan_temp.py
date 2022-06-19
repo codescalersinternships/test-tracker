@@ -10,8 +10,9 @@ class TestPlanTemp():
     @staticmethod
     def create_temps():
         config = ConfigParser()
+        result = []
         with open(f'{BASE_DIR}/server/temps.ini', 'r') as file:
             temps = config.read(file)
             for section in list(temps):
-                temps[section.replace('_', ' ')] = temps.pop(section)
-        return temps
+                result.append({"title": section.replace('_', ' '), "content": temps.pop(section)['content']})
+        return result

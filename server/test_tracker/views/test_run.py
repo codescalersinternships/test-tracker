@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from server.test_tracker.api.permission import HasProjectAccess
 from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.project import TEST_RUN_STATUS_CHOICES, TestCases, TestRun, TestSuites
+from server.test_tracker.models.project import TEST_RUN_STATUS_CHOICES, TestCases, TestPlan, TestRun, TestSuites
 from server.test_tracker.serializers.test_run import TestRunsSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.project import get_test_run_by_id, update_activity
@@ -23,12 +23,34 @@ class TestRunAPIView(GenericAPIView):
     def post(self, request:Request, project_id: str) -> Response:
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            run = serializer.save()
+            project = get_project_by_id(project_id)
+            test_suites_ids = [suite['id'] for suite in request.data['test_suites']]
+            test_suites = TestSuites.objects.filter(
+                id__in = test_suites_ids
+            )
+            for suite in test_suites:
+                if suite.project != project:
+                    return CustomResponse(
+                        status=400,
+                        message='Test suite does not belong to this project'
+                    )
+            test_plan = TestPlan.objects.get(project=project, id = request.data['test_plan'])
+            if test_plan.project != project:
+                return CustomResponse(
+                    status=400,
+                    message='Test plan does not belong to this project'
+                )
+
+            run = serializer.save(
+                status = TEST_RUN_STATUS_CHOICES.NOT_STARTED,
+                test_suites = test_suites, test_plan = test_plan
+            )
             update_activity(
-                datetime.datetime.now(), request.user, run.test_suites.first().project,
+                datetime.datetime.now(), request.user, project,
                 "Create", "Test Run", run.title
             )
             return CustomResponse.success(
+                message = "Success created test run",
                 data = serializer.data, status_code=201
             )
         return CustomResponse.bad_request(serializer.errors)
@@ -37,9 +59,10 @@ class TestRunAPIView(GenericAPIView):
         """
         This method is used to get all the test runs
         """
-        test_runs = TestRun.objects.filter(
+        runs_ids = list(set(TestRun.objects.filter(
             test_suites__project__id = project_id
-        ).order_by('-created')
+        ).values_list('id', flat=True)))
+        test_runs = TestRun.objects.filter(id__in = runs_ids).order_by('-created')
         serializer = self.serializer_class(test_runs, many=True)
         return CustomResponse.success(data=serializer.data)
 

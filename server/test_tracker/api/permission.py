@@ -36,10 +36,13 @@ class HasProjectAccess(permissions.BasePermission):
     def has_permission(self, request: Request, view: APIView,) -> bool:
         if request.user.is_authenticated:
             if view.get_renderer_context().get('kwargs').get('project_id'):
-                project = get_project_by_id(view.get_renderer_context().get('kwargs').get('project_id'))
+                project_id = view.get_renderer_context().get('kwargs').get('project_id')
+                if not project_id.isdigit():
+                    raise PermissionDenied
+                project = get_project_by_id(project_id)
                 if project is not None:
                     if request.user.id == project.user.id:
                         return True
                     elif request.user.id in project.members.values_list('id', flat=True):
                         return True
-                    raise PermissionDeniedyyy
+                    raise PermissionDenied

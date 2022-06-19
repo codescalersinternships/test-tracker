@@ -16,7 +16,7 @@ class ProjectTeamSerializer(ModelSerializer):
     """Class Member to get project teams"""
     class Meta:
         model = Member
-        fields = ['id', 'first_name', 'last_name']
+        fields = ['id', 'first_name', 'last_name', 'full_name']
 
 class MemberSerializers(ModelSerializer):
     created = SerializerMethodField()

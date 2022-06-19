@@ -106,16 +106,25 @@ class RequirementDocsDetailsAPIView(GenericAPIView):
 
     def get(self, request: Request, project_id: str, requirement_id: str) -> Response:
         """Use this endpoint to get requirement detail and sub requirements"""
-        project_requirement = RequirementDocssHandling.validate(project_id, requirement_id)
-        serializer = RequirementDocsSerializer(project_requirement)
+        project = get_project_by_id(project_id)
+        requirement = get_requirement_doc_by_id(requirement_id)
+        print(project, requirement)
+        if project is None:
+            return CustomResponse.not_found(message = "Project not found")
+        if requirement is None:
+            return CustomResponse.not_found(message = "Requirement not found")
+        if not requirement.id in project.project_requirements.all().values_list('id', flat=True):
+            return CustomResponse.unauthorized()
+        serializer = self.get_serializer(requirement)
         return CustomResponse.success(
-            message="Success Found Project Requirement",
-            data=serializer.data
+            data=serializer.data,
+            message="Requirement detail",
+            status_code=200
         )
 
     def put(self, request: Request, project_id: str, requirement_id: str) -> Response:
         """update a requirement"""
-        project_requirement = RequirementDocssHandling.validate(project_id, requirement_id)
+        project_requirement = RequirementHandling.validate(project_id, requirement_id)
         serializer = self.get_serializer(project_requirement, data=request.data)
 
         if serializer.is_valid():
@@ -159,8 +168,15 @@ class RequirementAPIView(GenericAPIView):
             - project_id: project that requirement will create inside
             - requirements_id: the id of the parent requirement document
         """
+        title: str = request.data.get('title')
+        validate_name: str = Validator().validate_string(title)
         project = get_project_by_id(project_id)
         requirement = get_project_requirement_by_id(requirements_id)
+        
+        if not validate_name:
+            return CustomResponse.bad_request(
+                message = f"Name '{title}' is not a valid name, Please choose a valid project name.",
+            )
         if project is None:
             return CustomResponse.not_found("Project not found.")
         if requirement is None:

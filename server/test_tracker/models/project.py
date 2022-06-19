@@ -4,6 +4,8 @@ from server.test_tracker.models.abstracts import TimeStampedModel
 from server.test_tracker.models.dashboard import Member, Project
 from django.db.models import UniqueConstraint
 
+from server.test_tracker.models.users import User
+
 
 
 class PLAN_CHOICES(models.TextChoices):
@@ -30,7 +32,7 @@ class TestPlan(TimeStampedModel):
         choices=PLAN_CHOICES.choices,
         default=PLAN_CHOICES.TEMPLATE
     )
-    temps = models.JSONField(default=dict, null=True, blank=True)
+    temps = models.JSONField(default=list, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -90,13 +92,14 @@ class TestCases(TimeStampedModel):
         Class test suite model for create a new test suite for the project
     """
     test_suite = models.ForeignKey(TestSuites, related_name="test_suite_test_cases", on_delete=models.CASCADE)
-    last_saved = models.ForeignKey(Member, related_name="last_saved_test_cases", on_delete=models.CASCADE, null=True)
+    last_saved = models.ForeignKey(User, related_name="last_saved_test_cases", on_delete=models.CASCADE, null=True)
     testcase_title = models.CharField(max_length=50)
     title = models.CharField(max_length=150)
     description = models.TextField(default="")
     test_steps = models.TextField(default="A list of steps to perform along with any sample data.")
     expected_result = models.TextField(default="Details of what the final result should be.")
-    verify_requirement = models.ForeignKey(Requirements, related_name="verifies_requirements", on_delete=models.CASCADE)
+    verify_requirement = models.ForeignKey(Requirements, 
+        related_name="verifies_requirements", on_delete=models.SET_NULL, null=True)
     comments = models.TextField(default="")
     passed = models.BooleanField(default=False)
     failed = models.BooleanField(default=False)

@@ -24,7 +24,7 @@ def get_project_requirement_by_id(requirements_id : str) -> RequirementDocs:
     except:
         return None
 
-def get_requirement_by_id(requirement_id : str) -> Requirements:
+def get_requirement_doc_by_id(requirement_id : str) -> Requirements:
     """
     This method gets Requirements based on Project requirements
     """

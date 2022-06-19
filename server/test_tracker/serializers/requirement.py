@@ -25,12 +25,14 @@ class RequirementsSerializer(ModelSerializer):
     created = SerializerMethodField()
     updated = SerializerMethodField()
     requirement_title = SerializerMethodField()
+    requirement_doc = SerializerMethodField()
 
     class Meta:
         """class meta"""
         model = Requirements
-        fields = ['id', 'title', 'description', 'created', 'updated','requirement_title']
+        fields = ['id', 'title', 'description', 'created', 'updated','requirement_title', 'requirement_doc']
 
     def get_created(self, obj):return obj.created.date()
     def get_updated(self, obj):return obj.modified.date()
     def get_requirement_title(self, obj):return obj.requirement_title
+    def get_requirement_doc(self, obj):return obj.requirement.id

@@ -49,7 +49,7 @@ class TestPlansAPIView(GenericAPIView):
                 "Create", "Test Plan", serializer.data.get('name')
             )
             return CustomResponse.success(
-                data=serializer.validated_data,
+                data=serializer.data,
                 message="Test plan created successfully"
             )
         return CustomResponse.bad_request(
@@ -143,10 +143,7 @@ class PostNewTestPlanContentAreaAPIView(GenericAPIView):
             if serializer.is_valid():
                 title = serializer.validated_data.get('title')
                 content = serializer.validated_data.get('content')
-                if test_plan.temps == None:
-                    test_plan.temps = {title:content}
-                else:
-                    test_plan.temps[title] = content
+                test_plan.temps.append({'title':title, 'content':content})
                 test_plan.save()
                 update_activity(
                     datetime.datetime.now(), request.user, get_project_by_id(project_id),
@@ -205,19 +202,19 @@ class TestPlanContentAreaAPIView(GenericAPIView):
         """Delete a content area from test plan"""
         test_plan = TestPlanHandling.validate(project_id, test_plan_id)
         if isinstance(test_plan, TestPlan):
-            if test_plan.temps != None:
-                update_activity(
-                    datetime.datetime.now(), request.user, get_project_by_id(project_id),
-                    "Delete", f"Test Plan Content Area {test_plan.temps[title]}", test_plan.title
-                )
-                test_plan.delete_temp(title)
-                return CustomResponse.success(
-                    message="DELETED",
-                    status_code=204
-                )
-            return CustomResponse.not_found(
-                message = 'There are no content area with this title'
-            )
+            contents = test_plan.temps
+            for content in contents:
+                if content['title'] == title:
+                    contents.remove(content)
+                    test_plan.save()
+                    update_activity(
+                        datetime.datetime.now(), request.user, get_project_by_id(project_id),
+                        "Delete", f"Test Plan Content Area {title}", test_plan.title
+                    )
+                    return CustomResponse.success(
+                        message="DELETED",
+                        status_code=204
+                    )
         return test_plan
     
     def get(self, request: Request, project_id:str, test_plan_id: str, title:str) -> Response:
@@ -225,17 +222,14 @@ class TestPlanContentAreaAPIView(GenericAPIView):
         test_plan = TestPlanHandling.validate(project_id, test_plan_id)
         response = []
         if isinstance(test_plan, TestPlan):
-            if test_plan.temps != None:
-                keys = test_plan.temps.keys()
-                for key in keys:
-                    if title.lower() in key.lower():
-                        response.append({'title': key, 'content': test_plan.temps[key]})
-                return CustomResponse.success(
-                    message="Success",
-                    data = response,
-                )
-            return CustomResponse.not_found(
-                message = 'There are no content area with this title'
+            contents = test_plan.temps
+            for content in contents:
+                for _title, value in content.items():
+                    if content[_title].lower().find(title.lower()) != -1:
+                        response.append({"title":content[_title], "content":value})
+            return CustomResponse.success(
+                message="Success",
+                data = response,
             )
         return test_plan
 

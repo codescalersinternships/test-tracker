@@ -53,7 +53,7 @@ class ProjectsAPIView(GenericAPIView):
         )
         return CustomResponse.success(
             data=serializer.data,
-            message="Project updated successfully",
+            message="Project Created successfully",
             status_code=203
                 )
 
