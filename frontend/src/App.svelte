@@ -1,5 +1,5 @@
 <script>
-    import { Router, Route } from "svelte-navigator";
+    import { Router, Route, links } from "svelte-navigator";
     import { onMount } from 'svelte';
 
     import isAuthenticated from "./healpers/IsAuthenticated"
@@ -80,10 +80,28 @@
             left: 50%;
             transform: translate(-50%, -50%)
         }
-
+        .plus-background{
+            background: #bf4e62;
+        }
+        .plus-color{
+            color: #bf4e62;
+        }
+        .plus-hover{
+            padding: 15px;
+        }
+        .plus-hover:hover{
+            background: #bf4e62;
+            color: #fff;
+        }
         .form-check-input:checked:focus:before,
         .form-check-input:focus:before {
             transform: scale(1) translate(-50%, -50%);
+        }
+        .modal{
+            background: #0e1117a3;
+        }
+        .link-color: {
+            color: #5a79b1;
         }
     </style>
 </svelte:head>

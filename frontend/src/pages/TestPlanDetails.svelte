@@ -5,7 +5,7 @@
     import Search from "../components/Search.svelte";
     import Alert from "../components/ui/Alert.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
-
+    import Dropdown from "../components/ui/Dropdown.svelte";
     export let user;
 
     const config = {
@@ -17,10 +17,8 @@
         tempsCopy,
         projectID,
         planID,
-        title,
-        oldTitle,
-        errorMessage;
-    let showDeleteModal = false;
+        showDeleteModal,
+        title;
 
     onMount(async () => {
         // Loading test plan
@@ -58,37 +56,21 @@
         temps = temps;
         temps.splice(indx, 1);
     }
-
-    async function updateContentArea(newTitle, newBody) {
-        // Update test plan content area
-        const data = { title: newTitle["title"], content: newBody["body"] };
-        try {
-            const response = await axios.put(
-                `/test_plan/${projectID}/${planID}/temps/${oldTitle}/`,
-                data,
-                config
-            );
-            document.querySelector(".update-content-modal").style.display =
-                "none";
-            const indx = temps.findIndex((v) => v.title === oldTitle);
-            temps[indx] = data;
-        } catch (error) {
-            if (error.response.status === 400) {
-                document.querySelector(".alert").style.display = "block";
-                errorMessage = error.response.data.message;
-                setTimeout(function () {
-                    document.querySelector(".alert").style.display = "none";
-                }, 3000);
-            }
-        }
-    }
 </script>
 
 <section>
     {#if user && testPlansContents}
-        <NavBar projectView="true" {user} />
-        <Alert message={errorMessage} />
-
+        <NavBar projectView="true" 
+            {user}
+            on:message={
+                (event) => {
+                    if(event.detail.obj.data.type === "test_plan_content_area"){
+                        temps = temps;
+                        temps.unshift(event.detail.obj.data);
+                    }
+                }
+            }
+        />
         <div class="container pb-5">
             <div class="pt-4">
                 <p class="h4 mb-2">
@@ -134,57 +116,25 @@
                 <Search
                     request="/test_plan/{projectID}/{planID}/temps/"
                     objects={temps}
-                    {config}
                     objectsCopy={tempsCopy}
                     on:message={handleSearch}
                 />
             </div>
             <div class="pt-5">
-                {#if temps}
+                {#if temps && temps.length}
                     {#each temps as contentArea}
                         <div class="card mb-3">
                             <div class="card-body pb-2">
-                                <div
-                                    class="dropdown p-1"
-                                    style="position: absolute;font-size: 0;right: 0;width: 35px;"
-                                >
-                                    <a
-                                        class="dropdown-toggle"
-                                        id="dropdownMenuButton"
-                                        data-mdb-toggle="dropdown"
-                                        aria-expanded="false"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="20"
-                                            height="20"
-                                            fill="currentColor"
-                                            class="bi bi-three-dots-vertical"
-                                            viewBox="0 0 16 16"
+                                <Dropdown>
+                                    <li>
+                                        <button
+                                            class="dropdown-item text-danger"
+                                            on:click={setContent(
+                                                contentArea
+                                            )}>Delete</button
                                         >
-                                            <path
-                                                d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
-                                            />
-                                        </svg>
-                                    </a>
-                                    <ul
-                                        class="dropdown-menu"
-                                        aria-labelledby="dropdownMenuButton"
-                                    >
-                                        <!-- <li>
-                                            <button on:click={setTitleAndBody(contentArea.title, contentArea.content)} 
-                                                class="dropdown-item text-black">Update</button>
-                                        </li> -->
-                                        <li>
-                                            <button
-                                                class="dropdown-item text-danger"
-                                                on:click={setContent(
-                                                    contentArea
-                                                )}>Delete</button
-                                            >
-                                        </li>
-                                    </ul>
-                                </div>
+                                    </li>
+                                </Dropdown>
                                 <h5 class="card-title">{contentArea.title}</h5>
                                 <p class="mt-4 text-muted">
                                     {contentArea.content}
@@ -194,21 +144,21 @@
                     {/each}
                 {:else}
                     <div class="col-12 last-projects-notfound pt-3">
-                        <p class="text-muted">
-                            -- There are no content areas in this test plan
-                        </p>
+                        <Alert 
+                            _class={'info'} 
+                            showAlert={true} 
+                            message={"There are no content areas in this test plan, Try adding one."} 
+                        />
                     </div>
                 {/if}
             </div>
         </div>
     {/if}
-    <!-- <ModalUpdate updateFunctionOnClick={updateContentArea} title={title} body={body}/> -->
     <DeleteModal
         bind:showDeleteModal
         on:message={handleDelete}
         obj={title}
         onRequest="/test_plan/{projectID}/{planID}/temps"
-        {config}
     />
 </section>
 
@@ -219,6 +169,12 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: #5a79b1;
+        }
+        .dropdowncustom {
+            position: absolute;
+            font-size: 0;
+            right: 0;
+            width: 35px;
         }
     </style>
 </svelte:head>

@@ -6,7 +6,7 @@
 
 <section class="mb-4 pb-5">
     <div class="pt-5">
-        <p>Activity</p>
+        <p>Recent Activity</p>
     </div>
     <div class="table pt-4">
         {#each activity as action}

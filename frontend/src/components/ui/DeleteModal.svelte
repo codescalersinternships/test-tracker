@@ -4,13 +4,19 @@
 
     export let onRequest = null; // [request] for the endpoint
     export let obj = null; // [obj] is the object to be deleted
-    export let config = null; // [config] is the config for the request
     export let redirect = null; // [redirect] is the url to redirect to after deleting
     export let showDeleteModal = false;
 
     const dispatch = createEventDispatcher();
 
-    async function deleteObj() {
+    const config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+
+    async function deleteObj(e) {
+        const node = e.currentTarget;
+        node.disabled = true;
+
         dispatch("message", {
             obj: obj,
         });
@@ -28,6 +34,8 @@
             }
         } catch (err) {
             console.log(err);
+        } finally {
+            node.disabled = false;
         }
     }
 </script>
@@ -76,8 +84,8 @@
                 >
                 <button
                     type="button"
-                    class="btn btn-danger text-white text-decoration-none"
-                    on:click={deleteObj}
+                    class="btn plus-background text-white text-decoration-none"
+                    on:click={(e) => deleteObj(e)}
                 >
                     Delete
                 </button>

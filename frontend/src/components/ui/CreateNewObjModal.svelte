@@ -1,155 +1,278 @@
 <script>
     import { onMount } from "svelte";
-    import axios from "../../healpers/axios";
-    import AreaSelect from "./AreaSelect.svelte"
-    import TextArea from "./TextArea.svelte"
-    import Alert from "./Alert.svelte"
-    import LoodingSpiner from "./LoodingSpiner.svelte"
+    import { createEventDispatcher } from 'svelte';
+    import AreaSelect from "./AreaSelect.svelte";
+    import Alert from "./Alert.svelte";
+    import Input from "./Input.svelte";
+    import Radio from "./Radio.svelte";
+    import TextArea from "./TextArea.svelte";
+    import { postNewObject } from "../../healpers/postNewObject"
+    import { 
+        claerFields, 
+        validateFields 
+    } from "../../healpers/validateFields"
+    import {
+        loadTestSuiteBasedOnProjectID,
+        loadTestPlanBasedOnProjectID,
+        loadProjectRequirementsBasedOnProjectID,
+    } from "../../healpers/api"
 
-    export let data;
+    export let data, current;
+    const dispatch = createEventDispatcher();
 
-    let requirementDocs, projects = [];
-    let loading = true;
-    let loadReqDocs = false;
+    let showAlert, 
+        message, 
+        _class, 
+        testPlans, 
+        projectRequirements,
+        testSuites,
+        selectedSuites = [];
+    
+    let nodes = [];
 
-    let title, message, showAlert, _class;
-    let config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    function logger(_class_, _message_) {
+        showAlert = true;
+        _class = _class_;
+        message = _message_;
     };
 
-    async function loadRequirementDocs() {
-        loadReqDocs = true;
-        const responseRequirements = await axios.get(
-            `/requirements/projects/${data.fields.project_id}/get-all/`,
-            config
-        );
-        requirementDocs = responseRequirements.data.data;
-        loadReqDocs = false;
+    function selectTestSuite(e, suite){
+        const node = e.currentTarget;
+        selectedSuites = selectedSuites;
+        node.disabled = true;
+        if(!selectedSuites.some(_suite => _suite.id === suite.id)){
+            selectedSuites.push(suite);
+            data.fields.test_suites = selectedSuites;
+        }
+        node.classList.add("selected");
+        nodes.push(node)
     }
-    
+
     onMount(async () => {
-        const responseProjects = await axios.get("/dashboard/projects/", config);
-        projects = responseProjects.data.data;
-        loading = false;
+        testPlans = await loadTestPlanBasedOnProjectID(
+            data.fields.project_id
+        );
+        projectRequirements = await loadProjectRequirementsBasedOnProjectID(
+            data.fields.project_id
+        );
+        testSuites = await loadTestSuiteBasedOnProjectID(
+            data.fields.project_id
+        );
     });
 
-    async function createNewObject() {
-        data.fields.title = title;
-        const url = data.url
-        if (data.obj == "test_plan" || data.obj == "requirement_Doc") {
-            const _url = `${data.url}${data.fields.project_id}/`
-            data.url = _url;
-        } else if (data.obj == "requirement") {
-            const _url = `${data.url}${data.fields.project_id}/requirement/${data.fields.requirement_Doc}/`
-            data.url = _url;
-        }
-        console.log(data);
-        try {
-            const response = await axios.post(
-                data.url, data.fields, config
-            );
-            showAlert = true;
-            _class = "success";
-            message = response.data.message;
-            setTimeout(() => {
-                data['showPostModal'] = false;
-                showAlert = false;
-            }, 1000);
-        } catch (err) {
-            showAlert = true;
-            _class = "danger";
-            message = err.response.data.message;
-        }
-        data.url = url;
+    function handleNodes(_nodes){
+        for (const node of _nodes) {
+                node.disabled = false;
+                node.classList.remove("selected");
+                console.log(node);
+            }
+        nodes = [];
     }
-    
-</script>
 
-<div
-    class="modal update-modal"
-    tabindex="-1"
+    const postObject = async function(e){
+        const response = await postNewObject(e, data);
+        _class = response.class;
+        message = response.message;
+        if (response.class === 'success') {
+            setTimeout(() => {
+                handleCloseModalClick();
+                response.data.type = data.obj
+                handleNodes(nodes);
+                dispatch('message', {
+                    obj: response
+                });
+            }, 1500);
+        }
+        logger(_class, message);
+    }
+
+    async function handleCloseModalClick() {
+        data.showPostModal = false;
+        showAlert = false;
+        claerFields(data);
+        selectedSuites = [];
+        handleNodes(nodes);
+    }
+
+</script>
+<div class="modal update-modal" tabindex="-1"
     style={`display: ${data.showPostModal ? "block" : "none"};`}
->    <div class="modal-dialog modal-dialog-centered">
+    >
+    <div class:modal-xl="{current === 'test_case' || current === 'test_run'}" 
+        class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body p-4">
                 <div class="modal-header">
                     <h5>{data.message}</h5>
                 </div>
-                <Alert {showAlert} {message} {_class}/>
                 <form>
-                {#if loading}
-                    <LoodingSpiner />
-                    {:else}
-                        <div class="form-group p-2 pb-2">
-                            <label for="content-title">Title</label>
-                            <input bind:value={title} type="text" class="form-control" id="content-title">
+                    <Alert {showAlert} {message} {_class}/>
+                    <Input bind:value={data.fields.title}/>
+                    {#if data.obj == 'project'}
+                        <TextArea 
+                            bind:value={data.fields.short_description} 
+                            title={'Short Description'}
+                        />
+                    {:else if data.obj == 'test_plan'}
+                        <div class="form-group p-2 mb-2">
+                            <Radio 
+                                bind:group={data.fields.type}
+                                value="template"
+                                id="radio-template"
+                                title="Create With Default Templates"
+                            />
+                            <Radio 
+                                bind:group={data.fields.type}
+                                value="blank"
+                                id="radio-blank"
+                                title="Create With Custom Templates"
+                            />
                         </div>
-                        {#if data.obj == 'project'}
-                            <TextArea bind:value={data.fields.short_description} />
-                        {:else if data.obj == 'test_plan'}
-                            <AreaSelect objects = {projects} bind:value={data.fields.project_id}
-                                id={'select-project'} labelTitle={'Project'}/>
-                            <div class="form-group p-2 mb-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" bind:group={data.fields.type} type="radio" id="flexRadioDefault1" value="template" checked/>
-                                    <label class="form-check-label" for="flexRadioDefault1">Create With Default Templates</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" bind:group={data.fields.type} type="radio" id="flexRadioDefault2" value="blank"/>
-                                    <label class="form-check-label" for="flexRadioDefault2">Create With Custom Templates</label>
-                                </div>
-                            </div>
-                        {:else if data.obj == 'requirement_Doc'}
-                            <AreaSelect objects = {projects} bind:value={data.fields.project_id}
-                                id={'select-requirement-doc-project'} labelTitle={'Project'}/>
-                        {:else if data.obj == 'requirement'}
-                            <div class="d-flex flex-row align-items-center">
-                                <div class="col-10">
-                                    <AreaSelect objects = {projects} bind:value={data.fields.project_id}
-                                        id={'select-project'} labelTitle={'Project'}/>
-                                </div>
-                                <div class="col-2">
-                                    <button type="button" class="btn btn-primary mt-2" data-mdb-dismiss="modal"
-                                        style="background-color: #bf4e62;" on:click={loadRequirementDocs}>
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            {#if loadReqDocs}
-                                <LoodingSpiner />
-                            {:else if requirementDocs && requirementDocs.length > 0}
-                                <AreaSelect objects = {requirementDocs} bind:value={data.fields.requirement_Doc}
-                                    id={'select-requirementdoc-requirement'} labelTitle={'Requirement Document'}/>
-                            {:else}
-                                <div class="alert alert-warning text-center">
-                                    <small class="m-0">No Requirement Document Found, Select Another Project</small>
-                                </div>
-                            {/if}
-                            <!-- <TextArea bind:value={data.fileds.description} /> -->
-                        <!-- {:else if data.obj == 'test_suite'}
-                            <AreaSelect {objects} id={'select-suite-project'} labelTitle={'Project'}/>
-                            <AreaSelect {objects} id={'select-suite-plan'} labelTitle={'Test Plan'}/>
-                        {:else if data.obj == 'test_case'}
-                            <TextArea labelTitle="Description" 
-                                bindValue={data.fileds.description} />
-                            <TextArea labelTitle="Test Steps" 
-                                bindValue={data.fileds.test_steps} />
-                            <TextArea labelTitle="Expected Result" 
-                                bindValue={data.fileds.expected_result} />
-                            <AreaSelect {objects} id={'select-requirement-case'} labelTitle={'Requirement'}/>
-                            <AreaSelect {objects} id={'select-requirement-suite'} labelTitle={'Test Suite'}/>
-                        {:else if data.obj == 'test_run'}
-                            <AreaSelect {objects} id={'select-run-plan'} labelTitle={'Test Plan'}/>
-                            <AreaSelect {objects} id={'select-run-project'} labelTitle={'Project'}/> -->
+                    {:else if data.obj == 'test_plan_content_area'}
+                        <TextArea
+                            bind:value={data.fields.content}
+                            title="Content Area Description"
+                        />
+                    {:else if data.obj == "requirement"}
+                        <TextArea
+                            bind:value={data.fields.description}
+                            title="Description"
+                        />
+                    {:else if data.obj == "test_suite"}
+                        {#if testPlans && testPlans.length > 0}
+                            <AreaSelect
+                                objects={testPlans}
+                                bind:value={data.fields.test_plan}
+                                id={"select-testsuite-plan"}
+                                labelTitle={"Test Plan"}
+                            />
                         {/if}
+                    {:else if data.obj == 'test_case'}
+                        <TextArea
+                            bind:value={data.fields.description}
+                            title="Description"
+                        />
+                        <TextArea
+                            bind:value={data.fields.test_steps}
+                            title="Test Steps"
+                        />
+                        <TextArea
+                            bind:value={data.fields.expected_result}
+                            title="Expected Result"
+                        />
+                        {#if projectRequirements && projectRequirements.length > 0}
+                            <AreaSelect
+                                objects={projectRequirements}
+                                bind:value={data.fields.requirement}
+                                id={"select-testcase-requirement"}
+                                labelTitle={"Verify requirement"}
+                            />
+                        {/if}
+                    {:else if data.obj == 'test_run'}
+                        {#if testPlans && testPlans.length > 0}
+                            <AreaSelect
+                                objects={testPlans}
+                                bind:value={data.fields.test_plan}
+                                id={"select-testsuite-plan"}
+                                labelTitle={"Test Plan"}
+                            />
+                        {/if}
+                        {#if selectedSuites && selectedSuites.length > 0}
+                            <div class="modal-header">
+                                <h5>Selected Test Suites</h5>
+                            </div>
+                            <div class="suites card-body row mt-4">
+                                {#each selectedSuites as selectedSuite}
+                                    <div class="col-3">
+                                        <a href="/projects/{data.fields.project_id}/test-suites/{selectedSuite.id}">
+                                            {selectedSuite.title}
+                                        </a>
+                                    </div>
+                                {/each}
+                            </div>
+                        {:else}
+                            <Alert 
+                                showAlert = {true} 
+                                message = {"Please load test suites to create test run."} 
+                                _class = {"warning"}
+                            />
+                        {/if}
+                        <div class="select-suites text-center mb-3 mt-3">
+                            <button
+                                type="button"
+                                class="btn plus-background text-light" 
+                                data-mdb-toggle="modal" data-mdb-target="#SuiteModal"
+                                >
+                                Select test suites
+                            </button>
+                        </div>
                     {/if}
                 </form>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" 
-                        on:click={() => (data['showPostModal'] = false)}>Close</button>
-                    <button class="btn btn-success" data-mdb-dismiss="modal" 
-                        on:click={createNewObject}>Create</button>
+                    <button 
+                        type="button" 
+                        class="btn btn-primary" 
+                        data-mdb-dismiss="modal" 
+                        on:click={handleCloseModalClick}>
+                        Close
+                    </button>
+                    <button
+                        disabled={!validateFields(data)}
+                        class="btn btn-success" 
+                        data-mdb-dismiss="modal" 
+                        on:click={(e) => postObject(e)}>
+                        Create
+                    </button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="SuiteModal" tabindex="-1" aria-labelledby="SuiteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                {#if testSuites && testSuites.length > 0}
+                    {#each testSuites as suite}
+                        <div class="card mb-3" style="background: #f9f9f9;">
+                            <button
+                                class="text-dark suites-selected-button" 
+                                on:click={(e) => selectTestSuite(e, suite)}>
+                                <div class="card-body pb-2">
+                                    <h5 class="card-title" style="color: #5a79b1;">
+                                        {suite.title}
+                                    </h5>
+                                    <div class="pt-4">
+                                        <div class="row">
+                                            <div class="col-12 col-md-4 col-sm-6 col-xs-8">
+                                                <p class="text-muted">
+                                                    Created: <strong>{suite.created}</strong>
+                                                </p>
+                                            </div>
+                                            <div class="col-12 col-md-4 col-sm-6 col-xs-8">
+                                                <p class="text-muted">
+                                                    Updated: <strong>{suite.modified}</strong>
+                                                </p>
+                                            </div>
+                                            <div class="col-12 col-md-4 col-sm-6 col-xs-8">
+                                                <p class="text-muted">
+                                                    Number of test cases: <strong>{suite.number_of_test_cases}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    {/each}
+                {:else}
+                    <Alert 
+                        showAlert = {true} 
+                        message = {"There are no test suites available to use."} 
+                        _class = {"info"}
+                    />
+                {/if}
             </div>
         </div>
     </div>
@@ -160,6 +283,30 @@
         textarea {
             height: 150px; 
             max-height: 150px
+        }
+        .modal-xl {
+            max-width: 1140px;
+        }
+        .suites{
+            width: 98%;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            text-align: center;
+            margin: 0 auto;
+            color: #5271be;
+            margin-bottom: 10px;
+            box-shadow: 1px 0px 4px 1px #bdbdbd;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .suites-selected-button:focus {
+            border-color: #bf4e62;
+        }
+        .selected{
+            background: #e7e6e6;
+            color: #fff;
+            border: solid 1px #001cff;
         }
     </style>
 </svelte:head>

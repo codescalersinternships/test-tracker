@@ -1,7 +1,5 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
     export let objects, id, labelTitle, value;
-    const dispatch = createEventDispatcher();
 </script>
 
 <div class="form-group p-2 mb-3">

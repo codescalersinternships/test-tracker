@@ -48,7 +48,15 @@
 
 <section>
     {#if user}
-        <NavBar {user} />
+        <NavBar
+            {user} on:message={
+            (event) => {
+                if(event.detail.obj.data.type === "project"){
+                    projects = projects;
+                    projects.unshift(event.detail.obj.data);
+                }
+            }}
+        />
         <div class="container pt-4">
             {#if projects}
                 There are <strong>{projects.length}</strong>
@@ -58,7 +66,6 @@
                     <Search
                         request="/project/search/"
                         objects={projects}
-                        {config}
                         objectsCopy={projectsCopy}
                         on:message={handleSearch}
                     />
@@ -88,6 +95,5 @@
         on:message={handleDelete}
         obj={thisProject}
         onRequest="/project"
-        {config}
     />
 </section>

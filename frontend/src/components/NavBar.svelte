@@ -1,10 +1,12 @@
 <script>
+        import { createEventDispatcher } from 'svelte';
         import { Router, Link } from "svelte-navigator";
         import NavBarDropdown from './ui/NavBarDropdown.svelte'
         import AddNewObject from './ui/AddNewObject.svelte'
 
         export let projectView = false;
         export let user;
+        const dispatch = createEventDispatcher();
 
         let projectID;
 
@@ -75,7 +77,13 @@
                 </Router>
             </ul>
         </div>
-        <AddNewObject />
+        <AddNewObject 
+            on:message={(event) => {
+                dispatch('message', {
+                    obj: event.detail.obj,
+                });
+            }}
+        />
         <NavBarDropdown>
             <span slot="dropdown-toggle" 
                 class="user_photo_nav">

@@ -1,112 +1,127 @@
 <script>
     import { onMount } from "svelte";
-    import axios from "../healpers/axios";
+    import { 
+        loadLast5ProjectsUpdated, loadLast5ProjectsActivity
+    } from "../healpers/api.js";
     import NavBar from "../components/NavBar.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import ActivityTable from "../components/ActivityTable.svelte";
     import ProjectCard from "../components/ProjectCard.svelte";
     import Search from "../components/Search.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
+    import Alert from "../components/ui/Alert.svelte";
 
     export let user;
-    let projectsCopy, projects, activity, thisProject;
+    let projects, activity, loadData, projectsCopy, thisProject;
     let showDeleteModal = false;
 
-    let config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
 
     onMount(async () => {
-        const responseProjects = await axios.get(
-            "/project/last-5-projects/",
-            config
-        );
-        const responseActivity = await axios.get(
-            "/project/last-5-projects/activity/",
-            config
-        );
-        activity = responseActivity.data.data;
-        projects = await responseProjects.data.data;
+        loadData = true;
+        activity = await loadLast5ProjectsActivity();
+        projects = await loadLast5ProjectsUpdated();
         projectsCopy = projects;
+        loadData = false;
     });
-
-    async function handleDelete(event) {
-        const project = event.detail.obj;
-        const indx = projects.findIndex((v) => v.id === project.id);
-        projects = projects;
-        projects.splice(indx, 1);
-    }
 
     async function handleSearch(event) {
         const searchProjects = event.detail.objects;
         projects = searchProjects;
-    }
+    };
 
     function setProject(project) {
         thisProject = project;
         showDeleteModal = true;
+    };
+
+    async function handleDelete(event) {
+        const project = event.detail.obj;
+        const indx = projects.findIndex((v) => v.id === project.id);
+        const activityIndx = activity.findIndex((v) => v.project_title === project.title);
+        projects = projects;
+        activity = activity;
+        projects.splice(indx, 1);
+        activity.splice(activityIndx, 1);
     }
 </script>
 
-<svelte:head>
-    <title>Test-Tracker</title>
-</svelte:head>
-
 <section>
     {#if user}
-        <NavBar {user} />
+        <NavBar 
+            {user} on:message={
+            (event) => {
+                if(event.detail.obj.data.type === "project"){
+                    projects = projects;
+                    projects.unshift(event.detail.obj.data);
+                }
+            }}
+        />
         <div class="container pt-4">
-            {#if projects}
-                {#if user.permission !== "admin"}
-                    You are <strong>{user.permission}</strong> of
-                    <strong>{user.projects}</strong>
-                    {user.projects === 1 ? "project" : "projects"}
-                {/if}
-                <div class="pt-4">
-                    <p>Search Projects</p>
-                    <Search
-                        request="/project/search/"
-                        objects={projects}
-                        {config}
-                        objectsCopy={projectsCopy}
-                        on:message={handleSearch}
-                    />
-                </div>
+            {#if projects && user.permission !== "admin"}
+                You are <strong>{user.permission}</strong> of <strong>{projects.length}</strong>
+                {projects.length === 1 ? "project" : "projects"}
+            {:else if projects && user.permission === "admin"}
+                There are <strong>{projects.length}</strong>
+                {projects.length === 1 ? "project" : "projects"}
+            {/if}
+            <div class="pt-4">
+                <p>Search Projects</p>
+                <Search
+                    request="/project/search/"
+                    objects={projects}
+                    objectsCopy={projectsCopy}
+                    on:message={handleSearch}
+                />
+            </div>
+            {#if loadData}
+                <LoodingSpiner />
+            {:else}
                 <div class="pt-5">
-                    {#if projects.length > 0}
+                    {#if projects && projects.length > 0}
                         <p class="last-projects">
                             Last <strong>{projects.length}</strong>
                             {projects.length === 1 ? "Project" : "Projects"} Updated
                         </p>
+                        <div class="row p-1">
+                            {#each projects as project}
+                                <ProjectCard {project}>
+                                    <button
+                                        class="dropdown-item text-danger"
+                                        on:click={setProject.bind(
+                                            undefined,
+                                            project
+                                        )}>Delete</button
+                                    >
+                                </ProjectCard>
+                            {/each}
+                        </div>
+                        <div class="activity">
+                            {#if activity && activity.length > 0}
+                                <ActivityTable activity={activity} />
+                            {/if}
+                        </div>
+                    {:else}
+                        <Alert 
+                            showAlert = {true} 
+                            message = {"There are no projects, try to create one"} 
+                            _class = {"info"}
+                        />
                     {/if}
-                    <div class="row p-1">
-                        {#each projects as project}
-                            <ProjectCard {project}>
-                                <button
-                                    class="dropdown-item text-danger"
-                                    on:click={setProject.bind(
-                                        undefined,
-                                        project
-                                    )}>Delete</button
-                                >
-                            </ProjectCard>
-                        {/each}
-                    </div>
                 </div>
-                {#if activity && activity.length > 0}
-                    <ActivityTable {activity} />
-                {/if}
             {/if}
         </div>
     {:else}
         <LoodingSpiner />
     {/if}
-
-    <DeleteModal
-        on:message={handleDelete}
-        bind:showDeleteModal
-        obj={thisProject}
-        onRequest="/project"
-        {config}
-    />
 </section>
+
+<DeleteModal
+    on:message={handleDelete}
+    bind:showDeleteModal
+    obj={thisProject}
+    onRequest="/project"
+/>
+
+<svelte:head>
+    <title>Test-Tracker | Home</title>
+</svelte:head>

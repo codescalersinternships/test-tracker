@@ -5,7 +5,9 @@
     import axios from "../healpers/axios";
     import NavBar from "../components/NavBar.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
+    import Alert from "../components/ui/Alert.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
+    import Dropdown from "../components/ui/Dropdown.svelte";
 
     export let user;
     let members,
@@ -86,7 +88,17 @@
 
 <section>
     {#if user}
-        <NavBar projectView="true" {user} />
+        <NavBar projectView="true" 
+            {user}
+            on:message={
+                (event) => {
+                    if(event.detail.obj.data.type === "test_run"){
+                        testRuns = testRuns;
+                        testRuns.unshift(event.detail.obj.data);
+                    }
+                }
+            }
+        />
         <div class="container pt-4 pb-4">
             {#if testRuns}
                 <div class="">
@@ -184,53 +196,26 @@
                             {#if testRuns}
                                 {#each testRuns as run}
                                     <div class="card card-style">
-                                        <div
-                                            class="dropdown p-1"
-                                            style="position: absolute;font-size: 0;right: 0;width: 35px; top:20px"
-                                        >
-                                            <a
-                                                class="dropdown-toggle"
-                                                id="dropdownMenuButton"
-                                                data-mdb-toggle="dropdown"
-                                                aria-expanded="false"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="20"
-                                                    height="20"
-                                                    fill="currentColor"
-                                                    class="bi bi-three-dots-vertical"
-                                                    viewBox="0 0 16 16"
-                                                >
-                                                    <path
-                                                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
-                                                    />
-                                                </svg>
-                                            </a>
-                                            <ul
-                                                class="dropdown-menu"
-                                                aria-labelledby="dropdownMenuButton"
-                                            >
-                                                <li>
-                                                    <button
-                                                        class="dropdown-item text-danger"
-                                                        on:click={setRun(run)}
-                                                        >Delete</button
-                                                    >
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <Dropdown>
+                                            <li>
+                                                <button
+                                                    class="dropdown-item text-danger"
+                                                    on:click={setRun(run)}>
+                                                    Delete
+                                                </button>
+                                            </li>
+                                        </Dropdown>
                                         <Link
                                             to="/projects/{projectID}/runs/{run.id}/"
                                             class="text-dark d-block text-decoration-none"
                                         >
                                             <div class="card-body pb-2">
-                                                <h5
-                                                    class="card-title"
-                                                    style="color: #5a79b1;"
-                                                >
-                                                    {run.assigned_user
-                                                        .first_name}-{run.title}
+                                                <h5 class="card-title" style="color: #5a79b1;">
+                                                    {#if run.assigned_user.first_name}
+                                                        {run.assigned_user.first_name}-{run.title}
+                                                    {:else}
+                                                        {run.title}
+                                                    {/if}
                                                 </h5>
                                                 <div class="row">
                                                     <div class="col-2">
@@ -380,10 +365,12 @@
                                         </Link>
                                     </div>
                                 {:else}
-                                    <div class="col-12 pt-5">
-                                        <p class="text-muted">
-                                            -- There are no test runs yet
-                                        </p>
+                                    <div class="col-12">
+                                        <Alert 
+                                            _class={'info'} 
+                                            showAlert={true} 
+                                            message={"There are no test runs yet, Try run test suite."} 
+                                        />
                                     </div>
                                 {/each}
                             {/if}
@@ -529,7 +516,6 @@
         on:message={handleDelete}
         obj={thisTestRun}
         onRequest="/test_runs/projects/{projectID}/runs"
-        {config}
     />
 </section>
 
@@ -593,6 +579,13 @@
             width: 8px;
             margin: 0px 5px 0.8px 0;
             border-radius: 50%;
+        }
+        .dropdowncustom{
+            position: absolute;
+            font-size: 0;
+            right: 0;
+            width: 35px; 
+            top:20px
         }
     </style>
 </svelte:head>

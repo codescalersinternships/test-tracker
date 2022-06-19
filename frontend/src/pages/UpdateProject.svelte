@@ -7,13 +7,14 @@
 
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import Alert from "../components/ui/Alert.svelte";
+    import AddProjectMemberModal from "../components/ui/AddProjectMemberModal.svelte";
 
     import NavBar from "../components/NavBar.svelte";
     import MemberCard from "../components/MemberCard.svelte";
 
     export let user;
 
-    let project, message, _class;
+    let project, message, _class, showAddMemberModal;
     let showAlert = false;
 
     var path = window.location.pathname;
@@ -22,6 +23,10 @@
     const dispatch = createEventDispatcher();
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}`},
+    };
+
+    function openAddMemberModal() {
+        showAddMemberModal = true;
     };
 
     onMount(async () => {
@@ -59,6 +64,11 @@
                 message = err.response.data.message;
             }
         }
+    }
+
+    async function handleAddMember(event) {
+        project.teams = project.teams;
+        project.teams.push(event.detail.member);
     }
 
     async function removeMember(member){
@@ -151,18 +161,34 @@
                             </div>
                         </div>
                         <div class="tab-pane pb-4 fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-                            <div class="row">
-                                {#each project.teams as member}
-                                    <MemberCard {member}>
-                                        <Link 
-                                            to=""
-                                            class="dropdown-item text-danger" 
-                                            on:click="{removeMember(member)}">
-                                            Remove {member.first_name}
-                                        </Link>
-                                    </MemberCard>
-                                {/each}
+                            <div class="add-member text-center mb-4">
+                                <button type="button" class="btn plus-background text-light"
+                                    on:click={openAddMemberModal} >
+                                    <i class="fas fa-plus"></i>
+                                </button>
                             </div>
+                            {#if project.teams && project.teams.length > 0}
+                                <div class="row">
+                                    {#each project.teams as member}
+                                        <MemberCard {member}>
+                                            <Link 
+                                                to=""
+                                                class="dropdown-item text-danger" 
+                                                on:click="{removeMember(member)}">
+                                                Remove {member.first_name}
+                                            </Link>
+                                        </MemberCard>
+                                    {/each}
+                                </div>
+                            {:else}
+                                <div class="col-12 text-center">
+                                    <Alert 
+                                        showAlert = {true} 
+                                        message = {"No members found, try to add new member."} 
+                                        _class = {"info"}
+                                    />
+                                </div>
+                            {/if}
                         </div>
                     </div>
                 </section>
@@ -172,6 +198,11 @@
         <LoodingSpiner />
     {/if}
 </section>
+
+<AddProjectMemberModal
+    on:message={handleAddMember}
+    bind:showAddMemberModal
+/>
 
 <svelte:head>
     <title>Test-Tracker | Project Detail</title>

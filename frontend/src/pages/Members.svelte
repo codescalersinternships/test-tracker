@@ -101,6 +101,5 @@
         on:message={handleDelete}
         obj={thisMember}
         onRequest="/members"
-        {config}
     />
 </section>

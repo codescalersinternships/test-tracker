@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import { onMount } from "svelte";
     import axios from "../../healpers/axios";
+    import Alert from "./Alert.svelte";
 
     export let showAddMemberModal = false;
 
@@ -63,8 +64,12 @@
                             {/each}
                         </select>
                     {:else}
-                        <div class="col-12">
-                            <p class="text-center">No members to add.</p>
+                        <div class="col-12 mt-4">
+                            <Alert 
+                                showAlert = {true} 
+                                message = {"No members to add."} 
+                                _class = {"info"}
+                            />
                         </div>
                     {/if}
                 </div>

@@ -47,7 +47,7 @@
                 <div class="col-4">
                     <button
                         type="button"
-                        class="btn btn-danger text-white text-decoration-none"
+                        class="btn plus-background text-white text-decoration-none"
                         on:click={openDeleteModal}
                     >
                         Delete
@@ -146,7 +146,7 @@
                                     <div class="col-2">
                                         <span class="ml-3">
                                             <a
-                                                class="text-primary"
+                                                class="link-color"
                                                 href="/members/{person.id}"
                                                 >@{person.first_name}</a
                                             >
@@ -196,8 +196,7 @@
     <DeleteModal
         bind:showDeleteModal
         obj={member}
-        onRequest="/members/"
-        {config}
+        onRequest="/members"
         redirect="/members/"
     />
 </section>

@@ -108,7 +108,6 @@
                     <Search
                         request="/test_suites/{projectID}/search/"
                         objects={testSuites}
-                        {config}
                         objectsCopy={testSuitesCopy}
                         on:message={handleSearch}
                     />
@@ -442,7 +441,6 @@
     on:message={handleDelete}
     obj={thisSuite}
     onRequest="/test_suites/{projectID}/actions"
-    {config}
 />
 
 <svelte:head>

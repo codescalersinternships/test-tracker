@@ -5,10 +5,13 @@
     export let objects; // [objects] is the array of objects to update with the new data
     export let objectsCopy; // [objectsCopy] is a copy of the objects array
     export let request; // [request] for the endpoint
-    export let config; // [config] for the headers
 
     const dispatch = createEventDispatcher();
     let searchInput;
+    
+    let config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
 
     async function searchFunction(){
         const word = searchInput.value;
