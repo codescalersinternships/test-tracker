@@ -15,3 +15,4 @@
     <li>Every test suite that contain a test case, so when you create a new test suite you should create a test case for this test suite</li>
     <li>Run all of test cases that you have and mark whoso fail and whoso success</li>
 </ul>
+.
