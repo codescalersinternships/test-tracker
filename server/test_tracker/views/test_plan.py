@@ -46,7 +46,7 @@ class TestPlansAPIView(GenericAPIView):
             serializer.save(project = project)
             update_activity(
                 datetime.datetime.now(), request.user, project,
-                "Create", "Test Plan", serializer.data.get('name')
+                "Create", "Test Plan", serializer.data.get('title')
             )
             return CustomResponse.success(
                 data=serializer.data,
