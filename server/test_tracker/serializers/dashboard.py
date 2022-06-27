@@ -138,6 +138,8 @@ class ProjectsSerializer(ModelSerializer):
         if user:
             test_suites = TestSuites.objects.filter(project = obj)
             test_runs = TestRun.objects.filter(
-                test_suites__in = test_suites, status=TEST_RUN_STATUS_CHOICES.NOT_STARTED).order_by('-created')
+                test_suites__in = test_suites,
+                status=TEST_RUN_STATUS_CHOICES.NOT_STARTED,
+            ).exclude(assigned_user=None).order_by('-created')
             return TestRunsSerializer(test_runs[:5], many=True).data
         return
