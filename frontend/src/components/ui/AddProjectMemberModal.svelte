@@ -8,7 +8,7 @@
 
     const dispatch = createEventDispatcher();
 
-    let members, member;
+    let members, member, message, _class, showAlert;
 
     var path = window.location.pathname;
     var projectID = path.split("/")[2];
@@ -29,12 +29,27 @@
     })
 
     async function addMember(){
-        await axios.put(`project/${projectID}/members/${member}/`, [], config);
-        const indx = members.findIndex((v) => v.id === member);
-        dispatch("message", {member:members[indx]});
-        members = members;
-        members.splice(indx, 1);
-        showAddMemberModal = false;
+        if (member !== null || member !== undefined || member !== '') {
+            try {
+                await axios.put(`project/${projectID}/members/${member}/`, [], config);
+                const indx = members.findIndex((v) => v.id === member);
+                dispatch("message", {member:members[indx]});
+                members = members;
+                members.splice(indx, 1);
+                showAddMemberModal = false;
+                message = "Member added to project successfully.";
+                _class = "success";
+                showAlert = true;
+            } catch (error) {
+                message = "Failed to add this member.";
+                _class = "danger";
+                showAlert = true;
+            }
+        } else {
+            message = "Please select a member to add.";
+            _class = "danger";
+            showAlert = true;
+        }
     }
 
 </script>
@@ -52,6 +67,11 @@
                             <label for="#select-status">Add New Member</label>
                         </strong>
                     </div>
+                    <Alert 
+                        {showAlert} 
+                        {message}
+                        {_class}
+                    />
                     {#if members && members.length > 0}
                         <select
                             bind:value={member}
@@ -84,7 +104,7 @@
                 {#if members && members.length > 0}
                     <button
                         type="button"
-                        class="btn btn-success text-white text-decoration-none"
+                        class="btn btn-success text-white"
                         on:click={addMember}
                     >
                         Add Member
