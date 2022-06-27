@@ -53,61 +53,60 @@
                 if(event.detail.obj.data.type === "project"){
                     projects = projects;
                     projects.unshift(event.detail.obj.data);
+                    projects.splice(-1, 1);
                 }
             }}
         />
         <div class="container pt-4">
-            {#if projects && user.permission !== "admin"}
-                You are <strong>{user.permission}</strong> of <strong>{projects.length}</strong>
-                {projects.length === 1 ? "project" : "projects"}
-            {:else if projects && user.permission === "admin"}
-                There are <strong>{projects.length}</strong>
-                {projects.length === 1 ? "project" : "projects"}
-            {/if}
-            <div class="pt-4">
-                <p>Search Projects</p>
-                <Search
-                    request="/project/search/"
-                    objects={projects}
-                    objectsCopy={projectsCopy}
-                    on:message={handleSearch}
-                />
-            </div>
-            {#if loadData}
+            {#if projects}
+                {#if projects && user.permission !== "admin"}
+                    You are <strong>{user.permission}</strong> of <strong>{projects.length}</strong>
+                    {projects.length === 1 ? "project" : "projects"}
+                {:else if projects && user.permission === "admin"}
+                    There are <strong>{projects.length}</strong>
+                    {projects.length === 1 ? "project" : "projects"}
+                {/if}
+                <div class="pt-4">
+                    <p>Search Projects</p>
+                    <Search
+                        request="/project/search/"
+                        objects={projects}
+                        objectsCopy={projectsCopy}
+                        on:message={handleSearch}
+                    />
+                </div>
+                <div class="pt-5">
+                    <p class="last-projects">
+                        Last <strong>{projects.length}</strong>
+                        {projects.length === 1 ? "Project" : "Projects"} Updated
+                    </p>
+                    <div class="row p-1">
+                        {#each projects as project}
+                            <ProjectCard {project}>
+                                <button
+                                    class="dropdown-item text-danger"
+                                    on:click={setProject.bind(
+                                        undefined,
+                                        project
+                                    )}>Delete</button
+                                >
+                            </ProjectCard>
+                        {/each}
+                    </div>
+                    <div class="activity">
+                        {#if activity && activity.length > 0}
+                            <ActivityTable activity={activity} />
+                        {/if}
+                    </div>
+                </div>
+            {:else if loadData}
                 <LoodingSpiner />
             {:else}
-                <div class="pt-5">
-                    {#if projects && projects.length > 0}
-                        <p class="last-projects">
-                            Last <strong>{projects.length}</strong>
-                            {projects.length === 1 ? "Project" : "Projects"} Updated
-                        </p>
-                        <div class="row p-1">
-                            {#each projects as project}
-                                <ProjectCard {project}>
-                                    <button
-                                        class="dropdown-item text-danger"
-                                        on:click={setProject.bind(
-                                            undefined,
-                                            project
-                                        )}>Delete</button
-                                    >
-                                </ProjectCard>
-                            {/each}
-                        </div>
-                        <div class="activity">
-                            {#if activity && activity.length > 0}
-                                <ActivityTable activity={activity} />
-                            {/if}
-                        </div>
-                    {:else}
-                        <Alert 
-                            showAlert = {true} 
-                            message = {"There are no projects, try to create one"} 
-                            _class = {"info"}
-                        />
-                    {/if}
-                </div>
+                <Alert 
+                    showAlert = {true} 
+                    message = {"There are no projects, try to create one"} 
+                    _class = {"info"}
+                />
             {/if}
         </div>
     {:else}
