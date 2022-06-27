@@ -1,27 +1,25 @@
 <script>
     import { onMount } from "svelte";
-    import axios from "../healpers/axios";
+    import { loadProjects } from "../healpers/api"
     import NavBar from "../components/NavBar.svelte";
     import ProjectCard from "../components/ProjectCard.svelte";
     import Search from "../components/Search.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
+    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
+    import Alert from "../components/ui/LoodingSpiner.svelte";
 
     export let user;
 
     let projects, projectsCopy, thisProject;
     let showDeleteModal = false;
-
-    let config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
+    let loading = false;
 
     onMount(async () => {
-        const responseProjects = await axios.get(
-            "/dashboard/projects/",
-            config
-        );
-        projects = responseProjects.data.data;
+        loading = true;
+        const responseProjects = await loadProjects()
+        projects = responseProjects;
         projectsCopy = projects;
+        loading = false;
     });
 
     async function handleSearch(event) {
@@ -83,10 +81,14 @@
                         {/each}
                     </div>
                 </div>
+            {:else if loading}
+                <LoodingSpiner />
             {:else}
-                <div class="col-12 last-projects-notfound pt-3">
-                    <p class="text-muted">-- There are no projects yet</p>
-                </div>
+                <Alert 
+                    showAlert = {true} 
+                    message = {"There are no projects, try to create one"} 
+                    _class = {"info"}
+                />
             {/if}
         </div>
     {/if}
