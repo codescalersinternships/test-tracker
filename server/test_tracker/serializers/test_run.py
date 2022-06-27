@@ -118,8 +118,9 @@ class TestRunsSerializer(ModelSerializer):
 
     def get_assigned_user(self, obj):
         """Return assigned user"""
-        from server.test_tracker.serializers.member import ProjectTeamSerializer
-        return ProjectTeamSerializer(obj.assigned_user).data
+        if obj.assigned_user:
+            from server.test_tracker.serializers.member import ProjectTeamSerializer
+            return ProjectTeamSerializer(obj.assigned_user).data
 
     def get_project_id(self, obj):
         """Return project id"""

@@ -1,4 +1,5 @@
 """Everything related to test runs"""
+from cgi import test
 import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
@@ -7,9 +8,12 @@ from rest_framework.response import Response
 from server.test_tracker.api.permission import HasProjectAccess
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.project import TEST_RUN_STATUS_CHOICES, TestCases, TestPlan, TestRun, TestSuites
+from server.test_tracker.serializers.test_cases import TestCaseSerializer
 from server.test_tracker.serializers.test_run import TestRunsSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
+from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import get_test_run_by_id, update_activity
+from server.test_tracker.services.test_suites import get_test_suite_by_id
 
 
 
@@ -200,3 +204,49 @@ class LastWeekTestRunReportSheetAPIView(GenericAPIView):
             }
         }
         return CustomResponse.success(data=data)
+
+class RunAllTestCasesAPIView(GenericAPIView):
+    permission_classes = (HasProjectAccess,)
+    serializer_class = TestCaseSerializer
+
+    def get(self, request: Request, project_id: str, test_run_id: str) -> Response:
+        """Get all test cases for a given test run."""
+        project = get_project_by_id(int(project_id))
+        test_run = get_test_run_by_id(int(test_run_id))
+        test_suites = get_test_run_by_id(int(test_run_id)).test_suites.all().values_list('id', flat=True)
+        if project is None or project_id.isdigit() == False:
+            return CustomResponse.not_found(message = "Project not found.")
+        if test_run is None:
+            return CustomResponse.not_found(message = "TestRun not found.")
+
+        test_cases = TestCases.objects.filter(test_suite__id__in = test_suites, completed=False)
+        return CustomResponse.success(
+            message = "Success cases found.",
+            data = self.get_serializer(test_cases, many=True).data
+        )
+
+class SetAssignedUserTestRunAPIView(GenericAPIView):
+    permission_classes = (HasProjectAccess,)
+    serializer_class = TestRunsSerializer
+
+    def put(self, request: Request, project_id: str, test_run_id: str) -> Response:
+        """User this endpoint to set assigned user to test run"""
+        assigned_user = request.query_params.get('assigned_user')
+        member = get_member_by_id(int(assigned_user))
+        project = get_project_by_id(project_id)
+        test_run = get_test_run_by_id(test_run_id)
+        if not assigned_user:
+            return CustomResponse.bad_request(message="Please select a user")
+        if not project:
+            return CustomResponse.not_found(message="Project not found")
+        if not test_run:
+            return CustomResponse.not_found(message="Test run not found")
+        if not member:
+            return CustomResponse.not_found(message="Member not found")
+        test_run.assigned_user = member
+        test_run.save()
+        return CustomResponse.success(
+            message=f"Test run {test_run.title} assigned to {member.full_name}",
+            data = self.get_serializer(test_run).data,
+            status_code = 203
+        )
