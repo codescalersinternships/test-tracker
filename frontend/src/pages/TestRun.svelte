@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { Link } from "svelte-navigator";
+    import { statusFields } from "../../src/healpers/fields"
 
     import axios from "../healpers/axios";
     import NavBar from "../components/NavBar.svelte";
@@ -8,6 +9,7 @@
     import Alert from "../components/ui/Alert.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
     import Dropdown from "../components/ui/Dropdown.svelte";
+    import AreaSelect from "../components/ui/AreaSelect.svelte";
 
     export let user;
     let members,
@@ -108,47 +110,25 @@
                     Test {testRuns.length === 1 ? "Run" : "Runs"}
                 </div>
                 <div class="pt-4">
-                    <p>Search On Test Runs</p>
                     <div class="row align-items-end mb-4">
                         <div class="col-4">
-                            <strong
-                                ><label for="#select-user">Involve user</label
-                                ></strong
-                            >
-                            <select
+                            <AreaSelect
+                                objects={members}
                                 bind:value={member}
-                                class="form-select mt-1"
-                                aria-label="select-user"
-                                id="select-user"
-                            >
-                                <option selected />
-                                {#if members}
-                                    {#each members as member}
-                                        <option value={member.id}
-                                            >{member.full_name}</option
-                                        >
-                                    {/each}
-                                {/if}
-                            </select>
+                                id={"select-user"}
+                                labelTitle={"Involve user"}
+                                user={true}
+                            />
                         </div>
                         <div class="col-4">
-                            <strong
-                                ><label for="#select-status">Status</label
-                                ></strong
-                            >
-                            <select
+                            <AreaSelect
+                                objects={statusFields()}
                                 bind:value={status}
-                                class="form-select"
-                                aria-label="select-status"
-                                id="select-status"
-                            >
-                                <option selected />
-                                <option value="not started">not started</option>
-                                <option value="in progress">in progress</option>
-                                <option value="completed">completed</option>
-                            </select>
+                                id={"select-status"}
+                                labelTitle={"Status"}
+                            />
                         </div>
-                        <div class="col-2 pb-1">
+                        <div class="col-2 pb-4">
                             <button
                                 type="button"
                                 class="btn btn-outline-primary"
@@ -199,6 +179,13 @@
                                         <Dropdown>
                                             <li>
                                                 <button
+                                                    class="dropdown-item text-primary"
+                                                    on:click={setRun(run)}>
+                                                    Run
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button
                                                     class="dropdown-item text-danger"
                                                     on:click={setRun(run)}>
                                                     Delete
@@ -211,7 +198,7 @@
                                         >
                                             <div class="card-body pb-2">
                                                 <h5 class="card-title" style="color: #5a79b1;">
-                                                    {#if run.assigned_user.first_name}
+                                                    {#if run.assigned_user && run.assigned_user.first_name}
                                                         {run.assigned_user.first_name}-{run.title}
                                                     {:else}
                                                         {run.title}
