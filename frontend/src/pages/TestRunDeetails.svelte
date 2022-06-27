@@ -1,11 +1,15 @@
 <script>
     import { onMount } from "svelte";
+    import { Router, Link } from "svelte-navigator";
 
     import axios from "../healpers/axios";
     import NavBar from "../components/NavBar.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
+    import Alert from "../components/ui/Alert.svelte";
     import Search from "../components/Search.svelte";
+    import Dropdown from "../components/ui/Dropdown.svelte";
+    import RunTestRunModal from "../components/ui/RunTestRunModal.svelte";
 
     export let user;
 
@@ -18,14 +22,25 @@
     let projectID = path.split("/")[2];
     let testRunID = path.split("/")[4];
 
-    let testRun, testSuites, testSuitesCopy, thisSuite;
+    let testRun,
+    testSuites,
+    testSuitesCopy,
+    thisSuite,
+    members,
+    member,
+    showAlert,
+    message,
+    _class, 
+    runThis;
 
     onMount(async () => {
         const testRunDetails = await axios.get(
             `/test_runs/projects/${projectID}/runs/${testRunID}/`,
             config
         );
+        const memberResponse = await axios.get("/members/all/", config);
         testRun = testRunDetails.data.data;
+        members = memberResponse.data.data;
         testSuites = testRun.test_suites;
         testSuitesCopy = testSuites;
     });
@@ -46,24 +61,65 @@
         testSuites = testSuites;
         testSuites.splice(indx, 1);
     }
+
+    async function setAssignedUser(){
+        if (member){
+            if (testRun.assigned_user && testRun.assigned_user.id === member){
+                message = "Already selected.";
+                _class = "danger";
+                showAlert = true;
+            } else {
+                const response = await axios.put(
+                    `/test_runs/projects/${projectID}/set-user/${testRunID}/?assigned_user=${member}`,
+                    [], config
+                );
+                if (response.data.status === 203){
+                    testRun.assigned_user = response.data.data.assigned_user;
+                    message = response.data.message;
+                    _class = "success";
+                    showAlert = true;
+                    setTimeout(() => {
+                        message = "";
+                        _class = "";
+                        showAlert = false;
+                    }, 3000);
+                } else {
+                    message = response.data.message;
+                    _class = "danger";
+                    showAlert = true;
+                }
+            }
+        }
+    }
 </script>
 
 <section>
     {#if user}
         <NavBar projectView="true" {user} />
+        <Alert {showAlert} {message} {_class}/>
         <div class="container pt-4 pb-4">
             {#if testRun}
-                <div class="">
-                    <p class="h4 mb-2">
-                        Test Runs |
-                        <strong class="h4 title">{testRun.title}</strong>
-                    </p>
-                    <p class="text-muted">
-                        -- Contains a total of <strong class="text-dark"
-                            >{testSuites.length}</strong
-                        >
-                        {testSuites.length === 1 ? "test" : "tests"}
-                    </p>
+                <div class="row">
+                    <div class="col-11">
+                        <p class="h4 mb-2">
+                            Test Runs |
+                            <strong class="h4 title">{testRun.title}</strong>
+                        </p>
+                        <p class="text-muted">
+                            -- Contains a total of <strong class="text-dark"
+                                >{testSuites.length}</strong
+                            >
+                            {testSuites.length === 1 ? "test" : "tests"}
+                        </p>
+                    </div>
+                    <div class="col-1">
+                        <Router>
+                            <Link to="/projects/{projectID}/runs/{testRunID}/run/" 
+                                class="btn background-primary text-light ml-2">
+                                Run
+                            </Link>
+                        </Router>
+                    </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-6">
@@ -103,14 +159,45 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <p>Search Suites</p>
-                    <Search
-                        request="/test_suites/{projectID}/search/"
-                        objects={testSuites}
-                        objectsCopy={testSuitesCopy}
-                        on:message={handleSearch}
-                    />
+                <div class="row mb-4">
+                    <div class="col-6 pt-2">
+                        <p class="pb-1 m-1">
+                            <strong>Search on test runs</strong>
+                        </p>
+                        <Search
+                            request="/test_suites/{projectID}/search/"
+                            objects={testSuites}
+                            objectsCopy={testSuitesCopy}
+                            on:message={handleSearch}
+                        />
+                    </div>
+                    <div class="col-6 pt-2">
+                        <p class="pb-1 m-1">
+                            <strong>Assigned user</strong>
+                        </p>
+                        <div class="input-group">
+                            <select
+                                class="form-select"
+                                aria-label="select-user"
+                                bind:value={member}
+                                >
+                                {#if testRun.assigned_user}
+                                    <option value={testRun.assigned_user.id} selected>
+                                        Assigned to | {testRun.assigned_user.full_name} | select to change
+                                    </option>
+                                {:else}
+                                    <option value={null}>Select user</option>
+                                {/if}
+                                {#each members as member }
+                                    <option value={member.id}>{member.full_name}</option>
+                                {/each}
+                            </select>
+                            <button type="button" class="btn btn-outline-success" 
+                                on:click={setAssignedUser}>
+                                Submit
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <section class="section-tabs">
                     <ul class="nav nav-tabs mb-5" id="ex1" role="tablist">
@@ -149,43 +236,16 @@
                             {#each testSuites as suite}
                                 <div class="col-12">
                                     <div class="test_case_card">
-                                        <div
-                                            class="dropdown p-1"
-                                            style="position: absolute;font-size: 0!important;right: 0; top: 20px;"
-                                        >
-                                            <a
-                                                class="dropdown-toggle"
-                                                id="dropdownMenuButton"
-                                                data-mdb-toggle="dropdown"
-                                                aria-expanded="false"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="20"
-                                                    height="20"
-                                                    fill="currentColor"
-                                                    class="bi bi-three-dots-vertical"
-                                                    viewBox="0 0 16 16"
+                                        <Dropdown>
+                                            <li>
+                                                <button
+                                                    class="dropdown-item text-danger"
+                                                    on:click={setSuite(
+                                                        suite
+                                                    )}>Delete</button
                                                 >
-                                                    <path
-                                                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
-                                                    />
-                                                </svg>
-                                            </a>
-                                            <ul
-                                                class="dropdown-menu"
-                                                aria-labelledby="dropdownMenuButton"
-                                            >
-                                                <li>
-                                                    <button
-                                                        class="dropdown-item text-danger"
-                                                        on:click={setSuite(
-                                                            suite
-                                                        )}>Delete</button
-                                                    >
-                                                </li>
-                                            </ul>
-                                        </div>
+                                            </li>
+                                        </Dropdown>
                                         <a
                                             data-mdb-toggle="collapse"
                                             href="#collapse-{suite.id}"
@@ -442,10 +502,18 @@
     obj={thisSuite}
     onRequest="/test_suites/{projectID}/actions"
 />
-
+{#if testRun && testRun.title && runThis}
+    <RunTestRunModal {runThis} title={testRun.title}/>
+{/if}
 <svelte:head>
     <title>Test-Tracker | Test runs</title>
     <style>
+        .dropdowncustom{
+            position: absolute;
+            font-size: 0!important;
+            right: 0;
+            top: 20px;
+        }
         .title {
             font-size: 1.5rem;
             font-weight: bold;
@@ -545,10 +613,6 @@
             width: 30px;
             text-align: center;
             border-radius: 50%;
-        }
-        .collapse_span:hover {
-            box-shadow: 0px 1px 4px 1px #d0d0d0;
-            background: #f5f5f5;
         }
         .test_case_info {
             margin-top: 10px;
