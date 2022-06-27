@@ -2,7 +2,7 @@
         import { createEventDispatcher } from 'svelte';
         import { Router, Link } from "svelte-navigator";
         import NavBarDropdown from './ui/NavBarDropdown.svelte'
-        import AddNewObject from './ui/AddNewObject.svelte'
+        import AddNewObject from './AddNewObject.svelte'
 
         export let projectView = false;
         export let user;

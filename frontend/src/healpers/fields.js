@@ -1,4 +1,4 @@
-export default function formFields() {
+export function formFields() {
     // return form fileds based on key => Backend Model 
     let path = window.location.pathname;
     let projectID = path.split("/")[2];
@@ -90,4 +90,13 @@ export default function formFields() {
         };
     };
     return objectsModels;
+}
+
+export function statusFields() {
+    const data = [
+        {title: "Not started", id: "not started"},
+        {title: "In progress", id: "in progress"},
+        {title: "Completed", id: "completed"},
+    ]
+    return data;
 }

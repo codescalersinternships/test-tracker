@@ -21,6 +21,14 @@ export async function loadLast5ProjectsActivity(){
     return await responseActivity.data.data;
 }
 
+export async function loadProjects(){
+    const responseProjects = await axios.get(
+        "/dashboard/projects/",
+        config
+    );
+    return await responseProjects.data.data;
+}
+
 export async function loadTestSuiteBasedOnProjectID(projectID){
     if(projectID != undefined || projectID != null){
         try {

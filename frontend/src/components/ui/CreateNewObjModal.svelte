@@ -39,6 +39,7 @@
     function selectTestSuite(e, suite){
         const node = e.currentTarget;
         selectedSuites = selectedSuites;
+        
         node.disabled = true;
         if(!selectedSuites.some(_suite => _suite.id === suite.id)){
             selectedSuites.push(suite);
@@ -64,7 +65,6 @@
         for (const node of _nodes) {
                 node.disabled = false;
                 node.classList.remove("selected");
-                console.log(node);
             }
         nodes = [];
     }
@@ -73,23 +73,23 @@
         const response = await postNewObject(e, data);
         _class = response.class;
         message = response.message;
-        if (response.class === 'success') {
+        if (response.data) {
             setTimeout(() => {
                 handleCloseModalClick();
-                response.data.type = data.obj
-                handleNodes(nodes);
-                dispatch('message', {
-                    obj: response
-                });
+                response.data.type = data.obj;
+                // handleNodes(nodes);
+                // dispatch('message', {
+                //     obj: response
+                // });
             }, 1500);
         }
         logger(_class, message);
     }
 
     async function handleCloseModalClick() {
+        claerFields(data);
         data.showPostModal = false;
         showAlert = false;
-        claerFields(data);
         selectedSuites = [];
         handleNodes(nodes);
     }
