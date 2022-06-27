@@ -4,7 +4,6 @@ from django.core.exceptions import PermissionDenied
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from server.test_tracker.models.dashboard import Project
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.member import get_member_by_id
 
@@ -46,3 +45,6 @@ class HasProjectAccess(permissions.BasePermission):
                     elif request.user.id in project.members.values_list('id', flat=True):
                         return True
                     raise PermissionDenied
+                raise PermissionDenied
+            raise PermissionDenied
+        raise PermissionDenied
