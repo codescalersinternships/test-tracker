@@ -29,6 +29,7 @@
 
     import TestRun from "./pages/TestRun.svelte";
     import TestRunDeetails from "./pages/TestRunDeetails.svelte";
+    import RunTestRun from "./pages/RunTestRun.svelte";
 
     import NotFound from "./pages/NotFound.svelte";
 
@@ -40,9 +41,50 @@
         isAuthenticated();
         const userDetails = await axios.get('/dashboard/user/', config);
         user = await userDetails.data.data
+        if (! user) {
+            return {
+                status: 302,
+                redirect: "/login"
+            };
+        }
     });
 
 </script>
+
+<main>
+    <Router>
+        <Route path="/" primary={false}><Home user={user}/></Route>
+        <Route path="auth/login/" primary={false}><Login/></Route>
+        <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
+        <Route path="auth/logout/" primary={false}><Logout/></Route>
+        
+        <Route path="projects/" primary={false}><Projects user={user}/></Route>
+        <Route path="projects/:id/" primary={false}><ProjectDetails user={user}/></Route>
+        <Route path="projects/:id/update/" primary={false}><UpdateProject user={user}/></Route>
+
+        <Route path="projects/:id/test-plans/" primary={false}><TestPlans user={user}/></Route>
+        <Route path="projects/:id/test-plans/:id/" primary={false}><TestPlanDetails user={user}/></Route>
+
+        <Route path="projects/:id/requirements/" primary={false}><Requirements user={user}/></Route>
+        <Route path="projects/:id/requirements/:id/" primary={false}><RequirementsDetails user={user}/></Route>
+
+        <Route path="projects/:id/test-suites/" primary={false}><TestSuite user={user}/></Route>
+        <Route path="projects/:id/test-suites/:id/" primary={false}><TestSuiteDetails user={user}/></Route>
+        
+        <Route path="members/" primary={false}><Members user={user}/></Route>
+        <Route path="members/:id/" primary={false}><MemberDetails user={user}/></Route>
+        
+        <Route path="projects/:id/runs/" primary={false}><TestRun user={user}/></Route>
+        <Route path="projects/:id/runs/:id/" primary={false}><TestRunDeetails user={user}/></Route>
+        <Route path="projects/:id/runs/:id/run" primary={false}><RunTestRun user={user}/></Route>
+
+        <Route> 
+            <NotFound/>
+        </Route>
+    </Router>
+</main>
+
+
 <svelte:head>
     <!-- Font Awesome -->
     <link
@@ -103,37 +145,14 @@
         .link-color: {
             color: #5a79b1;
         }
+        .width-100{
+            width: 100%;
+        }
+        .text-primary{
+            color:#5a79b1!important;
+        }
+        .background-primary{
+            background:#5a79b1!important;
+        }
     </style>
-</svelte:head>
-
-<main>
-    <Router>
-        <Route path="/" primary={false}><Home user={user}/></Route>
-        <Route path="auth/login/" primary={false}><Login/></Route>
-        <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
-        <Route path="auth/logout/" primary={false}><Logout/></Route>
-        
-        <Route path="projects/" primary={false}><Projects user={user}/></Route>
-        <Route path="projects/:id/" primary={false}><ProjectDetails user={user}/></Route>
-        <Route path="projects/:id/update/" primary={false}><UpdateProject user={user}/></Route>
-
-        <Route path="projects/:id/test-plans/" primary={false}><TestPlans user={user}/></Route>
-        <Route path="projects/:id/test-plans/:id/" primary={false}><TestPlanDetails user={user}/></Route>
-
-        <Route path="projects/:id/requirements/" primary={false}><Requirements user={user}/></Route>
-        <Route path="projects/:id/requirements/:id/" primary={false}><RequirementsDetails user={user}/></Route>
-
-        <Route path="projects/:id/test-suites/" primary={false}><TestSuite user={user}/></Route>
-        <Route path="projects/:id/test-suites/:id/" primary={false}><TestSuiteDetails user={user}/></Route>
-        
-        <Route path="members/" primary={false}><Members user={user}/></Route>
-        <Route path="members/:id/" primary={false}><MemberDetails user={user}/></Route>
-        
-        <Route path="projects/:id/runs/" primary={false}><TestRun user={user}/></Route>
-        <Route path="projects/:id/runs/:id/" primary={false}><TestRunDeetails user={user}/></Route>
-
-        <Route> 
-            <NotFound/>
-        </Route>
-    </Router>
-</main>
+</svelte:head>  
