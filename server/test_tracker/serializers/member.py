@@ -14,9 +14,14 @@ class MemberSetPasswordSerializer(ModelSerializer):
 
 class ProjectTeamSerializer(ModelSerializer):
     """Class Member to get project teams"""
+    created = SerializerMethodField()
     class Meta:
         model = Member
-        fields = ['id', 'first_name', 'last_name', 'full_name']
+        fields = ['id', 'first_name', 'last_name', 'full_name', 'created']
+    
+    def get_created(self, obj):
+        """Return created date"""
+        return obj.created.date()
 
 class MemberSerializers(ModelSerializer):
     created = SerializerMethodField()
