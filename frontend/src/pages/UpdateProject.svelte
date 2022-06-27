@@ -162,9 +162,9 @@
                         </div>
                         <div class="tab-pane pb-4 fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
                             <div class="add-member text-center mb-4">
-                                <button type="button" class="btn plus-background text-light"
+                                <button type="button" class="btn btn-success width-100 text-light"
                                     on:click={openAddMemberModal} >
-                                    <i class="fas fa-plus"></i>
+                                    <i class="fas fa-plus" style="font-size: 25px;"></i>
                                 </button>
                             </div>
                             {#if project.teams && project.teams.length > 0}
