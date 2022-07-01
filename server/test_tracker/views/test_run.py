@@ -248,5 +248,5 @@ class SetAssignedUserTestRunAPIView(GenericAPIView):
         return CustomResponse.success(
             message=f"Test run {test_run.title} assigned to {member.full_name}",
             data = self.get_serializer(test_run).data,
-            status_code = 203
+            status_code = 201
         )
