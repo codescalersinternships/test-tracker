@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "test-tracker"
+version = "0.1.0"
+description = ""
+authors = ["Mahmoud-Emad <mahmmoud.hassanein@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "4.0.4"
+asgiref = "3.5.1"
+attrs = "21.4.0"
+"backports.zoneinfo" = "0.2.1"
+certifi = "2021.10.8"
+charset-normalizer = "2.0.12"
+coreapi = "2.3.3"
+coreschema = "0.0.4"
+django-cors-headers = "3.12.0"
+django-debug-toolbar = "3.4.0"
+django-filter = "21.1"
+djangorestframework = "3.13.1"
+djangorestframework-simplejwt = "5.1.0"
+drf-yasg = "1.20.0"
+idna = "3.3"
+inflection = "0.5.1"
+iniconfig = "1.1.1"
+itypes = "1.2.0"
+Jinja2 = "3.1.2"
+MarkupSafe = "2.1.1"
+packaging = "21.3"
+Pillow = "9.1.0"
+pluggy = "1.0.0"
+py = "1.11.0"
+pyini-parser = "0.1.2"
+PyJWT = "2.3.0"
+pyparsing = "3.0.9"
+pytest = "7.1.2"
+python-decouple = "3.6"
+pytz = "2022.1"
+requests = "2.27.1"
+"ruamel.yaml" = "0.17.21"
+"ruamel.yaml.clib" = "0.2.6"
+sqlparse = "0.4.2"
+tomli = "2.0.1"
+uritemplate = "4.1.1"
+urllib3 = "1.26.9"
+whitenoise = "6.1.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
