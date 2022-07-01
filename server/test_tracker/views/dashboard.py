@@ -54,7 +54,7 @@ class ProjectsAPIView(GenericAPIView):
         return CustomResponse.success(
             data=serializer.data,
             message="Project Created successfully",
-            status_code=203
+            status_code=200
                 )
 
     def get(self, request: Request) -> Response:
@@ -110,7 +110,7 @@ class UpdateProfileAPIView(GenericAPIView):
             return CustomResponse.success(
                 data=serializer.data,
                 message="Profile updated successfully",
-                status_code=203
+                status_code=201
             )
         return CustomResponse.bad_request(
             error=serializer.errors,
