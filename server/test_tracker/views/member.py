@@ -61,7 +61,7 @@ class MemberSetPasswordAPIView(GenericAPIView):
                     serializer.save(password = make_password(password))
                     return CustomResponse.success(
                         message="Password updated successfully",
-                        status_code=203
+                        status_code=201
                     )
                 return CustomResponse.bad_request(
                     message = 'Please make sure that you entered a valid data',
