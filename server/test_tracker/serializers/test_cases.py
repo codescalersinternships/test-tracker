@@ -55,3 +55,12 @@ class TestCaseSerializer(ModelSerializer):
 
     def get_test_suite(self, obj):
         return obj.test_suite.title
+
+class UpdateTestCaseAfterRunSerializer(ModelSerializer):
+    """This class to update test case after run"""
+    class Meta:
+        model = TestCases
+        fields = (
+            'passed', 'failed','skipped', 'run', 
+            'completed',  'comments'
+        )

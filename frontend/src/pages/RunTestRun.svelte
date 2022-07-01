@@ -1,9 +1,10 @@
 <script>
     import { onMount } from "svelte";
+    import { runTestCaseFields } from "../healpers/fields";
     import axios from "../healpers/axios";
     import NavBar from "../components/NavBar.svelte"
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte"
-    import TextArea from "../components/ui/TextArea.svelte"
+    import Alert from "../components/ui/Alert.svelte"
 
     export let user;
 
@@ -14,7 +15,12 @@
     let path = window.location.pathname;
     let projectID = path.split("/")[2];
     let testRunID = path.split("/")[4];
-    let testRun, loading, testCases, testCase, comment;
+    let testRun, 
+    loading, 
+    testCases, 
+    testCase, 
+    comment, 
+    loadTestCase;
 
     onMount(async () => {
         loading = true;
@@ -31,15 +37,25 @@
         testCase = testCases[0];
         loading = false;
     });
+
+    async function runTestCase(type) {
+        // loadTestCase = true;
+        // setTimeout(() => {
+        //     loadTestCase = false;
+        // }, 3000);
+        let body = runTestCaseFields(type);
+        body.comments = comment;
+        const response = await axios.put(`test_cases/project/${projectID}/${testCase.id}/run/`, body, config)
+        console.log(response.data.data);
+    }
 </script>
 <section>
     {#if user}
         <NavBar projectView="true" {user} />
-        <!-- <Alert {showAlert} {message} {_class}/> -->
         <div class="container pt-4 pb-4">
             {#if loading}
                 <LoodingSpiner />
-            {:else}
+            {:else if testRun }
                 <div class="col-12">
                     <p class="h4 mb-2">
                         Test Runs |
@@ -96,68 +112,85 @@
                         </div>
                     </div>
                 </div>
-                <div class="card card-style">
-                    <div class="card-body pb-4">
-                        <div class="title-suite p-2">
-                            <h4>Test suite: <span class="title">{testCase.test_suite}</span></h4>
-                        </div>
-                        <div class="table-content p-2">
-                            <h6>Number</h6>
-                            <span class="title f-18">{testCase.testcase_title}</span>
-                        </div>
-                        <div class="table-content p-2">
-                            <h6>Title</h6>
-                            <span class="title f-18">{testCase.title}</span>
-                        </div>
-                        <div class="table-content p-2">
-                            <h6>Description</h6>
-                            <span class="title f-18">{testCase.description}</span>
-                        </div>
-                        <div class="table-content p-2">
-                            <h6>Test steps</h6>
-                            <span class="title f-18">{testCase.test_steps}</span>
-                        </div>
-                        <div class="table-content p-2">
-                            <h6>Expected results</h6>
-                            <span class="title f-18">{testCase.expected_result}</span>
-                        </div>
-                        <div class="table-content p-2">
-                            <h6>Actual result / comments</h6>
-                            <textarea bind:value={comment} class="form-control mt-3"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="card card-style">
-                    <div class="card-body pb-4">
-                        <div class="row">
-                            <div class="col-4">
-                                <button
-                                    type="button"
-                                    class="btn btn-custom pass"
-                                    data-mdb-dismiss="modal"
-                                    >
-                                    Pass
-                                </button>
-                            </div>
-                            <div class="col-4">
-                                <button
-                                    type="button"
-                                    class="btn btn-custom skip"
-                                    >
-                                    Skip
-                                </button>
-                            </div>
-                            <div class="col-4">
-                                <button
-                                    type="button"
-                                    class="btn btn-custom fail"
-                                    >
-                                    Fail
-                                </button>
+                {#if testCase}
+                    {#if loadTestCase}
+                        <LoodingSpiner />
+                    {:else}
+                        <div class="card card-style">
+                            <div class="card-body pb-4">
+                                <div class="title-suite p-2">
+                                    <h4>Test suite: <span class="title">{testCase.test_suite}</span></h4>
+                                </div>
+                                <div class="table-content p-2">
+                                    <h6>Number</h6>
+                                    <span class="title f-18">{testCase.testcase_title}</span>
+                                </div>
+                                <div class="table-content p-2">
+                                    <h6>Title</h6>
+                                    <span class="title f-18">{testCase.title}</span>
+                                </div>
+                                <div class="table-content p-2">
+                                    <h6>Description</h6>
+                                    <span class="title f-18">{testCase.description}</span>
+                                </div>
+                                <div class="table-content p-2">
+                                    <h6>Test steps</h6>
+                                    <span class="title f-18">{testCase.test_steps}</span>
+                                </div>
+                                <div class="table-content p-2">
+                                    <h6>Expected results</h6>
+                                    <span class="title f-18">{testCase.expected_result}</span>
+                                </div>
+                                <div class="table-content p-2">
+                                    <h6>Actual result / comments</h6>
+                                    <textarea bind:value={comment} class="form-control mt-3"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                        <div class="card card-style">
+                            <div class="card-body pb-4">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <button
+                                            type="button"
+                                            class="btn btn-custom pass"
+                                            on:click={() => runTestCase("pass")}
+                                            >
+                                            Pass
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button
+                                            type="button"
+                                            class="btn btn-custom skip"
+                                            on:click={() => runTestCase("skip")}
+                                            >
+                                            Skip
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button
+                                            type="button"
+                                            class="btn btn-custom fail"
+                                            on:click={() => runTestCase("fail")}
+                                            >
+                                            Fail
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+                {:else}
+                    <Alert 
+                        showAlert = {true} 
+                        message = {
+                            "There are no test cases related to this test suite, " + 
+                            "So try to create new on by pressing the + button on the navbar inside any test suite related to this test run."
+                        } 
+                        _class = {'info'}
+                    />
+                {/if}
             {/if}
         </div>
     {/if}

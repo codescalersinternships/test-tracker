@@ -9,8 +9,9 @@ from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthentic
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.project import Requirements, TestCases
 from server.test_tracker.serializers.requirement import RequirementsSerializer
-from server.test_tracker.serializers.test_cases import TestCaseSerializer, TestCaseSerializer
+from server.test_tracker.serializers.test_cases import TestCaseSerializer, TestCaseSerializer, UpdateTestCaseAfterRunSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
+from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import update_activity
 from server.test_tracker.services.requirement import get_requirement_by_id
 from server.test_tracker.services.test_cases import get_test_case_by_id
@@ -193,5 +194,31 @@ class GetAllProjectRequirementsAPIView(GenericAPIView):
         serializer = RequirementsSerializer(requirements, many=True)
         return CustomResponse.success(
             message="Success requirements found.",
+            data=serializer.data
+        )
+
+class UpdateTestCaseAfterRunAPIView(GenericAPIView):
+    """This class to update the test case by pass bool field"""
+    serializer_class = UpdateTestCaseAfterRunSerializer
+    permission_classes = (HasProjectAccess,)
+
+    def put(self, request: Request, project_id: str, test_case_id: str) -> Response:
+        """Method put to update the test case by pass bool field"""
+        project = get_project_by_id(project_id)
+        test_case = get_test_case_by_id(test_case_id)
+        if project is None:
+            return CustomResponse.not_found(message="Project not found")
+        if test_case is None:
+            return CustomResponse.not_found(message="Test case not found")
+        serializer = self.get_serializer(test_case, data=request.data)
+        if serializer.is_valid():
+            member = get_member_by_id(request.user.id)
+            if member is not None:
+                serializer.save(last_saved = member)
+            else:
+                serializer.save()
+        return CustomResponse.success(
+            message="Test case updated successfully", 
+            status_code=201,
             data=serializer.data
         )
