@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { Link } from "svelte-navigator";
     import axios from "../healpers/axios";
+    import Alert from "../components/ui/Alert.svelte"
 
     import NavBar from "../components/NavBar.svelte";
     import Search from "../components/Search.svelte";
@@ -56,7 +57,7 @@
     {#if user}
         <NavBar {user} />
         <div class="container pt-4 pb-4">
-            {#if members}
+            {#if members && members.length > 0}
                 <div class="">
                     <strong class="h4">All Members</strong>
                     <br />
@@ -68,7 +69,6 @@
                     <Search
                         request="/members/search/"
                         objects={members}
-                        {config}
                         objectsCopy={membersCopy}
                         on:message={handleSearch}
                     />
@@ -88,8 +88,17 @@
                     </div>
                 </div>
             {:else}
-                <div class="col-12 pt-5">
-                    <p class="text-muted">-- There are no members</p>
+                <Alert 
+                    showAlert = {true} 
+                    message = {"There are no members, try to invite someone"} 
+                    _class = {"info"}
+                />
+                <div class="pt-4 pb-4">
+                    <div class="text-center">
+                        <button class="btn btn-primary">
+                            click to invite
+                        </button>
+                    </div>
                 </div>
             {/if}
         </div>
