@@ -112,7 +112,9 @@ class TestRunsSerializer(ModelSerializer):
 
     def get_completed(self, obj: TestRun) -> int:
         """Return length of passed test cases"""
-        if  self.get_not_run(obj) == 0:
+        if  self.get_not_run(obj) == 0 and len(self.test_cases(obj.test_suites)) > 0:
+            return f"100.0%"
+        elif self.get_not_run(obj) == 0 and len(self.test_cases(obj.test_suites)) == 0:
             return f"0.0%"
         return f"{round(len(self.test_cases(obj.test_suites).filter(completed=True)) / len(self.test_cases(obj.test_suites)) * 100, 1)}%"
 
@@ -129,5 +131,4 @@ class TestRunsSerializer(ModelSerializer):
     def get_test_suites(self, obj):
         """Returns a list of test cases"""
         test_suites = obj.test_suites.all()
-        # test_cases = get_test_cases_based_on_test_suites(test_suites)
         return TestSuitesDetailSerializer(test_suites, many=True).data
