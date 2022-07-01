@@ -12,7 +12,6 @@
         id={id}
         bind:value={value}
         >
-        <option value={null}>Select {labelTitle}</option>
         {#each objects as object }
             {#if user}
                 <option value={object.id}>{object.full_name}</option>
