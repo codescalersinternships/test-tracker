@@ -77,10 +77,10 @@
             setTimeout(() => {
                 handleCloseModalClick();
                 response.data.type = data.obj;
-                // handleNodes(nodes);
-                // dispatch('message', {
-                //     obj: response
-                // });
+                handleNodes(nodes);
+                dispatch('message', {
+                    obj: response
+                });
             }, 1500);
         }
         logger(_class, message);
@@ -145,6 +145,12 @@
                                 bind:value={data.fields.test_plan}
                                 id={"select-testsuite-plan"}
                                 labelTitle={"Test Plan"}
+                            />
+                        {:else}
+                            <Alert 
+                                showAlert = {true} 
+                                message = {"You have to create at least one test plan, before creating a test suite."} 
+                                _class = {"warning"}
                             />
                         {/if}
                     {:else if data.obj == 'test_case'}
