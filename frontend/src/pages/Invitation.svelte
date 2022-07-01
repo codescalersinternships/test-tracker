@@ -5,7 +5,7 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     let signature = urlParams.get('signature');
-
+    console.log(data);
     async function RegisterApi(){
         const password1 = document.getElementById('password1').value;
         const password2 = document.getElementById('password2').value;
@@ -15,7 +15,7 @@
         }
         try {
             const response = await axios.put(`members/set_password/?signature=${signature}`, {password:password1})
-        if (response.status === 203) { await InviteSuccess() }} 
+        if (response.status === 201) { await InviteSuccess() }} 
         catch(err) {
             console.log(err.response);
         }
@@ -45,7 +45,11 @@
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
                   <form class="mx-1 mx-md-4">
                     <div class="mb-3">
-                        <span class="h5">Email:</span> <span class="text-muted grey-text h5"> {data.email}</span>
+                      {#if data.first_name}
+                        <p class="h5 text-center">
+                          Hello <span class="text-primary">{data.first_name} {data.last_name}</span>
+                        </p>
+                      {/if}
                     </div>
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
@@ -60,9 +64,9 @@
                         <input type="password" id="password2" class="form-control" />
                         <label class="form-label" for="password2">Re Password</label>
                       </div>
-                    </div> 
+                    </div>
                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                      <button type="button" class="btn btn-danger text-white text-decoration-none" 
+                      <button type="button" class="btn btn-success text-white text-decoration-none" 
                           on:click={RegisterApi}>
                           Register
                       </button>
@@ -73,6 +77,7 @@
                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
                     <img src="../../register.webp" class="img-fluid" alt="Registerimage" />
                 </div>
+                <small class="text-center text-muted">Please write your password to confirm your registration.</small>
               </div>
             </div>
           </div>
