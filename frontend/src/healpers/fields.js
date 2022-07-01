@@ -1,9 +1,10 @@
 export function formFields() {
-    // return form fileds based on key => Backend Model 
+    // Return form fileds based on key => Backend Model
+    // We have one modal for all [post, create] request
     let path = window.location.pathname;
     let projectID = path.split("/")[2];
-    let pram = path.split("/")[4];
-    let objID = Number.isInteger(parseInt(pram))
+    let pram = path.split("/")[4]; // Thats mean there is one more param like ['projectTestPlan', 'projectTestSuite'] etc..
+    let objID = Number.isInteger(parseInt(pram)) // To check if this real int number or not.
 
     let objectsModels = {
         "project": {
@@ -90,13 +91,46 @@ export function formFields() {
         };
     };
     return objectsModels;
-}
+};
 
 export function statusFields() {
+    // This function is used to get all test run 
+    // status to make a request to the server.
     const data = [
         {title: "Not started", id: "not started"},
         {title: "In progress", id: "in progress"},
         {title: "Completed", id: "completed"},
     ]
     return data;
-}
+};
+
+export function runTestCaseFields(type){
+    // This function will call when we need to set custom 
+    // fields based on test case status => type
+    const types = ["pass", "fail", "skip"];
+    if (types.includes(type)){
+        let body = {
+            pass: {
+                "passed": true,
+                "failed": false,
+                "skipped": false,
+            },
+            fail: {
+                "failed": true,
+                "passed": false,
+                "skipped": false,
+            },
+            skip: {
+                "skipped": true,
+                "passed": false,
+                "failed": false,
+            },
+
+        };
+        body[type].run = true;
+        body[type].completed = true;
+        body[type].comments = "";
+        return body[type];
+    };
+    return 400 // just like bad filter to make a conditional error
+};
