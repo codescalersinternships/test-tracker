@@ -20,4 +20,4 @@ def send_email(
         Thanks,
         The TestTracker Team
         """
-    return send_mail(title, content, EMAIL_HOST_USER, [invited_user_email])
+    return send_mail(title, content, str(EMAIL_HOST_USER), [invited_user_email])
