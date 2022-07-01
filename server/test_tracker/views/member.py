@@ -8,13 +8,14 @@ from django.db.models import Q
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from server.test_tracker.api.permission import IsHost, UserIsAuthenticated
+from server.test_tracker.api.permission import HasProjectAccess, IsHost, UserIsAuthenticated
 
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.dashboard import Member
-from server.test_tracker.serializers.member import MemberSerializers
+from server.test_tracker.serializers.member import MemberSerializers, ProjectTeamSerializer
 from server.test_tracker.serializers.member import MemberSetPasswordSerializer
 from server.test_tracker.services.dashboard import *
+from server.test_tracker.services.member import filter_members_by_project
     
 
 class GetMemberApiView(GenericAPIView):
@@ -156,4 +157,22 @@ class SearchMemberAPIView(GenericAPIView):
         return CustomResponse.success(
             message = "Success",
             data = self.get_serializer(member, many=True).data
+        )
+
+class ProjectMembersAPIView(GenericAPIView):
+    """This class to return all project members"""
+    serializer_class = ProjectTeamSerializer
+    permission_classes = (HasProjectAccess,)
+
+    def get (self, request: Request, project_id: str) -> Response:
+        """Use this endpoint to get all project members"""
+        project = get_project_by_id(project_id)
+        if project is None:
+            return CustomResponse.not_found(message = "Project not found")
+        members = filter_members_by_project(project)
+        return CustomResponse.success(
+            message = "Project members found",
+            data = self.get_serializer(
+                members, many=True
+            ).data
         )

@@ -37,7 +37,7 @@
             `/test_runs/projects/${projectID}/runs/${testRunID}/`,
             config
         );
-        const memberResponse = await axios.get("/members/all/", config);
+        const memberResponse = await axios.get(`members/project/${projectID}/members/`, config);
         testRun = testRunDetails.data.data;
         members = memberResponse.data.data;
         testSuites = testRun.test_suites;
@@ -184,12 +184,14 @@
                                     <option value={testRun.assigned_user.id} selected>
                                         Assigned to | {testRun.assigned_user.full_name} | select to change
                                     </option>
+                                {:else if members.length === 0}
+                                    <option value={null}>Try to add new user to this project.</option>
                                 {:else}
                                     <option value={null}>Select user</option>
+                                    {#each members as member }
+                                        <option value={member.id}>{member.full_name}</option>
+                                    {/each}
                                 {/if}
-                                {#each members as member }
-                                    <option value={member.id}>{member.full_name}</option>
-                                {/each}
                             </select>
                             <button type="button" class="btn btn-outline-success" 
                                 on:click={setAssignedUser}>
