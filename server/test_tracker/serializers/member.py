@@ -29,18 +29,24 @@ class MemberSerializers(ModelSerializer):
     total_project_worked_on = SerializerMethodField()
     last_tests_assigned = SerializerMethodField()
     phone = SerializerMethodField()
+    invited = SerializerMethodField()
+    accepted = SerializerMethodField()
 
     class Meta:
         model = Member
         fields = (
             'id', 'permission','full_name', 'email', 'phone', 'created', 
             'first_name', 'last_name', 'last_project_working_on',
-            'total_project_worked_on','last_tests_assigned'
+            'total_project_worked_on','last_tests_assigned','accepted',
+            'invited'
         )
     
     def get_created(self, obj):
         """Return created date"""
         return obj.created.date()
+
+    def get_invited(self, obj):return obj.invited
+    def get_accepted(self, obj):return obj.accepted
 
     def get_phone(self, obj):
         """Return created date"""
