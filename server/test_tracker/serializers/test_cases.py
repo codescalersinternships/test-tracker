@@ -61,6 +61,6 @@ class UpdateTestCaseAfterRunSerializer(ModelSerializer):
     class Meta:
         model = TestCases
         fields = (
-            'passed', 'failed','skipped', 'run', 
-            'completed',  'comments'
+            'id', 'passed', 'failed','skipped',
+            'run', 'completed',  'comments'
         )
