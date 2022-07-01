@@ -3,6 +3,7 @@
     import { Router, Link } from "svelte-navigator";
 
     export let member;
+    let invited = member.invited && !member.accepted;
 </script>
 
 <div class="col-12 mb-4">
@@ -22,6 +23,7 @@
         >
             <div
                 class="card-body d-flex align-items-center"
+                class:invited="{invited === true}"
             >
                 <span class="user_photo">
                     {member.first_name[0]}{member
@@ -31,9 +33,15 @@
                     <strong
                         >{member.full_name}</strong
                     >
-                    <p class="text-muted mb-0">
-                        Member since: {member.created}
-                    </p>
+                    {#if invited}
+                        <p class="text-muted mb-0">
+                            invited...
+                        </p>
+                    {:else}
+                        <p class="text-muted mb-0">
+                            Member since: {member.created}
+                        </p>                       
+                    {/if}
                 </div>
             </div>
         </Link>
@@ -69,6 +77,11 @@
             font-weight: bold;
             margin-bottom: 10px;
             color: #5a79b1;
+        }
+        .invited{
+            background: #e7e7e7;
+            border-radius: 5px;
+            border: 1px solid #d9d9d9;
         }
     </style>
 </svelte:head>
