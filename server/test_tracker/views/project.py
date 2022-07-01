@@ -73,7 +73,7 @@ class ProjectsDetailAPIView(GenericAPIView):
         return CustomResponse.success(
             data=serializer.data,
             message="Project updated successfully",
-            status_code=203
+            status_code=201
                 )
 
     def delete(self, request: Request, project_id: int) -> Response:
