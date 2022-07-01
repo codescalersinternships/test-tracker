@@ -9,7 +9,6 @@
     import Alert from "../components/ui/Alert.svelte";
     import Search from "../components/Search.svelte";
     import Dropdown from "../components/ui/Dropdown.svelte";
-    import RunTestRunModal from "../components/ui/RunTestRunModal.svelte";
 
     export let user;
 
@@ -73,7 +72,7 @@
                     `/test_runs/projects/${projectID}/set-user/${testRunID}/?assigned_user=${member}`,
                     [], config
                 );
-                if (response.data.status === 203){
+                if (response.data.status === 201){
                     testRun.assigned_user = response.data.data.assigned_user;
                     message = response.data.message;
                     _class = "success";
@@ -502,9 +501,6 @@
     obj={thisSuite}
     onRequest="/test_suites/{projectID}/actions"
 />
-{#if testRun && testRun.title && runThis}
-    <RunTestRunModal {runThis} title={testRun.title}/>
-{/if}
 <svelte:head>
     <title>Test-Tracker | Test runs</title>
     <style>
