@@ -34,7 +34,6 @@
 
     import Settings from "./pages/Settings.svelte";
     import NotFound from "./pages/NotFound.svelte";
-import { text } from "svelte/internal";
 
     let user;
     const mode = localStorage.getItem("mode")
