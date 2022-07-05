@@ -119,7 +119,7 @@
             --bg-color: #f1f1f1;
             --text-color: #000;
             --boxes-bg: #fff;
-            --boxes-shadow: 0px 2px 4px #00000010;
+            --boxes-shadow: 0px 2px 6px #00000030;
             --text-muted: #757575;
             --text-primary: #5a79b1;
             --text-danger: #bf4e62;
@@ -304,6 +304,22 @@
             background: var(--bg-color);
             color: var(--text-color);
             transition: 0.3s
+        }
+        .sun-btn{
+            background: var(--bg-color)!important;
+            box-shadow: var(--boxes-shadow);
+        }
+        .moon-btn {
+            box-shadow: var(--boxes-shadow);
+            background: var(--bg-color)!important;
+        }
+        .sun-btn:focus{
+            background: var(--bg-color)!important;
+            box-shadow: none;
+        }
+        .moon-btn:focus{
+            background: var(--bg-color)!important;
+            box-shadow: none;
         }
         .dark{
             transition: 0.3s;

@@ -195,14 +195,6 @@
             width: 50px;
             height: 50px;
         }
-        .sun-btn{
-            background: #ffff;
-            box-shadow: 0px 2px 4px 2px #e1d5d5;
-        }
-        .moon-btn {
-            box-shadow: 0px 2px 0px 3px #0e0e0e;
-            background: #222;
-        }
         .sun{
             color: #ff9900;
         }
