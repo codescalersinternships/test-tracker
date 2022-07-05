@@ -71,7 +71,7 @@
                             <Link to="/projects" class="nav-link">Projects</Link>
                         </li>
                         <li class="nav-item">
-                            <Link to="/overview/" class="nav-link">Settings</Link>
+                            <Link to="/settings/" class="nav-link">Settings</Link>
                         </li>
                     {/if}
                 </Router>
@@ -91,7 +91,7 @@
             </span>
             <span slot="dropdown-li">
                 <li>
-                    <Link to="#" class="dropdown-item">Settings</Link>
+                    <Link to="/settings/" class="dropdown-item">Settings</Link>
                 </li>
                 <li>
                     <Link to="/auth/logout/" class="dropdown-item">Logout</Link>

@@ -32,6 +32,10 @@
             `/test_runs/projects/${projectID}/runs/${testRunID}/`,
             config
         );
+        await axios.put(
+            `/test_runs/projects/${projectID}/runs/${testRunID}/cases/`,
+            [],config
+        );
         testCases = testCasesResponse.data.data;
         testRun = testRunDetails.data.data;
         testCase = testCases[0];
@@ -39,16 +43,28 @@
     });
 
     async function runTestCase(type) {
-        // loadTestCase = true;
-        // setTimeout(() => {
-        //     loadTestCase = false;
-        // }, 3000);
+        loadTestCase = true;
         let body = runTestCaseFields(type);
         body.comments = comment;
-        const response = await axios.put(`test_cases/project/${projectID}/${testCase.id}/run/`, body, config)
-        console.log(response.data.data);
+        const response = await axios.put(`test_cases/project/${projectID}/${testCase.id}/run/`, body, config);
+        const caseResponse = response.data.data;
+        const indx = testCases.findIndex((c) => c.id === caseResponse.id);
+        testCases = testCases;
+        testCases.splice(indx, 1);
+        testCase = testCases[0];
+        if (type === "pass"){
+            testRun.passed += 1;
+        } else if (type === "fail"){
+            testRun.failed += 1;
+        } else if (type === "skip"){
+            testRun.skipped += 1;
+        }
+        testRun.not_run -= 1;
+        comment = "";     
+        loadTestCase = false;
     }
 </script>
+
 <section>
     {#if user}
         <NavBar projectView="true" {user} />

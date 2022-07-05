@@ -7,5 +7,5 @@
     <strong>
         <label for="content-body">{title}</label>
     </strong>
-    <textarea bind:value={value} class="form-control mt-2"></textarea>
+    <textarea bind:value={value} class="form-control mt-2 input"></textarea>
 </div>

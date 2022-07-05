@@ -13,6 +13,7 @@
     try {
       const response = await axios.post("auth/signup/", data)
       if (response.status === 201) {
+        localStorage.setItem("mode", "light");
         window.location.href = '/'
       }
     } 

@@ -31,7 +31,7 @@
 </script>
 
 <div class="input-group">
-    <input bind:this={searchInput} type="search" class="form-control rounded" placeholder="Search"
+    <input bind:this={searchInput} type="search" class="form-control rounded input" placeholder="Search"
     aria-label="Search" aria-describedby="search-addon" />
     <button type="button" class="btn btn-outline-primary" 
         on:click={searchFunction}>

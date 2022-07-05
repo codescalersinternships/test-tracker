@@ -1,9 +1,10 @@
 <script>
-    import { Router, Route, links } from "svelte-navigator";
+    import { Router, Route } from "svelte-navigator";
     import { onMount } from 'svelte';
 
     import isAuthenticated from "./healpers/IsAuthenticated"
     import axios from './healpers/axios';
+    import { setTheme } from './healpers/theme';
     
     import Home from "./pages/Home.svelte";
     
@@ -31,17 +32,21 @@
     import TestRunDeetails from "./pages/TestRunDeetails.svelte";
     import RunTestRun from "./pages/RunTestRun.svelte";
 
+    import Settings from "./pages/Settings.svelte";
     import NotFound from "./pages/NotFound.svelte";
 
     let user;
+    const mode = localStorage.getItem("mode")
+
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     };
     onMount(async () => {
+        setTheme(mode);
         isAuthenticated();
         const userDetails = await axios.get('/dashboard/user/', config);
         user = await userDetails.data.data
-        if (! user) {
+        if (!user) {
             return {
                 status: 302,
                 redirect: "/login"
@@ -54,6 +59,8 @@
 <main>
     <Router>
         <Route path="/" primary={false}><Home user={user}/></Route>
+        <Route path="settings/" primary={false}><Settings user={user}/></Route>
+
         <Route path="auth/login/" primary={false}><Login/></Route>
         <Route path="auth/register/" primary={false}><RegisterHandeler/></Route>
         <Route path="auth/logout/" primary={false}><Logout/></Route>
@@ -108,8 +115,15 @@
         >
     </script>
     <style>
-        body {
-            padding: 0 8px !important;
+        :root{
+            --bg-color: #f1f1f1;
+            --text-color: #000;
+            --boxes-bg: #fff;
+            --boxes-shadow: 0px 2px 4px #00000010;
+        }
+        body{
+            color: var(--text-color);
+            background-color: var(--bg-color);
         }
         .form-check-input[type=radio]:after {
         top: 50%;
@@ -121,6 +135,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%)
+        }
+        .dropdown-menu{
+            margin-top: 15px!important;
+            border-radius: 0px;
+        }
+        .setting-drop:hover{
+            background:#5a79b1!important
         }
         .plus-background{
             background: #bf4e62;
@@ -151,8 +172,82 @@
         .text-primary{
             color:#5a79b1!important;
         }
+        .btn-primary{
+            background:#5a79b1!important;
+        }
+        .btn-outline-primary{
+            border:solid 1px #5a79b1!important;
+            color:#5a79b1!important;
+        }
         .background-primary{
             background:#5a79b1!important;
         }
+        .card{
+            border-radius: 0px;
+            background-color: var(--boxes-bg);
+            box-shadow: var(--boxes-shadow);
+            border: 0 !important;
+        }
+        .navbar{
+            background-color: var(--boxes-bg) !important;
+            box-shadow: var(--boxes-shadow);
+            border: 0 !important;
+        }
+        .modal-content{
+            background-color: var(--boxes-bg)!important;
+            box-shadow: var(--boxes-shadow)!important;
+            border: 0 !important;
+        }
+        .nav-tabs{
+            background-color: var(--boxes-bg)!important;
+            box-shadow: var(--boxes-shadow)!important;
+            border: 0 !important;
+        }
+        .nav-link:hover{
+            background-color: none!important;
+            box-shadow: none!important;
+        }
+        .nav-link.active {
+            background-color: var(--bg-color)!important;
+            box-shadow: var(--boxes-shadow)!important;
+            border: 0 !important;
+        }
+        .input{
+            outline: none !important;
+            margin-right: 3px !important;
+            background-color: var(--boxes-bg);
+            box-shadow: var(--boxes-shadow);
+            border: 0 !important;
+            border-radius: 0 !important;
+            color: var(--text-color);
+        }
+        .input:focus{
+            outline: none !important;
+            box-shadow: 1px 1px 1px var(--bg-color) !important;
+            border: 1px var(--bg-color) !important;
+        }
+        input:disabled {
+            background-color: var(--boxes-bg) !important;
+            color: var(--text-dark-color);
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: none;
+            box-shadow: var(--boxes-shadow);
+            background-color: var(--boxes-bg);
+            color: var(--text-color);
+        }
+        .light{
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.3s
+        }
+        .dark{
+            transition: 0.3s;
+            --bg-color: #222;
+            --text-color: #fff;
+            --boxes-bg: #303030;
+            --boxes-shadow: 0px 0px 2px 2px #4a4a4a;
+        }
     </style>
-</svelte:head>  
+</svelte:head>

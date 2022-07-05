@@ -1,10 +1,16 @@
 <script>
-    export let value;
+    export let value, title, type, id, disabled = false;
+
+    function typeAction(node) {
+		node.type = type;
+	}
 </script>
 
 <div class="form-group p-2 mb-2">
     <strong>
-        <label for="content-title">Title</label>
+        <label for={id}>{title}</label>
     </strong>
-    <input bind:value={value} type="text" class="form-control mt-2" id="content-title">
+    <input bind:value use:typeAction disabled={disabled}
+        class="form-control mt-2 input" id={id}
+    >
 </div>

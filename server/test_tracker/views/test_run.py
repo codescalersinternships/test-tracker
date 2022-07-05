@@ -224,6 +224,23 @@ class RunAllTestCasesAPIView(GenericAPIView):
             message = "Success cases found.",
             data = self.get_serializer(test_cases, many=True).data
         )
+    
+    def put(self, request: Request, project_id: str, test_run_id: str) -> Response:
+        """Update activity with test run"""
+        project = get_project_by_id(int(project_id))
+        test_run = get_test_run_by_id(int(test_run_id))
+        if project is None or project_id.isdigit() == False:
+            return CustomResponse.not_found(message = "Project not found.")
+        if test_run is None:
+            return CustomResponse.not_found(message = "TestRun not found.")
+        update_activity(
+            datetime.datetime.now(), request.user, project,
+            "Run", "Test Run", test_run.title
+        )
+        return CustomResponse.success(
+            message=f"Test run {test_run.title} running successfully.",
+            status_code = 201
+        )
 
 class SetAssignedUserTestRunAPIView(GenericAPIView):
     permission_classes = (HasProjectAccess,)

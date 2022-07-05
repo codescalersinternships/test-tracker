@@ -107,7 +107,12 @@
                 </div>
                 <form>
                     <Alert {showAlert} {message} {_class}/>
-                    <Input bind:value={data.fields.title}/>
+                    <Input 
+                        bind:value={data.fields.title} 
+                        id={"project-title"} 
+                        title={"title"} 
+                        type={"text"}
+                    />
                     {#if data.obj == 'project'}
                         <TextArea 
                             bind:value={data.fields.short_description} 
