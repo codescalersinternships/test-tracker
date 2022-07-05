@@ -79,7 +79,7 @@
                             <MemberCard {member}>
                                 <Link 
                                     to=""
-                                    class="dropdown-item text-danger" 
+                                    class="dropdown-item plus-hover drop-size" 
                                     on:click={setMember(member)}
                                     >Delete {member.first_name}
                                 </Link>

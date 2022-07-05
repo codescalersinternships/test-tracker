@@ -19,7 +19,7 @@
         </div>
         <Link
             to="/members/{member.id}/"
-            class="text-dark d-block text-decoration-none"
+            class="d-block text-decoration-none"
         >
             <div
                 class="card-body d-flex align-items-center"
@@ -78,10 +78,6 @@
             margin-bottom: 10px;
             color: #5a79b1;
         }
-        .invited{
-            background: #e7e7e7;
-            border-radius: 5px;
-            border: 1px solid #d9d9d9;
-        }
+
     </style>
 </svelte:head>

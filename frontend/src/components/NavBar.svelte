@@ -91,10 +91,10 @@
             </span>
             <span slot="dropdown-li">
                 <li>
-                    <Link to="/settings/" class="dropdown-item">Settings</Link>
+                    <Link to="/settings/" class="dropdown-item setting-drop">Settings</Link>
                 </li>
                 <li>
-                    <Link to="/auth/logout/" class="dropdown-item">Logout</Link>
+                    <Link to="/auth/logout/" class="dropdown-item setting-drop">Logout</Link>
                 </li>
             </span>
         </NavBarDropdown>

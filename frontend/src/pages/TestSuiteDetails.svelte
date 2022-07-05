@@ -106,7 +106,7 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <div class="card_info">
+                    <div class="card_info card">
                         <p>Associated test plan</p>
                         {#if testSuite.test_plan}
                             <a
@@ -137,11 +137,11 @@
                 <div class="row pt-4">
                         {#each testSuite.test_cases as test_case}
                             <div class="col-12">
-                                <div class="test_case_card">
+                                <div class="card test_case_card">
                                     <Dropdown>
                                         <li>
                                             <button
-                                                class="dropdown-item text-danger"
+                                                class="dropdown-item text-danger drop-size plus-hover"
                                                 on:click={setTestCase(test_case)}
                                                 >Delete
                                             </button>
@@ -154,7 +154,12 @@
                                         aria-expanded="false"
                                         aria-controls="collapse-{test_case.id}"
                                     >
-                                        {test_case.testcase_title}-{test_case.title}
+                                        <span class="text-primary h5">
+                                            {test_case.testcase_title}
+                                        </span>
+                                        <span class="text-muted h5">
+                                            {test_case.title}
+                                        </span>
                                     </a>
 
                                     <div class="test_case_info">
@@ -289,8 +294,6 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            background-color: #f5f5f5;
-            border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
         }
@@ -301,7 +304,6 @@
 
         .test_case_card {
             position: relative;
-            background-color: #f5f5f5;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 15px;
@@ -322,7 +324,6 @@
         }
         .test_case_info {
             margin-top: 10px;
-            background: #fcfcfc;
             padding: 5px;
         }
         .collapse-style {

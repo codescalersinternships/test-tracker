@@ -119,11 +119,11 @@
             <div class="pt-5">
                 {#if requirements.length > 0}
                     {#each requirements as requirement}
-                        <div class="card mb-3" style="background: #f9f9f9;">
+                        <div class="card mb-3">
                             <Dropdown>
                                 <li>
                                     <button
-                                        class="dropdown-item text-danger"
+                                        class="dropdown-item text-danger drop-size plus-hover"
                                         on:click={setRequirement(
                                             requirement
                                         )}
@@ -132,12 +132,12 @@
                                 </li>
                             </Dropdown>
                             <div class="card-body pb-2">
-                                <h5 class="card-title" style="color: #5a79b1;">
-                                    {requirement.requirement_title}-{requirement.title}
-                                </h5>
-                                <p class="mt-4 text-muted">
-                                    {requirement.description}
-                                </p>
+                                <span class="text-primary h5">
+                                    {requirement.requirement_title}
+                                </span>
+                                <span class="text-muted h5">
+                                    {requirement.title}
+                                </span>
                                 <div class="pt-4">
                                     <div class="row">
                                         <div class="col-12 col-md-4 col-sm-6 col-xs-8">

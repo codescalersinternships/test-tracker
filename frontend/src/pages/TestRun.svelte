@@ -179,14 +179,14 @@
                                         <Dropdown>
                                             <li>
                                                 <button
-                                                    class="dropdown-item text-primary"
+                                                    class="dropdown-item setting-drop"
                                                     on:click={setRun(run)}>
                                                     Run
                                                 </button>
                                             </li>
                                             <li>
                                                 <button
-                                                    class="dropdown-item text-danger"
+                                                    class="dropdown-item text-danger drop-size plus-hover"
                                                     on:click={setRun(run)}>
                                                     Delete
                                                 </button>

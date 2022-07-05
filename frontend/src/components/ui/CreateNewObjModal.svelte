@@ -45,7 +45,7 @@
             selectedSuites.push(suite);
             data.fields.test_suites = selectedSuites;
         }
-        node.classList.add("selected");
+        node.classList.add("selected-suite");
         nodes.push(node)
     }
 
@@ -64,7 +64,7 @@
     function handleNodes(_nodes){
         for (const node of _nodes) {
                 node.disabled = false;
-                node.classList.remove("selected");
+                node.classList.remove("selected-suite");
             }
         nodes = [];
     }
@@ -246,12 +246,12 @@
             <div class="modal-body">
                 {#if testSuites && testSuites.length > 0}
                     {#each testSuites as suite}
-                        <div class="card mb-3" style="background: #f9f9f9;">
+                        <div class="card mb-3">
                             <button
                                 class="text-dark suites-selected-button" 
                                 on:click={(e) => selectTestSuite(e, suite)}>
                                 <div class="card-body pb-2">
-                                    <h5 class="card-title" style="color: #5a79b1;">
+                                    <h5 class="card-title text-primary">
                                         {suite.title}
                                     </h5>
                                     <div class="pt-4">
@@ -310,14 +310,6 @@
             box-shadow: 1px 0px 4px 1px #bdbdbd;
             font-size: 18px;
             font-weight: 500;
-        }
-        .suites-selected-button:focus {
-            border-color: #bf4e62;
-        }
-        .selected{
-            background: #e7e6e6;
-            color: #fff;
-            border: solid 1px #001cff;
         }
     </style>
 </svelte:head>

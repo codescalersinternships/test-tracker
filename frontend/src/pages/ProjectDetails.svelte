@@ -70,7 +70,7 @@
                                     <Router>
                                         <li>
                                             <Link 
-                                                class="dropdown-item text-dark" 
+                                                class="dropdown-item drop-size" 
                                                 to={`/projects/${project.id}/update/`}>
                                                 Update project
                                             </Link>
@@ -79,14 +79,14 @@
                                             <Link 
                                                 to=""
                                                 on:click={openAddMemberModal} 
-                                                class="dropdown-item text-dark">
+                                                class="dropdown-item drop-size">
                                                 Add member
                                             </Link>
                                         </li>
                                         <li>
                                             <Link 
                                                 to=""
-                                                class="dropdown-item text-danger" 
+                                                class="dropdown-item drop-size plus-hover" 
                                                 on:click={openDeleteModal}
                                                 >Delete Project
                                             </Link>
@@ -107,26 +107,26 @@
                     <table class="table table-borderless">
                         <tbody>
                             <tr>
-                                <th scope="row">Total test plans</th>
+                                <th scope="row" class="text-muted">Total test plans</th>
                                 <td class="text-primary"
                                     >{project.total_test_plan.length}</td
                                 >
                             </tr>
                             <tr>
-                                <th scope="row">Total Requirements Docs</th>
+                                <th scope="row" class="text-muted">Total Requirements Docs</th>
                                 <td class="text-primary"
                                     >{project.total_requirements_docs
                                         .length}</td
                                 >
                             </tr>
                             <tr>
-                                <th scope="row">Total Test Suites</th>
+                                <th scope="row" class="text-muted">Total Test Suites</th>
                                 <td class="text-primary"
                                     >{project.total_suites.length}</td
                                 >
                             </tr>
                             <tr>
-                                <th scope="row">Total Test Runs</th>
+                                <th scope="row" class="text-muted">Total Test Runs</th>
                                 <td class="text-primary"
                                     >{project.total_test_runs.length}</td
                                 >
@@ -189,7 +189,7 @@
                                     {:else}
                                         <tbody>
                                             <tr>
-                                                <td class="text-muted"
+                                                <td class="text-muted text-center"
                                                     >There are no incompleted
                                                     task for you</td
                                                 >
@@ -204,17 +204,18 @@
                                         <tbody>
                                             <tr>
                                                 <td class="text-primary">
-                                                    <strong class="text-dark"
-                                                        >TestRun:
+                                                    <strong class="text-muted"
+                                                        >TestRun | 
                                                     </strong>
                                                     <a
                                                         href="/projects/{projectID}/runs/{task.id}"
+                                                        class="text-center"
                                                         >{task.title}</a
                                                     >
                                                 </td>
                                                 <td class="text-primary">
-                                                    <strong class="text-dark"
-                                                        >User:
+                                                    <strong class="text-muted"
+                                                        >User | 
                                                     </strong>
                                                     <a
                                                         href="/members/{task

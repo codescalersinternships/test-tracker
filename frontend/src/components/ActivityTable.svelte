@@ -10,18 +10,18 @@
     </div>
     <div class="table pt-4">
         {#each activity as action}
-        <table class="table align-middle mb-3 bg-white">
-                <thead class="bg-light">
+        <table class="table align-middle mb-3">
+                <thead class="table-bg">
                     <tr>
                         <th>
                             <span class="badge badge-success rounded-pill d-inline">{action.date}</span>
                         </th>
                     </tr>
                 </thead>
-                <thead class="bg-light">
+                <thead class="table-bg">
                     <tr>
                         <td>
-                            <div class="d-inline">
+                            <div class="d-inline b-0">
                                 <div class="ms-3">
                                     <p class="text-muted mb-0">{action.action}</p>
                                 </div>

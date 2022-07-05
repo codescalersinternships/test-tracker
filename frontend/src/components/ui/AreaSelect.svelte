@@ -7,7 +7,7 @@
         <label for={id}>{labelTitle}</label>
     </strong>
     <select
-        class="form-select mt-2"
+        class="form-select mt-2 input"
         aria-label={id}
         id={id}
         bind:value={value}

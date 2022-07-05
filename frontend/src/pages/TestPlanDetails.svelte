@@ -80,7 +80,7 @@
 
                 <p class="text-muted">
                     {#if testPlansContents.temps}
-                        There are <strong class="text-dark"
+                        There are <strong class="text-light"
                             >{testPlansContents.temps.length}</strong
                         >
                         {testPlansContents.temps.length === 1
@@ -128,7 +128,7 @@
                                 <Dropdown>
                                     <li>
                                         <button
-                                            class="dropdown-item text-danger"
+                                            class="dropdown-item text-danger drop-size plus-hover"
                                             on:click={setContent(
                                                 contentArea
                                             )}>Delete</button

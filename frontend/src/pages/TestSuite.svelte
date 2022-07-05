@@ -97,11 +97,11 @@
                     </p>
                     {#if testSuites && testSuites.length}
                         {#each testSuites as suite}
-                            <div class="card mb-3" style="background: #f9f9f9;">
+                            <div class="card mb-3">
                                 <Dropdown>
                                     <li>
                                         <button
-                                            class="dropdown-item text-danger"
+                                            class="dropdown-item text-danger drop-size plus-hover"
                                             on:click={setSuite(suite)}
                                             >Delete</button
                                         >

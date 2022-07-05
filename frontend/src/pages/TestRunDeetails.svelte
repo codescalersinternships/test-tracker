@@ -105,7 +105,7 @@
                             <strong class="h4 title">{testRun.title}</strong>
                         </p>
                         <p class="text-muted">
-                            -- Contains a total of <strong class="text-dark"
+                            -- Contains a total of <strong class="text-muted"
                                 >{testSuites.length}</strong
                             >
                             {testSuites.length === 1 ? "test" : "tests"}
@@ -142,7 +142,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card_info">
+                        <div class="card card_info">
                             <p>Status</p>
                             <div class="card-body p-0 text-center">
                                 {testRun.status.replace("_", " ").toUpperCase()}
@@ -150,7 +150,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card_info">
+                        <div class="card card_info">
                             <p>Completed</p>
                             <div class="card-body p-0 text-center">
                                 {testRun.completed}
@@ -176,7 +176,7 @@
                         </p>
                         <div class="input-group">
                             <select
-                                class="form-select"
+                                class="form-select input"
                                 aria-label="select-user"
                                 bind:value={member}
                                 >
@@ -236,11 +236,11 @@
                         >
                             {#each testSuites as suite}
                                 <div class="col-12">
-                                    <div class="test_case_card">
+                                    <div class="card test_case_card">
                                         <Dropdown>
                                             <li>
                                                 <button
-                                                    class="dropdown-item text-danger"
+                                                    class="dropdown-item text-danger drop-size plus-hover"
                                                     on:click={setSuite(
                                                         suite
                                                     )}>Delete</button
@@ -257,7 +257,7 @@
                                             {suite.title}
                                         </a>
 
-                                        <div class="test_case_info">
+                                        <div class="card test_case_info">
                                             <a
                                                 class="collapse_span"
                                                 data-mdb-toggle="collapse"
@@ -582,8 +582,7 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            background-color: #f5f5f5;
-            border-radius: 10px;
+            border-radius: 0px;
             padding: 20px;
             margin-bottom: 20px;
         }
@@ -593,7 +592,6 @@
         }
         .test_case_card {
             position: relative;
-            background-color: #f5f5f5;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 15px;
@@ -614,7 +612,6 @@
         }
         .test_case_info {
             margin-top: 10px;
-            background: #fcfcfc;
             padding: 5px;
         }
         .collapse-style {

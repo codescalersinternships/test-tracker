@@ -38,22 +38,24 @@
     {#if user && member}
         <NavBar {user} />
         <div class="container pb-5">
-            <div class="pt-3 pb-2">
-                <p class="h4">
-                    About <strong class="h4">{member.full_name}</strong>
-                </p>
-            </div>
-            {#if user.permission === "admin"}
-                <div class="col-4">
-                    <button
-                        type="button"
-                        class="btn plus-background text-white text-decoration-none"
-                        on:click={openDeleteModal}
-                    >
-                        Delete
-                    </button>
+            <div class="row pt-3 pb-2">
+                <div class="col-11">
+                    <p class="h4 mb-2">
+                        About | <strong class="h4 text-primary">{member.full_name}</strong>
+                    </p>
                 </div>
-            {/if}
+                {#if user.permission === "admin"}
+                    <div class="col-1">
+                        <button
+                            type="button"
+                            class="btn plus-background text-white text-decoration-none"
+                            on:click={openDeleteModal}
+                            >
+                            Delete
+                        </button>
+                    </div>
+                {/if}
+            </div>
             <div class="card mt-4 p-4">
                 <div class="pt-4">
                     <p class="h5 text-muted">Personal Information</p>
@@ -61,27 +63,27 @@
                     <table class="table table-borderless">
                         <tbody>
                             <tr>
-                                <th scope="row">Full Name</th>
-                                <td class="text-dark">{member.full_name}</td>
-                                <th scope="row">Email</th>
-                                <td class="text-dark">{member.email}</td>
+                                <th scope="row" class="text-muted">Full Name</th>
+                                <td class="text-primary">{member.full_name}</td>
+                                <th scope="row" class="text-muted">Email</th>
+                                <td class="text-primary">{member.email}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Phone Number</th>
+                                <th scope="row" class="text-muted">Phone Number</th>
                                 {#if member.phone.length === 0}
                                     <td class="text-muted">Not set yet</td>
                                 {:else}
-                                    <td class="text-dark">{member.phone}</td>
+                                    <td class="text-primary">{member.phone}</td>
                                 {/if}
-                                <th scope="row">Joined date</th>
-                                <td class="text-dark">{member.created}</td>
+                                <th scope="row" class="text-muted">Joined date</th>
+                                <td class="text-primary">{member.created}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Permission</th>
+                                <th scope="row" class="text-muted">Permission</th>
                                 {#if member.permission == "full_access"}
-                                    <td class="text-dark">Full Access</td>
+                                    <td class="text-primary">Full Access</td>
                                 {:else}
-                                    <td class="text-dark">Admin</td>
+                                    <td class="text-primary">Admin</td>
                                 {/if}
                             </tr>
                         </tbody>
@@ -96,7 +98,7 @@
                         <table class="table table-borderless">
                             <tbody>
                                 <tr>
-                                    <th scope="row">Name</th>
+                                    <th scope="row" class="text-muted">Name</th>
                                     <td class="text-primary">
                                         <a
                                             href="/projects/{member
@@ -108,14 +110,14 @@
                                             )}
                                         </a>
                                     </td>
-                                    <th scope="row">Updated date</th>
-                                    <td class="text-dark"
+                                    <th scope="row" class="text-muted">Updated date</th>
+                                    <td class="text-primary"
                                         >{member.last_project_working_on
                                             .modified}</td
                                     >
                                 </tr>
                                 <tr>
-                                    <th scope="row">Pinding tasks</th>
+                                    <th scope="row" class="text-muted">Pinding tasks</th>
                                     {#if member.incomplete_test_runs_assigned_to_you}
                                         <td class="text-primary"
                                             >{member.incomplete_test_runs_assigned_to_you}</td
@@ -125,8 +127,8 @@
                                             >There are no pinding tasks.</td
                                         >
                                     {/if}
-                                    <th scope="row">Created date</th>
-                                    <td class="text-dark"
+                                    <th scope="row" class="text-muted">Created date</th>
+                                    <td class="text-primary"
                                         >{member.last_project_working_on
                                             .created}</td
                                     >
@@ -138,20 +140,30 @@
                         <hr />
                         <div class="row">
                             {#if member.last_project_working_on.teams.length === 0}
-                                <div class="col-6 text-muted">
-                                    There are no teams yet, only you.
+                                <div class="col-12 text-muted">
+                                    <p class="text-center">
+                                        There are no teams yet, only you.
+                                    </p>
                                 </div>
                             {:else}
                                 {#each member.last_project_working_on.teams as person}
-                                    <div class="col-2">
-                                        <span class="ml-3">
-                                            <a
-                                                class="link-color"
-                                                href="/members/{person.id}"
-                                                >@{person.first_name}</a
-                                            >
-                                        </span>
-                                    </div>
+                                    {#if person.id != member.id}
+                                        <div class="col-2">
+                                            <span class="ml-3">
+                                                <a
+                                                    class="link-color"
+                                                    href="/members/{person.id}"
+                                                    >@{person.first_name}</a
+                                                >
+                                            </span>
+                                        </div>
+                                    {:else}
+                                        <div class="col-12 text-muted">
+                                            <p class="text-center">
+                                                There are no teams yet, only you.
+                                            </p>
+                                        </div>
+                                    {/if}
                                 {/each}
                             {/if}
                         </div>
@@ -166,7 +178,7 @@
                         <table class="table table-borderless">
                             <tbody>
                                 <tr>
-                                    <th scope="row">Name</th>
+                                    <th scope="row" class="text-muted">Name</th>
                                     <td
                                         ><a
                                             href="/projects/{member
@@ -180,7 +192,7 @@
                                             )}</a
                                         ></td
                                     >
-                                    <th scope="row">Date</th>
+                                    <th scope="row" class="text-muted">Date</th>
                                     <td class="text-primary"
                                         >{member.last_tests_assigned
                                             .created}</td

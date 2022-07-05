@@ -59,13 +59,31 @@
         />
         <div class="container pt-4">
             {#if projects}
-                {#if projects && user.permission !== "admin"}
-                    You are <strong>{user.permission}</strong> of <strong>{projects.length}</strong>
-                    {projects.length === 1 ? "project" : "projects"}
-                {:else if projects && user.permission === "admin"}
-                    There are <strong>{projects.length}</strong>
-                    {projects.length === 1 ? "project" : "projects"}
-                {/if}
+                <div class="pt-0">
+                    {#if projects && user.permission === "admin"}
+                        <p class="h5">
+                            <span class="text-primary">
+                                Admin
+                            </span> 
+                            Dashboard
+                        </p>
+                        <p class="text-muted">
+                            There are <strong>{projects.length}</strong>
+                            {projects.length === 1 ? "project" : "projects"}
+                        </p>
+                        {:else if projects && user.permission !== "admin"}
+                            <p class="h5">
+                                <span class="text-primary">
+                                    Member
+                                </span> 
+                                Dashboard
+                            </p>
+                            <p class="text-muted">
+                                You are <strong>{user.permission}</strong> of <strong>{projects.length}</strong>
+                                {projects.length === 1 ? "project" : "projects"}
+                            </p>
+                        {/if}
+                </div>
                 <div class="pt-4">
                     <p>Search Projects</p>
                     <Search
@@ -84,7 +102,7 @@
                         {#each projects as project}
                             <ProjectCard {project}>
                                 <button
-                                    class="dropdown-item text-danger"
+                                    class="dropdown-item plus-color plus-hover"
                                     on:click={setProject.bind(
                                         undefined,
                                         project

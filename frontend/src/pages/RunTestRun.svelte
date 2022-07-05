@@ -159,7 +159,7 @@
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Actual result / comments</h6>
-                                    <textarea bind:value={comment} class="form-control mt-3"></textarea>
+                                    <textarea bind:value={comment} class="form-control mt-3 input"></textarea>
                                 </div>
                             </div>
                         </div>

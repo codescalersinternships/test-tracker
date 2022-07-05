@@ -84,7 +84,7 @@
                 <div class="">
                     <strong class="h4">Test Plans</strong>
                     <br />
-                    -- There are <strong>{testPlans.length}</strong>
+                    -- There are <strong class="text-light">{testPlans.length}</strong>
                     Test {testPlans.length === 1 ? "Plan" : "Plans"}
                 </div>
                 <div class="pt-4">
@@ -102,11 +102,11 @@
                     </p>
                     {#if testPlans && testPlans.length > 0}
                         {#each testPlans as plan}
-                            <div class="card mb-3" style="background: #f9f9f9;">
+                            <div class="card mb-3">
                                 <Dropdown>
                                     <li>
                                         <button
-                                            class="dropdown-item text-danger"
+                                            class="dropdown-item text-danger drop-size plus-hover"
                                             on:click={setPlan(plan)}
                                             >Delete</button
                                         >

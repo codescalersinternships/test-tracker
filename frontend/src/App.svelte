@@ -34,6 +34,7 @@
 
     import Settings from "./pages/Settings.svelte";
     import NotFound from "./pages/NotFound.svelte";
+import { text } from "svelte/internal";
 
     let user;
     const mode = localStorage.getItem("mode")
@@ -120,15 +121,38 @@
             --text-color: #000;
             --boxes-bg: #fff;
             --boxes-shadow: 0px 2px 4px #00000010;
+            --text-muted: #757575;
+            --text-primary: #5a79b1;
+            --text-danger: #bf4e62;
+            --text-light: #fff;
+            --text-dark: #222;
         }
         body{
             color: var(--text-color);
             background-color: var(--bg-color);
         }
+        .text-muted{
+            color: var(--text-muted)!important;
+        }
+        .selected-suite{
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: solid 1px var(--text-danger)!important;
+        }
+        .suites-selected-button {
+            border-radius: 0px;
+            background-color: var(--boxes-bg);
+            box-shadow: var(--boxes-shadow);
+            border: 0;
+        }
+        .suites-selected-button:focus {
+            background: var(--bg-color)!important;
+            border-color: var(--text-danger);
+        }
         .form-check-input[type=radio]:after {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%)
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%)
         }
         .form-check-input:checked:before,
         .form-check-input:before{
@@ -139,22 +163,51 @@
         .dropdown-menu{
             margin-top: 15px!important;
             border-radius: 0px;
+            background: var(--boxes-bg);
+        }
+        .setting-drop{
+            border-radius: 0px!important;
+            color: var(--text-primary)!important;
+            padding: 15px;
         }
         .setting-drop:hover{
-            background:#5a79b1!important
+            background: var(--text-primary) !important;
+            color: var(--text-light) !important;
         }
         .plus-background{
-            background: #bf4e62;
+            background: var(--text-danger) !important;
         }
         .plus-color{
-            color: #bf4e62;
+            color: var(--text-danger);
+            border-radius: 0px!important;
         }
         .plus-hover{
             padding: 15px;
         }
-        .plus-hover:hover{
-            background: #bf4e62;
+        .drop-size{
+            padding: 15px;
+            border-radius: 0px!important;
+        }
+        .drop-size:hover{
+            background: var(--text-primary);
+            color: var(--text-light)!important;
+        }
+        .delete-drop{
+            background:var(--boxes-bg)!important;
+            padding: 15px;
+            color: var(--text-danger);
+        }
+        .delete-drop:hover{
             color: #fff;
+            background-color: var(--text-danger);
+        }
+        .plus-hover:hover{
+            background: var(--text-danger);
+            color: var(--text-light);
+        }
+        .plus-hover:focus{
+            background: var(--text-danger) !important;
+            color: var(--text-light) !important;
         }
         .form-check-input:checked:focus:before,
         .form-check-input:focus:before {
@@ -187,6 +240,17 @@
             background-color: var(--boxes-bg);
             box-shadow: var(--boxes-shadow);
             border: 0 !important;
+        }
+        .table-bg{
+            border-radius: 0px;
+            background-color: var(--boxes-bg);
+            box-shadow: var(--boxes-shadow);
+            border: 0 !important;
+        }
+        .table>:not(caption)>*>* {
+            background-color: var(--boxes-bg);
+            border-bottom-width: 0px;
+            box-shadow: var(--boxes-shadow);
         }
         .navbar{
             background-color: var(--boxes-bg) !important;
@@ -248,6 +312,7 @@
             --text-color: #fff;
             --boxes-bg: #303030;
             --boxes-shadow: 0px 0px 2px 2px #4a4a4a;
+            --text-muted: #ebe7e7;
         }
     </style>
 </svelte:head>

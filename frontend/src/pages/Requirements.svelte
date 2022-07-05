@@ -88,11 +88,11 @@
                 <p class="search-result" style="display: none">Search Result</p>
                 {#if requirements && requirements.length}
                     {#each requirements as requirement}
-                        <div class="card mb-3" style="background: #f9f9f9;">
+                        <div class="card mb-3">
                             <Dropdown>
                                 <li>
                                     <button
-                                        class="dropdown-item text-danger"
+                                        class="dropdown-item text-danger drop-size plus-hover"
                                         on:click={setRequirement(requirement)}
                                         >Delete</button
                                     >
@@ -101,7 +101,7 @@
                             <Link to="/projects/{projectID}/requirements/{requirement.id}"
                                 class="text-dark d-block text-decoration-none">
                                 <div class="card-body pb-2">
-                                    <h5 class="card-title" style="color: #5a79b1;">
+                                    <h5 class="card-title text-primary">
                                         {requirement.title}
                                     </h5>
                                     <div class="pt-4">
