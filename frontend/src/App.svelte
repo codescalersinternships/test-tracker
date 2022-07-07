@@ -227,6 +227,28 @@
         .btn-primary{
             background:var(--text-primary) !important;
         }
+        .user_photo_nav{
+            display: inline-block;
+            background: var(--text-primary);
+            margin-right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            line-height: 40px;
+            text-align: center;
+            color: #fff;
+            font-weight: 700;
+        }
+        .not_run {
+            background-color: var(--text-primary);
+        }
+        .user_photo {
+            margin-right: 15px;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+        }
         .svg {
             color: var(--text-primary) !important;
             margin-bottom: 3px;
