@@ -4,8 +4,8 @@ export function validateFields (data) {
     }
     for (const filed in data) {
         if (data[filed] === "" 
-            || data[filed] === undefined
-            || data[filed] === null
+            // || data[filed] === undefined
+            // || data[filed] === null
         ) {
             return false;
         }
@@ -14,10 +14,13 @@ export function validateFields (data) {
 };
 
 export function claerFields (data) {
+    if (data.fields){
+        data = data.fields
+    }
     const standerdFields = ["project_id", "requirement_Doc", "requirement", "test_suite"];
-    for (const filed in data.fields) {
-        if (!standerdFields.includes(filed)) {
-            data.fields[filed] = "";
-        }
+    for (const filed in data) {
+        data[filed] = "";
+        // if (!standerdFields.includes(filed)) {
+        // }
     }
 };
