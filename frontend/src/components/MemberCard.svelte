@@ -30,7 +30,7 @@
                         .last_name[0]}
                 </span>
                 <div class="info_user">
-                    <strong
+                    <strong class="text-primary"
                         >{member.full_name}</strong
                     >
                     {#if invited}
@@ -76,7 +76,6 @@
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 10px;
-            color: #5a79b1;
         }
 
     </style>
