@@ -1,15 +1,21 @@
 <script>
     import { onMount } from "svelte";
     import { Link } from "svelte-navigator";
-    import { statusFields } from "../../src/healpers/fields"
 
+    import { statusFields } from "../../src/healpers/fields"
     import axios from "../healpers/axios";
-    import NavBar from "../components/NavBar.svelte";
-    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
+
+    import NotStartedSVG from "../components/svg/NotStartedSVG.svelte";
+    import InProgressSVG from "../components/svg/InProgressSVG.svelte";
+    import CompletedSVG from "../components/svg/CompletedSVG.svelte";
+    
     import Alert from "../components/ui/Alert.svelte";
-    import DeleteModal from "../components/ui/DeleteModal.svelte";
     import Dropdown from "../components/ui/Dropdown.svelte";
+    import DeleteModal from "../components/ui/DeleteModal.svelte";
     import AreaSelect from "../components/ui/AreaSelect.svelte";
+    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
+    
+    import NavBar from "../components/NavBar.svelte";
 
     export let user;
     let members,
@@ -214,74 +220,19 @@
                                                     </div>
                                                     <div class="col-2">
                                                         {#if run.status === "not_started"}
-                                                            <p
-                                                                class="text-muted"
-                                                            >
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    width="20"
-                                                                    height="20"
-                                                                    fill="currentColor"
-                                                                    class="bi bi-pause-circle svg"
-                                                                    viewBox="0 0 16 16"
-                                                                >
-                                                                    <path
-                                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                                                                    />
-                                                                    <path
-                                                                        d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"
-                                                                    />
-                                                                </svg>
-                                                                <strong
-                                                                    >Not Started</strong
-                                                                >
+                                                            <p class="text-muted">
+                                                                <NotStartedSVG />
+                                                                <strong>Not Started</strong>
                                                             </p>
                                                         {:else if run.status === "in_progress"}
-                                                            <p
-                                                                class="text-muted"
-                                                            >
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    width="20"
-                                                                    height="20"
-                                                                    fill="currentColor"
-                                                                    class="bi bi-arrow-repeat svg"
-                                                                    viewBox="0 0 16 16"
-                                                                >
-                                                                    <path
-                                                                        d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"
-                                                                    />
-                                                                    <path
-                                                                        fill-rule="evenodd"
-                                                                        d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
-                                                                    />
-                                                                </svg>
-                                                                <strong
-                                                                    >In Progress</strong
-                                                                >
+                                                            <p class="text-muted">
+                                                                <InProgressSVG />
+                                                                <strong>In Progress</strong>
                                                             </p>
                                                         {:else if run.status === "completed"}
-                                                            <p
-                                                                class="text-muted"
-                                                            >
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    width="20"
-                                                                    height="20"
-                                                                    fill="currentColor"
-                                                                    class="bi bi-check-circle svg"
-                                                                    viewBox="0 0 16 16"
-                                                                >
-                                                                    <path
-                                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                                                                    />
-                                                                    <path
-                                                                        d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"
-                                                                    />
-                                                                </svg>
-                                                                <strong
-                                                                    >Completed</strong
-                                                                >
+                                                            <p class="text-muted">
+                                                                <CompletedSVG />
+                                                                <strong>Completed</strong>
                                                             </p>
                                                         {/if}
                                                     </div>
@@ -362,57 +313,49 @@
                                 {/each}
                             {/if}
                         </div>
-                        <div
-                            class="tab-pane fade"
-                            id="ex1-tabs-2"
-                            role="tabpanel"
-                            aria-labelledby="ex1-tab-2"
-                        >
-                            <h5>Test run results for the past week</h5>
+                        <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>Filter test result based on weeks</h5>
+                                    Test run results for the past week
+                                </div>
+                                <div class="col-6"></div>
+                            </div>
                             <hr />
                             <div class="card card-style">
                                 <div class="card-body pb-4">
                                     <div class="row">
                                         <div class="col-3 report-graid">
-                                            <span class="pass report-span-style"
-                                                >{report.passed}</span
-                                            >
-                                            <span
-                                                class="report-span-text"
-                                                style="color:#7fb24b"
-                                                >Passed</span
-                                            >
+                                            <span class="pass report-span-style">
+                                                {report.passed}
+                                            </span>
+                                            <span class="report-span-text" style="color:#7fb24b">
+                                                Passed
+                                            </span>
                                         </div>
                                         <div class="col-3 report-graid">
-                                            <span class="fail report-span-style"
-                                                >{report.failed}</span
-                                            >
-                                            <span
-                                                class="report-span-text"
-                                                style="color:#f1495d"
-                                                >Failed</span
-                                            >
+                                            <span class="fail report-span-style">
+                                                {report.failed}
+                                            </span>
+                                            <span class="report-span-text" style="color:#f1495d">
+                                                Failed
+                                            </span>
                                         </div>
                                         <div class="col-3 report-graid">
-                                            <span class="skip report-span-style"
-                                                >{report.skipped}</span
-                                            >
-                                            <span
-                                                class="report-span-text"
-                                                style="color:#f5a623;"
-                                                >Skipped</span
-                                            >
+                                            <span class="skip report-span-style">
+                                                {report.skipped}
+                                            </span>
+                                            <span class="report-span-text" style="color:#f5a623;">
+                                                Skipped
+                                            </span>
                                         </div>
                                         <div class="col-3 report-graid">
-                                            <span
-                                                class="not_run report-span-style"
-                                                >{report.not_run}</span
-                                            >
-                                            <span
-                                                class="report-span-text"
-                                                style="color:#A5b3C0"
-                                                >Not Run</span
-                                            >
+                                            <span class="not_run report-span-style">
+                                                {report.not_run}
+                                            </span>
+                                            <span class="report-span-text text-primary">
+                                                Not Run
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -430,62 +373,38 @@
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <div
-                                        class="card mb-2"
-                                        style="box-shadow: none;"
-                                    >
-                                        <div class="card-body pt-0 pb-1">
-                                            <p class="mb-1">Involve you</p>
-                                            <span
-                                                class="report-details report-span-style"
-                                                >{report.not_started_test_runs
-                                                    .involve_you}</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="card mb-2"
-                                        style="box-shadow: none;"
-                                    >
-                                        <div class="card-body pt-0 pb-1">
-                                            <p class="mb-1">
-                                                Total not started
-                                            </p>
-                                            <span
-                                                class="report-details report-span-style"
-                                                >{report.not_started_test_runs
-                                                    .total_not_started}</span
-                                            >
+                                    <div class="card mb-3 p-4">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p class="mb-1">Involve you</p>
+                                                <span class="report-details report-span-style">
+                                                    {report.not_started_test_runs.involve_you}
+                                                </span>
+                                            </div>
+                                            <div class="col-6">
+                                                <p class="mb-1">Total not started</p>
+                                                <span class="report-details report-span-style">
+                                                    {report.not_started_test_runs.total_not_started}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div
-                                        class="card mb-2"
-                                        style="box-shadow: none;"
-                                    >
-                                        <div class="card-body pt-0 pb-1">
-                                            <p class="mb-1">Involve you</p>
-                                            <span
-                                                class="report-details report-span-style"
-                                                >{report.in_progress_test_runs
-                                                    .involve_you}</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="card mb-2"
-                                        style="box-shadow: none;"
-                                    >
-                                        <div class="card-body pt-0 pb-1">
-                                            <p class="mb-1">
-                                                Total in progress
-                                            </p>
-                                            <span
-                                                class="report-details report-span-style"
-                                                >{report.in_progress_test_runs
-                                                    .total_in_progress}</span
-                                            >
+                                    <div class="card mb-3 p-4">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p class="mb-1">Involve you</p>
+                                                <span class="report-details report-span-style">
+                                                    {report.in_progress_test_runs.involve_you}
+                                                </span>
+                                            </div>
+                                            <div class="col-6">
+                                                <p class="mb-1">Total in progress</p>
+                                                <span class="report-details report-span-style">
+                                                    {report.in_progress_test_runs.total_in_progress}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -549,9 +468,6 @@
         }
         .skip {
             background-color: #f5a623;
-        }
-        .not_run {
-            background-color: #5a79b1;
         }
         .report-details {
             background-color: #549dfa;
