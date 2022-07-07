@@ -5,12 +5,21 @@
     import NavBar from "../components/NavBar.svelte";
     import Input from "../components/ui/Input.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
+    import { updateSettingsFields } from "../healpers/fields"
+    import { validateFields } from "../healpers/validateFields"
+    import Alert from "../components/ui/Alert.svelte";
 
     export let user;
-    let mode, sun, moon;
+    let mode, sun, moon, showAlert, _class, message;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+
+    function logger(_class_, _message_) {
+        showAlert = true;
+        _class = _class_;
+        message = _message_;
     };
 
     onMount(async () => {
@@ -23,6 +32,38 @@
             sun = false;
         }
     });
+
+    async function updateSettings(){
+        let body = updateSettingsFields(user);
+        if (user.password1 !== undefined || user.password2 !== undefined){
+            if (user.password1 !== user.password2) {
+                logger("danger", "password mismatch.");
+                return;
+            } else {
+                body.password = user.password1;
+            }
+        }
+        if (!validateFields(body)){
+            logger("danger", "Please fill all fields.");
+            return;
+        }
+
+        if (body.phone.toString().length > 15 || body.phone.toString().length < 9){
+            logger("danger", "Invalid phone number.");
+            return;
+        }
+
+        const response = await axios.put("auth/settings/", body, config);
+
+        if(response.status === 201){
+            logger("success", response.data.message);
+            setTimeout(() => {
+                showAlert = false;
+            }, 1500);
+        } else {
+            logger("danger", response.data.message);
+        }
+    };
 
     function changeMode() {
         mode = localStorage.getItem("mode")
@@ -51,8 +92,10 @@
         <div class="container pt-4">
             <div class="mb-4">
                 <div class="row">
-                    <div class="col-11">
-                        <strong class="h4">Settings</strong>
+                    <div class="col-11" style="overflow: hidden;">
+                        <strong class="h4">Settings | 
+                            <strong class="text-primary">{user.first_name} {user.last_name}</strong>
+                        </strong>
                     </div>
                     <div class="col-1">
                         {#if sun}
@@ -76,7 +119,7 @@
                 <ul class="nav nav-tabs mb-5" id="ex1" role="tablist">
                     <li class="nav-item nav-style" role="presentation">
                         <a
-                            class="nav-link active"
+                            class="nav-link nav-link-tab active"
                             id="ex1-tab-1"
                             data-mdb-toggle="tab"
                             href="#ex1-tabs-1"
@@ -87,7 +130,7 @@
                     </li>
                     <li class="nav-item nav-style" role="presentation">
                         <a
-                            class="nav-link"
+                            class="nav-link nav-link-tab"
                             id="ex1-tab-2"
                             data-mdb-toggle="tab"
                             href="#ex1-tabs-2"
@@ -116,25 +159,25 @@
                                 title={"Email."} 
                                 type={"email"} 
                                 disabled={true} 
-                                value={user.email}
+                                bind:value={user.email}
                                 id={"email"}
                             />
                             <Input
                                 title={"First Name."}
                                 type={"text"}
-                                value={user.first_name}
+                                bind:value={user.first_name}
                                 id={"fname"}
                             />
                             <Input
                                 title={"Last Name."} 
                                 type={"text"} 
-                                value={user.last_name}
+                                bind:value={user.last_name}
                                 id={"lname"}
                             />
                             <Input
                                 title={"Phone Number."} 
                                 type={"number"} 
-                                value={user.phone}
+                                bind:value={user.phone}
                                 id={"phone"}
                             />
                         </div>
@@ -144,32 +187,45 @@
                         id="ex1-tabs-2"
                         role="tabpanel"
                         aria-labelledby="ex1-tab-2"
-                    >
+                        >
                         <div class="card card-style">
-                            <small class="text-center pt-2 pb-0 mb-0">
-                                <span class="text-danger">
-                                    * Hint - 
-                                </span>
-                                Only admin who set your permission.
-                            </small>
-                            <Input
-                                title={"Permission."} 
-                                type={"text"}
-                                value={user.permission}
-                                disabled={true}
-                                id={"permission"}
-                            />
+                            {#if user.permission !== "admin"}
+                                <small class="text-center pt-2 pb-0 mb-0">
+                                    <span class="text-danger">
+                                        * Hint - 
+                                    </span>
+                                    Only the host who can set your permission.
+                                </small>
+                                <Input
+                                    title={"Permission."} 
+                                    type={"text"}
+                                    bind:value={user.permission}
+                                    disabled={true}
+                                    id={"permission"}
+                                />
+                            {/if}
                             <Input
                                 title={"Password."} 
                                 type={"password"} 
                                 id={"password"}
+                                bind:value={user.password1}
                             />
                             <Input
                                 title={"RE Password."} 
                                 type={"password"}
                                 id={"re-password"} 
+                                bind:value={user.password2}
                             />
                         </div>
+                    </div>
+                    {#if showAlert}
+                        <Alert {showAlert} {_class} {message} />
+                    {/if}
+                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                        <button type="button" class="btn btn-primary btn-lg" 
+                            on:click={updateSettings}>
+                            Save
+                        </button>
                     </div>
                 </div>
             </section>
