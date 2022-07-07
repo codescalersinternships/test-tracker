@@ -91,3 +91,10 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['id','email', 'first_name', 'last_name', 'full_name']
+
+class UpdateUserSettingsSerializer(ModelSerializer):
+    """Update user profile settings"""
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'phone', 'password']
