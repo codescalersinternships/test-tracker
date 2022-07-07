@@ -67,9 +67,9 @@
         />
         <div class="container pb-5">
             <div class="pt-4">
-                <p class="h5">Project Requirements Docs</p>
+                <p class="h5 text-primary">Project Requirements Docs</p>
                 <p class="text-muted">
-                    There are <strong>{requirements.length}</strong>
+                    There are <strong class="text-primary">{requirements.length}</strong>
                     Test {requirements.length === 1
                         ? "Requirement"
                         : "Requirements"}

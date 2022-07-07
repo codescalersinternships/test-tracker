@@ -71,13 +71,13 @@
             <div class="pt-4">
                 <p class="h4 mb-2">
                     Requirement Docs |
-                    <strong class="h4 title">{RequirementDocs.title}</strong>
+                    <strong class="h4 text-primary">{RequirementDocs.title}</strong>
                 </p>
 
                 <p class="text-muted">
                     {#if RequirementDocs.requirements.length}
                         There are <strong
-                            >{RequirementDocs.requirements.length}</strong
+                            class="text-primary">{RequirementDocs.requirements.length}</strong
                         >
                         {RequirementDocs.requirements.length === 1
                             ? "Requirement"
@@ -88,8 +88,8 @@
             <div class="row mt-4">
                 <div class="col-6">
                     <div
-                        class="card mb-3 text-center"
-                        style="background: rgb(138 180 228);color: #fff;font-size: 20px;font-weight: 600;"
+                        class="card mb-3 text-center btn-primary"
+                        style="font-size: 20px;font-weight: 600;"
                     >
                         <div class="card-body pb-2">
                             <p>Created : {RequirementDocs.created}</p>
@@ -98,11 +98,11 @@
                 </div>
                 <div class="col-6">
                     <div
-                        class="card mb-3 text-center"
-                        style="background: rgb(138 180 228);color: #fff;font-size: 20px;font-weight: 600;"
+                        class="card mb-3 text-center btn-primary"
+                        style="font-size: 20px;font-weight: 600;"
                     >
                         <div class="card-body pb-2">
-                            <p>Updated : {RequirementDocs.updated}</p>
+                            <p>Updated : {RequirementDocs.modified}</p>
                         </div>
                     </div>
                 </div>
