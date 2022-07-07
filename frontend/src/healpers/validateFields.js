@@ -1,9 +1,11 @@
 export function validateFields (data) {
-    for (const filed in data.fields) {
-        console.log(filed, data.fields[filed]);
-        if (data.fields[filed] === "" 
-            || data.fields[filed] === undefined
-            || data.fields[filed] === null
+    if (data.fields){
+        data = data.fields
+    }
+    for (const filed in data) {
+        if (data[filed] === "" 
+            || data[filed] === undefined
+            || data[filed] === null
         ) {
             return false;
         }
