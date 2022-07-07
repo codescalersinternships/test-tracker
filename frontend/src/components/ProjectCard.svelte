@@ -15,8 +15,8 @@
                 </li>
             </Dropdown>
             <Link to="/projects/{project.id}/" class="text-decoration-none">
-                <div class="card-body">
-                    <p class="card-title h5">{project.title.length > 25 ? project.title.slice(0,25)+'..' : project.title}</p>
+                <div class="card-body text-primary">
+                    <p class="card-title h5 ">{project.title.length > 25 ? project.title.slice(0,25)+'..' : project.title}</p>
                     <span>Created at:   </span><span class="card-subtitle mt-2 h6"> {project.created}</span>
                 </div>
             </Link>
