@@ -97,26 +97,6 @@ class MemberAPIView(GenericAPIView):
             message="Member creation failed",
         )
 
-class UpdateProfileAPIView(GenericAPIView):
-    """This class to update profile info"""
-    serializer_class = MemberSerializers
-    permission_classes = (UserIsAuthenticated,)
-
-    def put(self, request: Request) -> Response:
-        user = get_user_by_id(request.user.id)
-        serializer = self.get_serializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return CustomResponse.success(
-                data=serializer.data,
-                message="Profile updated successfully",
-                status_code=201
-            )
-        return CustomResponse.bad_request(
-            error=serializer.errors,
-            message="Profile update failed",
-        )
-
 class GetProfileAPIView(GenericAPIView):
     """This class to update profile info"""
     serializer_class = MemberSerializers
