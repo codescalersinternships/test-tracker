@@ -74,8 +74,8 @@
             {:else if testRun }
                 <div class="col-12">
                     <p class="h4 mb-2">
-                        Test Runs |
-                        <strong class="h4 title">{testRun.title}</strong>
+                        Test Run | 
+                        <strong class="h4 text-primary">{testRun.title}</strong>
                     </p>
                     <p class="text-muted">
                         Running all remaining tests
@@ -135,27 +135,27 @@
                         <div class="card card-style">
                             <div class="card-body pb-4">
                                 <div class="title-suite p-2">
-                                    <h4>Test suite: <span class="title">{testCase.test_suite}</span></h4>
+                                    <h4>Test suite: <span class="text-primary">{testCase.test_suite}</span></h4>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Number</h6>
-                                    <span class="title f-18">{testCase.testcase_title}</span>
+                                    <span class="text-primary f-18">{testCase.testcase_title}</span>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Title</h6>
-                                    <span class="title f-18">{testCase.title}</span>
+                                    <span class="text-primary f-18">{testCase.title}</span>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Description</h6>
-                                    <span class="title f-18">{testCase.description}</span>
+                                    <span class="text-primary f-18">{testCase.description}</span>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Test steps</h6>
-                                    <span class="title f-18">{testCase.test_steps}</span>
+                                    <span class="text-primary f-18">{testCase.test_steps}</span>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Expected results</h6>
-                                    <span class="title f-18">{testCase.expected_result}</span>
+                                    <span class="text-primary f-18">{testCase.expected_result}</span>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Actual result / comments</h6>
