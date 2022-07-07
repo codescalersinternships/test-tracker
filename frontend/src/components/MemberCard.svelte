@@ -25,7 +25,7 @@
                 class="card-body d-flex align-items-center"
                 class:invited="{invited === true}"
             >
-                <span class="user_photo">
+                <span class="user_photo_nav user_photo">
                     {member.first_name[0]}{member
                         .last_name[0]}
                 </span>
@@ -55,18 +55,6 @@
             font-size: 0;
             right: 0; 
             top: 20px;
-        }
-        .user_photo {
-            display: inline-block;
-            background: #5a79b1;
-            margin-right: 15px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            line-height: 60px;
-            text-align: center;
-            font-weight: 900;
-            color: #fff;
         }
         .info_user {
             flex: 1;
