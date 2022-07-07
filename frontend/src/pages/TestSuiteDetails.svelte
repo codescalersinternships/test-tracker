@@ -75,10 +75,10 @@
             <div class="pt-4">
                 <p class="h4 mb-2">
                     Test Runs |
-                    <strong class="h4 title">{testSuite.title}</strong>
+                    <strong class="h4 text-primary">{testSuite.title}</strong>
                 </p>
                 <p class="text-muted">
-                    There are <strong>{testSuite.number_of_test_cases}</strong>
+                    There are <strong class="text-primary">{testSuite.number_of_test_cases}</strong>
                     test {testSuite.number_of_test_cases === 1
                         ? "case"
                         : "cses"}
@@ -87,8 +87,8 @@
             <div class="row mb-4">
                 <div class="col-6">
                     <div
-                        class="card mb-3 text-center"
-                        style="background: rgb(138 180 228);color: #fff;font-size: 20px;font-weight: 600;"
+                        class="card mb-3 text-center btn-primary"
+                        style="font-size: 20px;font-weight: 600;"
                     >
                         <div class="card-body pb-2">
                             <p>Created : {testSuite.created}</p>
@@ -97,8 +97,8 @@
                 </div>
                 <div class="col-6">
                     <div
-                        class="card mb-3 text-center"
-                        style="background: rgb(138 180 228);color: #fff;font-size: 20px;font-weight: 600;"
+                        class="card mb-3 text-center btn-primary"
+                        style="font-size: 20px;font-weight: 600;"
                     >
                         <div class="card-body pb-2">
                             <p>Updated : {testSuite.modified}</p>
@@ -112,7 +112,7 @@
                             <a
                                 href="/projects/{projectID}/test-plans/{testSuite
                                     .test_plan.id}"
-                                class="text-decoration-none"
+                                class="text-decoration-none text-primary"
                             >
                                 <div class="card-body p-0 text-center">
                                     {testSuite.test_plan.title}
@@ -207,6 +207,7 @@
                                                     ><small>
                                                         <a
                                                             style="font-size: 15px;"
+                                                            class="text-primary"
                                                             href="/members/{test_case
                                                                 .last_saved.id}"
                                                             >@{test_case.last_saved

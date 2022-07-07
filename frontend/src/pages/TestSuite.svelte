@@ -77,9 +77,9 @@
         <div class="container pt-4 pb-4">
             {#if testSuites}
                 <div class="">
-                    <strong class="h4">Test Suites</strong>
+                    <strong class="h4 text-primary">Test Suites</strong>
                     <br />
-                    -- There are <strong>{testSuites.length}</strong>
+                    -- There are <strong class="text-primary">{testSuites.length}</strong>
                     Test {testSuites.length === 1 ? "Suite" : "Suites"}
                 </div>
                 <div class="pt-4">
@@ -111,7 +111,7 @@
                                     to="/projects/{projectID}/test-suites/{suite.id}"
                                     class="text-dark d-block text-decoration-none" >
                                     <div class="card-body pb-2">
-                                        <h5 class="card-title" style="color: #5a79b1;">
+                                        <h5 class="card-title text-primary">
                                             {suite.title}
                                         </h5>
                                         <div class="pt-4">

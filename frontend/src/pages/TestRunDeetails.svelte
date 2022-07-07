@@ -102,10 +102,10 @@
                     <div class="col-11">
                         <p class="h4 mb-2">
                             Test Runs |
-                            <strong class="h4 title">{testRun.title}</strong>
+                            <strong class="h4 text-primary">{testRun.title}</strong>
                         </p>
                         <p class="text-muted">
-                            -- Contains a total of <strong class="text-muted"
+                            -- Contains a total of <strong class="text-primary"
                                 >{testSuites.length}</strong
                             >
                             {testSuites.length === 1 ? "test" : "tests"}
@@ -114,7 +114,7 @@
                     <div class="col-1">
                         <Router>
                             <Link to="/projects/{projectID}/runs/{testRunID}/run/" 
-                                class="btn background-primary text-light ml-2">
+                                class="btn btn-primary text-muted ml-2">
                                 Run
                             </Link>
                         </Router>
@@ -123,8 +123,8 @@
                 <div class="row mb-4">
                     <div class="col-6">
                         <div
-                            class="card mb-3 text-center"
-                            style="background: rgb(138 180 228);color: #fff;font-size: 20px;font-weight: 600;"
+                            class="card mb-3 text-center btn-primary"
+                            style="font-size: 20px;font-weight: 600;"
                         >
                             <div class="card-body pb-2">
                                 <p>Created : {testRun.created}</p>
@@ -133,8 +133,8 @@
                     </div>
                     <div class="col-6">
                         <div
-                            class="card mb-3 text-center"
-                            style="background: rgb(138 180 228);color: #fff;font-size: 20px;font-weight: 600;"
+                            class="card mb-3 text-center btn-primary"
+                            style="font-size: 20px;font-weight: 600;"
                         >
                             <div class="card-body pb-2">
                                 <p>Updated : {testRun.modified}</p>
@@ -193,7 +193,7 @@
                                     {/each}
                                 {/if}
                             </select>
-                            <button type="button" class="btn btn-outline-success" 
+                            <button type="button" class="btn btn-outline-primary" 
                                 on:click={setAssignedUser}>
                                 Submit
                             </button>
@@ -204,7 +204,7 @@
                     <ul class="nav nav-tabs mb-5" id="ex1" role="tablist">
                         <li class="nav-item nav-style" role="presentation">
                             <a
-                                class="nav-link active"
+                                class="nav-link nav-link-tab active"
                                 id="ex1-tab-1"
                                 data-mdb-toggle="tab"
                                 href="#ex1-tabs-1"
@@ -215,7 +215,7 @@
                         </li>
                         <li class="nav-item nav-style" role="presentation">
                             <a
-                                class="nav-link"
+                                class="nav-link nav-link-tab"
                                 id="ex1-tab-2"
                                 data-mdb-toggle="tab"
                                 href="#ex1-tabs-2"

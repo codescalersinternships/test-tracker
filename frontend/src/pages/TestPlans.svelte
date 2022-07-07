@@ -82,9 +82,9 @@
         <div class="container pt-4 pb-4">
             {#if testPlans}
                 <div class="">
-                    <strong class="h4">Test Plans</strong>
+                    <strong class="h4 text-primary">Test Plans</strong>
                     <br />
-                    -- There are <strong class="text-light">{testPlans.length}</strong>
+                    -- There are <strong class="text-primary">{testPlans.length}</strong>
                     Test {testPlans.length === 1 ? "Plan" : "Plans"}
                 </div>
                 <div class="pt-4">
@@ -113,9 +113,9 @@
                                     </li>
                                 </Dropdown>
                                 <Link to="/projects/{projectID}/test-plans/{plan.id}"
-                                    class="text-dark d-block text-decoration-none">
+                                    class="text-primary d-block text-decoration-none">
                                     <div class="card-body pb-2">
-                                        <h5 class="card-title" style="color: #5a79b1;">
+                                        <h5 class="card-title text-primary">
                                             {plan.title}
                                         </h5>
                                         <div class="pt-4">

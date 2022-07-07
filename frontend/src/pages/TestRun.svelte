@@ -104,9 +104,9 @@
         <div class="container pt-4 pb-4">
             {#if testRuns}
                 <div class="">
-                    <strong class="h4">Test Runs</strong>
+                    <strong class="h4 text-primary">Test Runs</strong>
                     <br />
-                    -- There are <strong>{testRuns.length}</strong>
+                    -- There are <strong class="text-primary">{testRuns.length}</strong>
                     Test {testRuns.length === 1 ? "Run" : "Runs"}
                 </div>
                 <div class="pt-4">
@@ -128,10 +128,10 @@
                                 labelTitle={"Status"}
                             />
                         </div>
-                        <div class="col-2 pb-4">
+                        <div class="col-2 pb-4 ">
                             <button
                                 type="button"
-                                class="btn btn-outline-primary"
+                                class="btn btn-outline-primary col-filter-run-btn"
                                 on:click={handleSearch}
                             >
                                 Search
@@ -143,7 +143,7 @@
                     <ul class="nav nav-tabs mb-5" id="ex1" role="tablist">
                         <li class="nav-item nav-style" role="presentation">
                             <a
-                                class="nav-link active"
+                                class="nav-link nav-link-tab active"
                                 id="ex1-tab-1"
                                 data-mdb-toggle="tab"
                                 href="#ex1-tabs-1"
@@ -154,7 +154,7 @@
                         </li>
                         <li class="nav-item nav-style" role="presentation">
                             <a
-                                class="nav-link"
+                                class="nav-link nav-link-tab"
                                 id="ex1-tab-2"
                                 data-mdb-toggle="tab"
                                 href="#ex1-tabs-2"
@@ -197,7 +197,7 @@
                                             class="text-dark d-block text-decoration-none"
                                         >
                                             <div class="card-body pb-2">
-                                                <h5 class="card-title" style="color: #5a79b1;">
+                                                <h5 class="card-title text-primary">
                                                     {#if run.assigned_user && run.assigned_user.first_name}
                                                         {run.assigned_user.first_name}-{run.title}
                                                     {:else}
@@ -516,10 +516,6 @@
         .card-style {
             border: 1px solid #dadada;
             margin-bottom: 15px;
-        }
-        .svg {
-            color: #5a79b1;
-            margin-bottom: 3px;
         }
         .report-span-style {
             align-items: center;
