@@ -15,6 +15,7 @@
                     <tr>
                         <th>
                             <span class="badge badge-success rounded-pill d-inline">{action.date}</span>
+                            <span class="badge rounded-pill d-inline text-muted">Action Date</span>
                         </th>
                     </tr>
                 </thead>
