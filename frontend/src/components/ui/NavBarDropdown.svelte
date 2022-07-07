@@ -28,17 +28,6 @@
 
 <svelte:head>
     <style>
-        .user_photo_nav{
-            display: inline-block;
-            background: #5a79b1;
-            margin-right: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            line-height: 40px;
-            text-align: center;
-            color: #fff;
-        }
         a{
             text-decoration: none !important;
             color: #5a79b1 !important;
