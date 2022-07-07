@@ -75,12 +75,12 @@
             <div class="pt-4">
                 <p class="h4 mb-2">
                     Test Plans |
-                    <strong class="h4 title">{testPlansContents.title}</strong>
+                    <strong class="h4 text-primary">{testPlansContents.title}</strong>
                 </p>
 
                 <p class="text-muted">
                     {#if testPlansContents.temps}
-                        There are <strong class="text-light"
+                        There are <strong class="text-primary"
                             >{testPlansContents.temps.length}</strong
                         >
                         {testPlansContents.temps.length === 1
@@ -92,8 +92,8 @@
             <div class="row mt-4">
                 <div class="col-6">
                     <div
-                        class="card mb-3 text-center"
-                        style="background: rgb(138 180 228);color: #fff;font-size: 20px;font-weight: 600;"
+                        class="card mb-3 text-center btn-primary"
+                        style="font-size: 20px;font-weight: 600;"
                     >
                         <div class="card-body pb-2">
                             <p>Created : {testPlansContents.created}</p>
@@ -102,8 +102,8 @@
                 </div>
                 <div class="col-6">
                     <div
-                        class="card mb-3 text-center"
-                        style="background: rgb(138 180 228);color: #fff;font-size: 20px;font-weight: 600;"
+                        class="card mb-3 text-center btn-primary"
+                        style="font-size: 20px;font-weight: 600;"
                     >
                         <div class="card-body pb-2">
                             <p>Updated : {testPlansContents.modified}</p>
@@ -135,7 +135,7 @@
                                         >
                                     </li>
                                 </Dropdown>
-                                <h5 class="card-title">{contentArea.title}</h5>
+                                <h5 class="card-title text-primary">{contentArea.title}</h5>
                                 <p class="mt-4 text-muted">
                                     {contentArea.content}
                                 </p>
