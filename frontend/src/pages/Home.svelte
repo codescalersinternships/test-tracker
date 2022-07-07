@@ -68,7 +68,7 @@
                             Dashboard
                         </p>
                         <p class="text-muted">
-                            There are <strong>{projects.length}</strong>
+                            There are <strong class="text-primary">{projects.length}</strong>
                             {projects.length === 1 ? "project" : "projects"}
                         </p>
                         {:else if projects && user.permission !== "admin"}
@@ -79,7 +79,7 @@
                                 Dashboard
                             </p>
                             <p class="text-muted">
-                                You are <strong>{user.permission}</strong> of <strong>{projects.length}</strong>
+                                You are <strong class="text-primary">{user.permission}</strong> of <strong>{projects.length}</strong>
                                 {projects.length === 1 ? "project" : "projects"}
                             </p>
                         {/if}
@@ -95,7 +95,7 @@
                 </div>
                 <div class="pt-5">
                     <p class="last-projects">
-                        Last <strong>{projects.length}</strong>
+                        Last <strong class="text-primary">{projects.length}</strong> of
                         {projects.length === 1 ? "Project" : "Projects"} Updated
                     </p>
                     <div class="row p-1">
