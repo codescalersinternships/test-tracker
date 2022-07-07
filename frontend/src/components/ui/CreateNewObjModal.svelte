@@ -69,8 +69,8 @@
         nodes = [];
     }
 
-    const postObject = async function(e){
-        const response = await postNewObject(e, data);
+    const postObject = async function(){
+        const response = await postNewObject(data);
         _class = response.class;
         message = response.message;
         if (response.data) {
@@ -231,7 +231,7 @@
                         disabled={!validateFields(data)}
                         class="btn btn-success" 
                         data-mdb-dismiss="modal" 
-                        on:click={(e) => postObject(e)}>
+                        on:click={postObject}>
                         Create
                     </button>
                 </div>
