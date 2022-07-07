@@ -2,6 +2,7 @@
 <script>
     import axios from '../healpers/axios'
     import Alert from "../components/ui/Alert.svelte";
+    import Input from "../components/ui/Input.svelte";
 
     let _alert = false;
     let email, password, message, _class;
@@ -69,14 +70,18 @@
                             We were missing you!
                         </p>
                     </div>
-                    <div class="form-outline mb-4">
-                        <input bind:value={email} type="email" id="email" class="form-control form-control-lg" />
-                        <label class="form-label" for="email">Email</label>
-                    </div>
-                    <div class="form-outline mb-4">
-                        <input bind:value={password} type="password" id="password" class="form-control form-control-lg" />
-                        <label class="form-label" for="password">Password</label>
-                    </div>
+                    <Input 
+                        bind:value={email} 
+                        id={"email"} 
+                        title={"Email"} 
+                        type={"email"}
+                    />
+                    <Input 
+                        bind:value={password} 
+                        id={"password"} 
+                        title={"Password"} 
+                        type={"password"}
+                    />
                     <Alert showAlert={_alert} message={message} _class={_class} />
                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                         <button type="button" class="btn btn-primary btn-lg" 
