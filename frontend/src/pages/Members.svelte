@@ -59,9 +59,9 @@
         <div class="container pt-4 pb-4">
             {#if members && members.length > 0}
                 <div class="">
-                    <strong class="h4">All Members</strong>
+                    <strong class="h4 text-primary">All Members</strong>
                     <br />
-                    -- There are <strong>{members.length}</strong>
+                    -- There are <strong class="text-primary">{members.length}</strong>
                     {user.total_projects === 1 ? "member" : "members"} registered
                 </div>
                 <div class="pt-4">

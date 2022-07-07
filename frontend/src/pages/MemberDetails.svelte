@@ -100,7 +100,7 @@
                                 <tr>
                                     <th scope="row" class="text-muted">Name</th>
                                     <td class="text-primary">
-                                        <a
+                                        <a class="text-primary"
                                             href="/projects/{member
                                                 .last_project_working_on.id}"
                                         >
