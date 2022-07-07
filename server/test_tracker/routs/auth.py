@@ -8,4 +8,5 @@ urlpatterns = [
     path('login/', LoginByTokenAPIView.as_view()),
     path('token/refresh/', MyTokenRefreshView.as_view()),
     path('invitation/', DecodeAndVerifySignatureAPIView.as_view()),
+    path('settings/', UpdateUserSettingsAPIView.as_view()),
 ]

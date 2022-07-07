@@ -7,7 +7,6 @@ urlpatterns = [
     path('projects/', ProjectsAPIView.as_view()),
     path('members/', MemberAPIView.as_view()),
 
-    path('profile/', UpdateProfileAPIView.as_view()),
     path('user/', GetRequestUserAPIView.as_view()),
     path('profile/<str:user_id>/', GetProfileAPIView.as_view()),
 ]
