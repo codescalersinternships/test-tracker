@@ -56,7 +56,7 @@
                             <div class="col-10">
                                 <p class="h4">
                                     Project overview & activity of
-                                    <strong class="h4 title">{project.title}</strong>
+                                    <strong class="h4 text-primary">{project.title}</strong>
                                 </p>
                                 {#if project.short_description}
                                     <i class="text-danger">--- </i>
@@ -104,7 +104,7 @@
                         </div>
                         <hr />
                     </div>
-                    <table class="table table-borderless">
+                    <table class="table table-borderless box-shadow-none">
                         <tbody>
                             <tr>
                                 <th scope="row" class="text-muted">Total test plans</th>
@@ -189,8 +189,8 @@
                                     {:else}
                                         <tbody>
                                             <tr>
-                                                <td class="text-muted text-center"
-                                                    >There are no incompleted
+                                                <td class="text-muted"
+                                                    >--There are no incompleted
                                                     task for you</td
                                                 >
                                             </tr>
@@ -230,7 +230,7 @@
                                         <tbody>
                                             <tr>
                                                 <td class="text-muted"
-                                                    >There are no pinding tasks</td
+                                                    >--There are no pinding tasks</td
                                                 >
                                             </tr>
                                         </tbody>

@@ -57,8 +57,12 @@
         />
         <div class="container pt-4">
             {#if projects}
-                There are <strong>{projects.length}</strong>
-                {projects.length === 1 ? "project" : "projects"}
+                <div class="">
+                    <strong class="h4 text-primary">All Projects</strong>
+                    <br />
+                    -- There are <strong class="text-primary">{projects.length}</strong>
+                    {projects.length === 1 ? "project" : "projects"}
+                </div>
                 <div class="pt-4">
                     <p>Search Projects</p>
                     <Search
@@ -73,7 +77,7 @@
                         {#each projects as project}
                             <ProjectCard {project}>
                                 <button
-                                    class="dropdown-item text-danger"
+                                    class="dropdown-item text-danger drop-size plus-hover"
                                     on:click={setProject(project)}
                                     >Delete</button
                                 >
