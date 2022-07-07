@@ -134,3 +134,12 @@ export function runTestCaseFields(type){
     };
     return 400 // just like bad filter to make a conditional error
 };
+
+export function updateSettingsFields(user) {
+    let body = {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        phone: user.phone,
+    };
+    return body
+}
