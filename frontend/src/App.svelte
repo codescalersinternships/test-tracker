@@ -122,6 +122,8 @@
             --boxes-shadow: 0px 2px 6px #00000030;
             --text-muted: #757575;
             --text-primary: #5a79b1;
+            --text-primary-10: #5a79b1ab;
+            --text-primary-5: #5a79b178;
             --text-danger: #bf4e62;
             --text-light: #fff;
             --text-dark: #222;
@@ -253,6 +255,17 @@
             color: var(--text-primary) !important;
             margin-bottom: 3px;
         }
+        .calnder-chart {
+            border: none;
+            outline: none;
+            background-color: var(--bg-color);
+            color: var(--text-color) !important;
+            position: relative;
+        }
+        .calnder-chart-bg {
+            background-color: var(--bg-color);
+            color: var(--text-color) !important;
+        }
         .col-filter-run-btn{
             padding: 10px;
             width: 100%;
@@ -359,6 +372,15 @@
             border-radius: 4px;
             float: right;
         }
+        .bill-15{
+            background: var(--text-primary);
+        }
+        .bill-10{
+            background: var(--text-primary-10);
+        }
+        .bill-5{
+            background: var(--text-primary-5);
+        }
         .dark{
             transition: 0.3s;
             --bg-color: #1a1a1a;
@@ -367,6 +389,8 @@
             --boxes-shadow: 0px 0px 2px 2px #4a4a4a;
             --text-muted: #ebe7e7;
             --text-primary: #1da1f2;
+            --text-primary-10: #1da1f296;
+            --text-primary-5: #1da1f242;
         }
     </style>
 </svelte:head>

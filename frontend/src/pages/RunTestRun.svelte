@@ -62,6 +62,9 @@
         testRun.not_run -= 1;
         comment = "";     
         loadTestCase = false;
+        if (testCases.length === 0) {
+            await axios.put(`/test_runs/projects/${projectID}/runs/${testRunID}/run/complete/`, [], config);
+        }
     }
 </script>
 
@@ -73,10 +76,10 @@
                 <LoodingSpiner />
             {:else if testRun }
                 <div class="col-12">
-                    <p class="h4 mb-2">
-                        Test Run | 
+                    <span class="h4">Test Run | </span>
+                    <a class="h4 mb-2" href="/projects/10/runs/{testRun.id}">
                         <strong class="h4 text-primary">{testRun.title}</strong>
-                    </p>
+                    </a>
                     <p class="text-muted">
                         Running all remaining tests
                     </p>

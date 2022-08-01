@@ -35,7 +35,9 @@
             const response = await axios.post('/auth/login/', data);
             const token = response.data.access_token;
             localStorage.setItem("token", token);
-            localStorage.setItem("mode", "light");
+            if (!localStorage.getItem("mode")){
+                localStorage.setItem("mode", "light");
+            }
             window.location.href = '/';
         } catch (err) {
             if (err.response.status === 404) {

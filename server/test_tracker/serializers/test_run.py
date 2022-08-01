@@ -5,7 +5,6 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from server.test_tracker.models.project import TestCases, TestRun, TestSuites
 from server.test_tracker.serializers.test_cases import TestCaseSerializer
 from server.test_tracker.serializers.test_suites import TestSuitesDetailSerializer
-from server.test_tracker.services.test_cases import get_test_cases_based_on_test_suites
 
 
 

@@ -1,8 +1,6 @@
 """Everything related to test suites"""
-
-
-
-from server.test_tracker.models.project import TestSuites
+from server.test_tracker.models.project import TestCases, TestSuites
+from typing import List
 
 
 def get_test_suite_by_id(test_suite_id: str) -> TestSuites:

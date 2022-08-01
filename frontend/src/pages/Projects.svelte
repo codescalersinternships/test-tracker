@@ -6,7 +6,7 @@
     import Search from "../components/Search.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
-    import Alert from "../components/ui/LoodingSpiner.svelte";
+    import Alert from "../components/ui/Alert.svelte";
 
     export let user;
 

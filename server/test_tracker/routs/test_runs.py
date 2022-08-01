@@ -12,5 +12,7 @@ urlpatterns = [
     path('projects/<str:project_id>/runs/<str:test_run_id>/', TestRunDetailAPIView.as_view()),
     path('<str:project_id>/search/',SearchOnTestRunAPIView.as_view()),
     path('projects/<str:project_id>/runs/<str:test_run_id>/cases/', RunAllTestCasesAPIView.as_view()),
+    path('projects/<str:project_id>/runs/<str:test_run_id>/run/complete/', CompleteTestRunAPIView.as_view()),
     path('projects/<str:project_id>/set-user/<str:test_run_id>/', SetAssignedUserTestRunAPIView.as_view()),
+    path('month/report/cases/', ReportMonthTestRunAPIView.as_view()),
 ]

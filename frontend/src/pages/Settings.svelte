@@ -1,12 +1,12 @@
 <script>
     import { onMount } from "svelte";
+    import { updateSettingsFields } from "../healpers/fields"
+    import { validateFields } from "../healpers/validateFields"
 
     import axios from "../healpers/axios";
     import NavBar from "../components/NavBar.svelte";
     import Input from "../components/ui/Input.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
-    import { updateSettingsFields } from "../healpers/fields"
-    import { validateFields } from "../healpers/validateFields"
     import Alert from "../components/ui/Alert.svelte";
 
     export let user;
@@ -67,7 +67,6 @@
 
     function changeMode() {
         mode = localStorage.getItem("mode")
-        console.log(mode);
         if(mode === "light"){
             window.document.body.classList.remove('light');
             window.document.body.classList.add('dark');
@@ -156,29 +155,29 @@
                                 you are not allowed to change your email.
                             </small>
                             <Input
+                                disabled={true} 
                                 title={"Email."} 
                                 type={"email"} 
-                                disabled={true} 
-                                bind:value={user.email}
                                 id={"email"}
+                                bind:value={user.email}
                             />
                             <Input
                                 title={"First Name."}
                                 type={"text"}
-                                bind:value={user.first_name}
                                 id={"fname"}
+                                bind:value={user.first_name}
                             />
                             <Input
                                 title={"Last Name."} 
                                 type={"text"} 
-                                bind:value={user.last_name}
                                 id={"lname"}
+                                bind:value={user.last_name}
                             />
                             <Input
                                 title={"Phone Number."} 
                                 type={"number"} 
-                                bind:value={user.phone}
                                 id={"phone"}
+                                bind:value={user.phone}
                             />
                         </div>
                     </div>
@@ -197,11 +196,11 @@
                                     Only the host who can set your permission.
                                 </small>
                                 <Input
+                                    disabled={true}
                                     title={"Permission."} 
                                     type={"text"}
-                                    bind:value={user.permission}
-                                    disabled={true}
                                     id={"permission"}
+                                    bind:value={user.permission}
                                 />
                             {/if}
                             <Input

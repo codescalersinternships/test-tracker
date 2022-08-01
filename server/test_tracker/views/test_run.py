@@ -1,11 +1,10 @@
 """Everything related to test runs"""
-from cgi import test
 import datetime
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from server.test_tracker.api.permission import HasProjectAccess
+from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
 from server.test_tracker.models.project import TEST_RUN_STATUS_CHOICES, TestCases, TestPlan, TestRun, TestSuites
 from server.test_tracker.serializers.test_cases import TestCaseSerializer
@@ -13,7 +12,7 @@ from server.test_tracker.serializers.test_run import TestRunsSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import get_test_run_by_id, update_activity
-from server.test_tracker.services.test_suites import get_test_suite_by_id
+from server.test_tracker.services.test_cases import month_filter_test_cases_based_on_test_suites
 
 
 
@@ -237,6 +236,8 @@ class RunAllTestCasesAPIView(GenericAPIView):
             datetime.datetime.now(), request.user, project,
             "Run", "Test Run", test_run.title
         )
+        test_run.status = TEST_RUN_STATUS_CHOICES.IN_PROGRESS
+        test_run.save()
         return CustomResponse.success(
             message=f"Test run {test_run.title} running successfully.",
             status_code = 201
@@ -267,3 +268,42 @@ class SetAssignedUserTestRunAPIView(GenericAPIView):
             data = self.get_serializer(test_run).data,
             status_code = 201
         )
+
+class ReportMonthTestRunAPIView(GenericAPIView):
+    """Get all test cases runing based on day"""
+    permission_classes = (UserIsAuthenticated,)
+
+    def get(self, request: Request) -> Response:
+        """
+            This method will return the number of test cases running on days of the month.
+            test_run_id => Test run id
+        """
+        test_run_id = request.query_params.get('run')
+        month = request.query_params.get('month')
+        test_run = get_test_run_by_id(test_run_id)
+        test_suites = test_run.test_suites.all()
+        return CustomResponse.success(
+            data=month_filter_test_cases_based_on_test_suites(
+                test_suites, month
+            )
+        )
+
+class CompleteTestRunAPIView(GenericAPIView):
+    """Complete test run after run all test cases."""
+    permission_classes = (HasProjectAccess,)
+
+    def put(self, request: Request, project_id: str, test_run_id: str) -> Response:
+        """We will use this endpoint to complete the test run after running all test cases"""
+        project = get_project_by_id(int(project_id))
+        test_run = get_test_run_by_id(int(test_run_id))
+        if project is None or project_id.isdigit() == False:
+            return CustomResponse.not_found(message = "Project not found.")
+        if test_run is None:
+            return CustomResponse.not_found(message = "TestRun not found.")
+        update_activity(
+            datetime.datetime.now(), request.user, project,
+            "Complete", "Test Run", test_run.title
+        )
+        test_run.status = TEST_RUN_STATUS_CHOICES.COMPLETED
+        test_run.save()
+

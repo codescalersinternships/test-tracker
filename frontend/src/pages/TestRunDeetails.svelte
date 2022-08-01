@@ -9,6 +9,8 @@
     import Alert from "../components/ui/Alert.svelte";
     import Search from "../components/Search.svelte";
     import Dropdown from "../components/ui/Dropdown.svelte";
+    import CollapseSVG from "../components/svg/CollapseSVG.svelte";
+    import Calendar from "../components/Calendar.svelte"; 
 
     export let user;
 
@@ -29,8 +31,9 @@
     member,
     showAlert,
     message,
-    _class, 
-    runThis;
+    _class;
+
+    const today = new Date;
 
     onMount(async () => {
         const testRunDetails = await axios.get(
@@ -108,13 +111,13 @@
                             -- Contains a total of <strong class="text-primary"
                                 >{testSuites.length}</strong
                             >
-                            {testSuites.length === 1 ? "test" : "tests"}
+                            {testSuites.length === 1 ? "test" : "tests"} suites
                         </p>
                     </div>
                     <div class="col-1">
                         <Router>
                             <Link to="/projects/{projectID}/runs/{testRunID}/run/" 
-                                class="btn btn-primary text-muted ml-2">
+                                class="btn btn-primary ml-2 text-light">
                                 Run
                             </Link>
                         </Router>
@@ -228,62 +231,33 @@
 
                     <!-- Tabs content -->
                     <div class="tab-content" id="ex1-content">
-                        <div
-                            class="tab-pane fade show active"
-                            id="ex1-tabs-1"
-                            role="tabpanel"
-                            aria-labelledby="ex1-tab-1"
-                        >
+                        <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel"
+                            aria-labelledby="ex1-tab-1" >
                             {#each testSuites as suite}
                                 <div class="col-12">
-                                    <div class="card test_case_card">
+                                    <div class="card test_case_card mb-5">
                                         <Dropdown>
                                             <li>
-                                                <button
-                                                    class="dropdown-item text-danger drop-size plus-hover"
+                                                <button class="dropdown-item text-danger drop-size plus-hover"
                                                     on:click={setSuite(
                                                         suite
-                                                    )}>Delete</button
-                                                >
+                                                    )}>Delete
+                                                </button>
                                             </li>
                                         </Dropdown>
-                                        <a
-                                            data-mdb-toggle="collapse"
-                                            href="#collapse-{suite.id}"
-                                            role="button"
+                                        <a data-mdb-toggle="collapse" href="#collapse-{suite.id}" role="button" 
                                             aria-expanded="false"
                                             aria-controls="collapse-{suite.id}"
-                                        >
+                                            class="h5 text-primary">
                                             {suite.title}
                                         </a>
 
                                         <div class="card test_case_info">
-                                            <a
-                                                class="collapse_span"
-                                                data-mdb-toggle="collapse"
-                                                href="#collapse-{suite.id}"
-                                                role="button"
-                                                aria-expanded="false"
-                                                aria-controls="collapse-{suite.id}"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="25"
-                                                    height="30"
-                                                    fill="currentColor"
-                                                    class="bi bi-chevron-compact-down"
-                                                    viewBox="0 0 16 16"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z"
-                                                    />
-                                                </svg>
+                                            <a class="collapse_span" data-mdb-toggle="collapse" href="#collapse-{suite.id}"
+                                                role="button" aria-expanded="false" aria-controls="collapse-{suite.id}">
+                                                <CollapseSVG />
                                             </a>
-                                            <div
-                                                class="row"
-                                                style="margin-left: 10px;"
-                                            >
+                                            <div class="row" style="margin-left: 10px;">
                                                 <div class="col-3">
                                                     <small>Created on</small>
                                                 </div>
@@ -291,58 +265,44 @@
                                                     <small>Updated on</small>
                                                 </div>
                                                 <div class="col-3">
-                                                    <small
-                                                        >Total test cases</small
-                                                    >
+                                                    <small>Total test cases</small>
                                                 </div>
                                                 <div class="col-3">
                                                     <small>Test Plan</small>
                                                 </div>
 
                                                 <div class="col-3">
-                                                    <strong
-                                                        ><small
-                                                            >{suite.created}</small
-                                                        ></strong
-                                                    >
+                                                    <strong>
+                                                        <small>
+                                                            {suite.created}
+                                                        </small>
+                                                    </strong>
                                                 </div>
                                                 <div class="col-3">
-                                                    <strong
-                                                        ><small
-                                                            >{suite.modified}</small
-                                                        ></strong
-                                                    >
+                                                    <strong>
+                                                        <small>
+                                                            {suite.modified}
+                                                        </small>
+                                                    </strong>
                                                 </div>
                                                 <div class="col-3">
-                                                    <strong
-                                                        ><small
-                                                            >{suite.number_of_test_cases}</small
-                                                        ></strong
-                                                    >
+                                                    <strong>
+                                                        <small>
+                                                            {suite.number_of_test_cases}
+                                                        </small>
+                                                    </strong>
                                                 </div>
                                                 {#if suite.test_plan.title}
                                                     <div class="col-3">
                                                         <strong>
-                                                            <a
-                                                                href="/projects/{testRun.project_id}/test-plans/{suite
-                                                                    .test_plan
-                                                                    .id}/"
-                                                            >
+                                                            <a href="/projects/{testRun.project_id}/test-plans/{suite.test_plan.id}/">
                                                                 {#if suite.test_plan.title}
                                                                     <small>
-                                                                        {suite
-                                                                            .test_plan
-                                                                            .title
-                                                                            .length >
-                                                                        25
-                                                                            ? suite.test_plan.title.slice(
-                                                                                  0,
-                                                                                  25
-                                                                              ) +
-                                                                              ".."
-                                                                            : suite
-                                                                                  .test_plan
-                                                                                  .title}
+                                                                        {
+                                                                            suite.test_plan.title.length > 25 
+                                                                            ? suite.test_plan.title.slice(0,25) +".."
+                                                                            : suite.test_plan.title
+                                                                        }
                                                                     </small>
                                                                 {/if}
                                                             </a>
@@ -352,74 +312,43 @@
                                                     <p>There are no plans</p>
                                                 {/if}
                                             </div>
-                                            <div
-                                                class="collapse collapse-style"
-                                                id="collapse-{suite.id}"
-                                            >
+                                            <div class="collapse collapse-style" id="collapse-{suite.id}">
                                                 <div class="row">
                                                     <div class="col-3">
-                                                        <small
-                                                            style="color:#7fb24b"
-                                                            >Passed</small
-                                                        >
+                                                        <small style="color:#7fb24b">Passed</small>
                                                     </div>
                                                     <div class="col-3">
-                                                        <small
-                                                            style="color:#f1495d"
-                                                            >Failed</small
-                                                        >
+                                                        <small style="color:#f1495d">Failed</small>
                                                     </div>
                                                     <div class="col-3">
-                                                        <small
-                                                            style="color:#f5a623;"
-                                                            >Skipped</small
-                                                        >
+                                                        <small style="color:#f5a623">Skipped</small>
                                                     </div>
                                                     <div class="col-3">
-                                                        <small
-                                                            style="color:#5a79b1"
-                                                            >Not Run</small
-                                                        >
+                                                        <small class="text-primary">Not Run</small>
                                                     </div>
 
                                                     <div class="col-3">
                                                         <strong>
-                                                            <span
-                                                                class="number pass"
-                                                            />
-                                                            <small
-                                                                >{suite.passed}</small
-                                                            >
+                                                            <span class="number pass" />
+                                                            <small >{suite.passed}</small >
                                                         </strong>
                                                     </div>
                                                     <div class="col-3">
                                                         <strong>
-                                                            <span
-                                                                class="number fail"
-                                                            />
-                                                            <small
-                                                                >{suite.failed}</small
-                                                            >
+                                                            <span class="number fail"/>
+                                                            <small>{suite.failed}</small>
                                                         </strong>
                                                     </div>
                                                     <div class="col-3">
                                                         <strong>
-                                                            <span
-                                                                class="number skip"
-                                                            />
-                                                            <small
-                                                                >{suite.skipped}</small
-                                                            >
+                                                            <span class="number skip"/>
+                                                            <small>{suite.skipped}</small>
                                                         </strong>
                                                     </div>
                                                     <div class="col-3">
                                                         <strong>
-                                                            <span
-                                                                class="number not_run"
-                                                            />
-                                                            <small
-                                                                >{suite.not_run}</small
-                                                            >
+                                                            <span class="number not_run"/>
+                                                            <small>{suite.not_run}</small>
                                                         </strong>
                                                     </div>
                                                 </div>
@@ -435,59 +364,46 @@
                                 </div>
                             {/each}
                         </div>
-                        <div
-                            class="tab-pane fade"
-                            id="ex1-tabs-2"
-                            role="tabpanel"
-                            aria-labelledby="ex1-tab-2"
-                        >
+                        <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
                             <div class="card card-style">
                                 <div class="card-body pb-4">
                                     <div class="row">
                                         <div class="col-3 report-graid">
-                                            <span class="pass report-span-style"
-                                                >{testRun.passed}</span
-                                            >
-                                            <span
-                                                class="report-span-text"
-                                                style="color:#7fb24b"
-                                                >Passed</span
-                                            >
+                                            <span class="pass report-span-style">
+                                                {testRun.passed}
+                                            </span>
+                                            <span class="report-span-text" style="color:#7fb24b">
+                                                Passed
+                                            </span>
                                         </div>
                                         <div class="col-3 report-graid">
-                                            <span class="fail report-span-style"
-                                                >{testRun.failed}</span
-                                            >
-                                            <span
-                                                class="report-span-text"
-                                                style="color:#f1495d"
-                                                >Failed</span
-                                            >
+                                            <span class="fail report-span-style">
+                                                {testRun.failed}
+                                            </span>
+                                            <span class="report-span-text" style="color:#f1495d">
+                                                Failed
+                                            </span>
                                         </div>
                                         <div class="col-3 report-graid">
-                                            <span class="skip report-span-style"
-                                                >{testRun.skipped}</span
-                                            >
-                                            <span
-                                                class="report-span-text"
-                                                style="color:#f5a623;"
-                                                >Skipped</span
-                                            >
+                                            <span class="skip report-span-style">
+                                                {testRun.skipped}
+                                            </span>
+                                            <span class="report-span-text" style="color:#f5a623">
+                                                Skipped
+                                            </span>
                                         </div>
                                         <div class="col-3 report-graid">
-                                            <span
-                                                class="not_run report-span-style"
-                                                >{testRun.not_run}</span
-                                            >
-                                            <span
-                                                class="report-span-text"
-                                                style="color:#5a79b1"
-                                                >Not Run</span
-                                            >
+                                            <span class="btn-primary report-span-style">
+                                                {testRun.not_run}
+                                            </span>
+                                            <span class="report-span-text text-primary">
+                                                Not Run
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <Calendar {today}/>
                         </div>
                     </div>
                 </section>
@@ -561,9 +477,6 @@
         }
         .skip {
             background-color: #f5a623;
-        }
-        .not_run {
-            background-color: #5a79b1;
         }
         .report-details {
             background-color: #549dfa;

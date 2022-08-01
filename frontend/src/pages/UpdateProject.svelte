@@ -7,6 +7,8 @@
 
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import Alert from "../components/ui/Alert.svelte";
+    import Input from "../components/ui/Input.svelte";
+    import TextArea from "../components/ui/TextArea.svelte";
     import AddProjectMemberModal from "../components/ui/AddProjectMemberModal.svelte";
 
     import NavBar from "../components/NavBar.svelte";
@@ -97,7 +99,7 @@
                         <Router>
                             <Link 
                                 to={`/projects/${project.id}/`}>
-                                <strong class="h4 title">{project.title}</strong>
+                                <strong class="h4 text-primary">{project.title}</strong>
                             </Link>
                         </Router>
                     </p>
@@ -106,7 +108,7 @@
                     <ul class="nav nav-tabs mb-5" id="ex1" role="tablist">
                         <li class="nav-item nav-style" role="presentation">
                             <a
-                                class="nav-link active"
+                                class="nav-link active nav-link-tab"
                                 id="ex1-tab-1"
                                 data-mdb-toggle="tab"
                                 href="#ex1-tabs-1"
@@ -118,7 +120,7 @@
                         </li>
                         <li class="nav-item nav-style" role="presentation">
                             <a
-                                class="nav-link"
+                                class="nav-link nav-link-tab"
                                 id="ex1-tab-2"
                                 data-mdb-toggle="tab"
                                 href="#ex1-tabs-2"
@@ -138,23 +140,19 @@
                             >   
                             <Alert {message} {showAlert} {_class}/>
                             <div class="card mt-4 p-4">
-                                <form>
-                                    <div class="form-group mb-4">
-                                        <strong><label for="content-title">Title</label></strong>
-                                        <input bind:value="{project.title}" 
-                                            type="text" class="form-control mt-2" id="content-title">
-                                    </div>
-                                    <div class="form-group pa-2 mb-4">
-                                        <strong>
-                                            <label for="content-title">Short Description</label>
-                                        </strong>
-                                        <textarea bind:value="{project.short_description}" 
-                                            class="form-control mt-2" id="content-body" />
-                                    </div>
-                                </form>
+                                <Input
+                                    title={"Title."}
+                                    type={"text"}
+                                    id={"p-title"}
+                                    bind:value={project.title}
+                                />
+                                <TextArea 
+                                    title="Short Description"
+                                    bind:value="{project.short_description}"
+                                />
                                 <div>
                                     <button type="submit"
-                                        class="btn btn-success" 
+                                        class="btn btn-primary" 
                                         on:click="{updateProjectFields}">Submit
                                     </button>
                                 </div>
@@ -162,7 +160,7 @@
                         </div>
                         <div class="tab-pane pb-4 fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
                             <div class="add-member text-center mb-4">
-                                <button type="button" class="btn btn-success width-100 text-light"
+                                <button type="button" class="btn btn-primary width-100 text-light"
                                     on:click={openAddMemberModal} >
                                     <i class="fas fa-plus" style="font-size: 25px;"></i>
                                 </button>
@@ -173,7 +171,7 @@
                                         <MemberCard {member}>
                                             <Link 
                                                 to=""
-                                                class="dropdown-item text-danger" 
+                                                class="dropdown-item text-danger drop-size plus-hover" 
                                                 on:click="{removeMember(member)}">
                                                 Remove {member.first_name}
                                             </Link>
@@ -207,54 +205,9 @@
 <svelte:head>
     <title>Test-Tracker | Project Detail</title>
     <style>
-        .title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #5a79b1;
-        }
         .nav-style {
             width: 50%;
             text-align: center;
-        }
-        .card {
-            font-weight: 400;
-            border: 0;
-            -webkit-box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
-            box-shadow: 0 2px 5px 0rgba(0,0,0,0.16),0 2px 10px 0rgba(0,0,0,0.12);
-        }
-        .testimonial-card .card-up {
-            height: 120px;
-            overflow: hidden;
-            border-top-left-radius: 0.25rem;
-            border-top-right-radius: 0.25rem;
-        }
-        .indigo.lighten-1 {
-            background-color: #5c6bc0 !important;
-        }
-        .indigo {
-            background-color: #3f51b5 !important;
-        }
-        .testimonial-card .avatar {
-            width: 120px;
-            height: 120px;
-            margin-top: -60px;
-            overflow: hidden;
-            border: 5px solid #fff;
-            border-radius: 50%;
-            background: #5a79b1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-size: 30px;
-            font-weight: 600;
-            color: #fff;
-        }
-        .testimonial-card .card-body {
-            text-align: center;
-        }
-        .testimonial-card .avatar .avatar-span {
-            width: 100%;
         }
     </style>
 </svelte:head>
