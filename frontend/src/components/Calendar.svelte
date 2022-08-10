@@ -11,7 +11,7 @@
 
 	let month = today.getMonth();
 	let year = today.getFullYear();
-    let loading, report = [];
+    let loading,testlodge, report = [];
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

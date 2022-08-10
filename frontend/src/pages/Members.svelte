@@ -2,7 +2,8 @@
     import { onMount } from "svelte";
     import { Link } from "svelte-navigator";
     import axios from "../healpers/axios";
-    import Alert from "../components/ui/Alert.svelte"
+    import Alert from "../components/ui/Alert.svelte";
+    import Modal from "../components/ui/Modal.svelte";
 
     import NavBar from "../components/NavBar.svelte";
     import Search from "../components/Search.svelte";
@@ -12,7 +13,7 @@
 
     export let user;
 
-    let members, membersCopy, thisMember;
+    let members, membersCopy, thisMember, showModal;
     let showDeleteModal = false;
 
     const config = {
@@ -57,13 +58,27 @@
     {#if user}
         <NavBar {user} />
         <div class="container pt-4 pb-4">
-            {#if members && members.length > 0}
-                <div class="">
-                    <strong class="h4 text-primary">All Members</strong>
-                    <br />
-                    -- There are <strong class="text-primary">{members.length}</strong>
-                    {user.total_projects === 1 ? "member" : "members"} registered
+            <div class="row">
+                <div class="col-10">
+                    <p class="h4 mb-2">
+                        <strong class="h4 text-primary">All Members</strong>
+                    </p>
+                    {#if members && members.length > 0}
+                        <p class="text-muted">
+                            -- There are <strong class="text-primary">{members.length}</strong>
+                            {user.total_projects === 1 ? "member" : "members"} registered
+                        </p>
+                    {/if}
                 </div>
+                <div class="col-2">
+                    <button class="btn btn-primary" on:click={
+                        () => {showModal = true; console.log(showModal);}
+                    }>
+                        Invite member
+                    </button>
+                </div>
+            </div>
+            {#if members && members.length > 0}
                 <div class="pt-4">
                     <p>Search Members</p>
                     <Search
@@ -93,13 +108,6 @@
                     message = {"There are no members, try to invite someone"} 
                     _class = {"info"}
                 />
-                <div class="pt-4 pb-4">
-                    <div class="text-center">
-                        <button class="btn btn-primary">
-                            click to invite
-                        </button>
-                    </div>
-                </div>
             {/if}
         </div>
     {:else}
@@ -111,4 +119,6 @@
         obj={thisMember}
         onRequest="/members"
     />
+    <Modal show={showModal} />
+    <!-- </Modal> -->
 </section>
