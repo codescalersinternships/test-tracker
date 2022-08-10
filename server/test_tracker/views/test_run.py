@@ -12,7 +12,7 @@ from server.test_tracker.serializers.test_run import TestRunsSerializer
 from server.test_tracker.services.dashboard import get_project_by_id
 from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import get_test_run_by_id, update_activity
-from server.test_tracker.services.test_cases import month_filter_test_cases_based_on_test_suites
+from server.test_tracker.services.test_cases import filter_test_cases_by_test_suite, month_filter_test_cases_based_on_test_suites
 
 
 
@@ -236,7 +236,10 @@ class RunAllTestCasesAPIView(GenericAPIView):
             datetime.datetime.now(), request.user, project,
             "Run", "Test Run", test_run.title
         )
-        test_run.status = TEST_RUN_STATUS_CHOICES.IN_PROGRESS
+        if len(filter_test_cases_by_test_suite(test_run.test_suites.all()).filter(run = False)) > 0:
+            test_run.status = TEST_RUN_STATUS_CHOICES.IN_PROGRESS
+        else:
+            test_run.status = TEST_RUN_STATUS_CHOICES.COMPLETED
         test_run.save()
         return CustomResponse.success(
             message=f"Test run {test_run.title} running successfully.",
@@ -306,4 +309,3 @@ class CompleteTestRunAPIView(GenericAPIView):
         )
         test_run.status = TEST_RUN_STATUS_CHOICES.COMPLETED
         test_run.save()
-

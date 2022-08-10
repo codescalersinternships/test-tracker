@@ -1,5 +1,4 @@
 """Everything related to the test case"""
-from cProfile import run
 from server.test_tracker.models.project import TestCases, TestSuites
 
 
@@ -48,3 +47,8 @@ def month_filter_test_cases_based_on_test_suites(test_suites: TestSuites, month:
                 "skipped": len(skipped.filter(modified__day__gte=case.modified.day, run=True))
             }
     return response
+
+def filter_test_cases_by_test_suite(test_suites: TestCases):
+    """Recive test suites query_set and return test cases query_set"""
+    test_cases = TestCases.objects.filter(test_suite__in = test_suites)
+    return test_cases
