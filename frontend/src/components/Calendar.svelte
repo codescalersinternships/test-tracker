@@ -57,7 +57,8 @@
                     {#if current[idxw]}
                         {#each { length:7 } as d,idxd (idxd)}
                             {#if current[idxw][idxd] != 0}
-                            <div class="date calnder-chart tooltip">
+                            <div class:calnder-char-today="{isToday(current[idxw][idxd])}" 
+                                    class="date calnder-chart tooltip">
                                 { current[idxw][idxd] }
                                 {#if report[current[idxw][idxd]]}
                                     {#if report[current[idxw][idxd]].total <= 5}
@@ -99,9 +100,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                {/if}
-                                {#if isToday(current[idxw][idxd])}
-                                    <span class="bill bill-today today"></span>
                                 {/if}
                             </div>
                             {:else if (idxw < 1)}
@@ -183,9 +181,6 @@
         .today {
             bottom: 4px;
             left: 18px;
-        }
-        .bill-today{
-            background: #ffa900;
         }
         .bill-contrib{
             bottom: 4px;

@@ -127,6 +127,10 @@
             --text-danger: #bf4e62;
             --text-light: #fff;
             --text-dark: #222;
+            --calender-today: rgb(255 169 0 / 36%);
+        }
+        .bill-today{
+            background: var(--calender-today);
         }
         body{
             color: var(--text-color);
@@ -262,6 +266,9 @@
             color: var(--text-color) !important;
             position: relative;
         }
+        .calnder-char-today {
+            background-color: var(--calender-today);
+        }
         .calnder-chart-bg {
             background-color: var(--bg-color);
             color: var(--text-color) !important;
@@ -391,6 +398,7 @@
             --text-primary: #1da1f2;
             --text-primary-10: #1da1f296;
             --text-primary-5: #1da1f242;
+            --calender-today: rgb(255 169 0 / 10%);
         }
     </style>
 </svelte:head>
