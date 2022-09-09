@@ -8,13 +8,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0025_alter_testcases_verify_requirement'),
+        ("test_tracker", "0025_alter_testcases_verify_requirement"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='testcases',
-            name='last_saved',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='last_saved_test_cases', to=settings.AUTH_USER_MODEL),
+            model_name="testcases",
+            name="last_saved",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="last_saved_test_cases",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

@@ -102,7 +102,7 @@
                         style="font-size: 20px;font-weight: 600;"
                     >
                         <div class="card-body pb-2">
-                            <p>Updated : {RequirementDocs.modified}</p>
+                            <p>Updated : {RequirementDocs.updated}</p>
                         </div>
                     </div>
                 </div>

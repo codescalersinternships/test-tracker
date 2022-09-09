@@ -1,12 +1,9 @@
 from django.db import models
 
-from server.test_tracker.models.abstracts import (
-    TimeStampedModel
-)
+from server.test_tracker.models.abstracts import TimeStampedModel
 from server.test_tracker.models.users import User
 
 import uuid
-
 
 
 class PERMISSION_CHOICES(models.TextChoices):
@@ -16,8 +13,11 @@ class PERMISSION_CHOICES(models.TextChoices):
 
 class Project(TimeStampedModel):
     """Class project model for adding a new project to the database"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_projects")
-    members = models.ManyToManyField('Member', related_name="project_members")
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_projects"
+    )
+    members = models.ManyToManyField("Member", related_name="project_members")
     title = models.CharField(max_length=100)
     short_description = models.TextField(max_length=500)
     activity = models.JSONField(default=dict)
@@ -34,12 +34,15 @@ class Member(User):
     based on the permission type
     - To use this model you need to have already project
     """
-    host_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='host_user_manager')
+
+    host_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="host_user_manager"
+    )
 
     permission = models.CharField(
         max_length=100,
         choices=PERMISSION_CHOICES.choices,
-        default=PERMISSION_CHOICES.FULL_ACCESS
+        default=PERMISSION_CHOICES.FULL_ACCESS,
     )
 
     signature = models.UUIDField(default=uuid.uuid4, null=True)

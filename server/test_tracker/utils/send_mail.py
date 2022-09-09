@@ -1,11 +1,14 @@
 from server.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
 
+
 def send_email(
-    invited_user_first_name, host_user, invited_user_email: str, 
-    redirect_link=None):
+    invited_user_first_name, host_user, invited_user_email: str, redirect_link=None
+):
     """Send an email to the specified user"""
-    title = f'TestTracker - {host_user.first_name} has invited you to join their account'
+    title = (
+        f"TestTracker - {host_user.first_name} has invited you to join their account"
+    )
     content = f"""
         Hi {invited_user_first_name}
 

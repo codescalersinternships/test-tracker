@@ -71,6 +71,7 @@
 
     const postObject = async function(){
         const response = await postNewObject(data);
+        claerFields(data);
         _class = response.class;
         message = response.message;
         if (response.data) {
@@ -87,7 +88,6 @@
     }
 
     async function handleCloseModalClick() {
-        claerFields(data);
         data.showPostModal = false;
         showAlert = false;
         selectedSuites = [];

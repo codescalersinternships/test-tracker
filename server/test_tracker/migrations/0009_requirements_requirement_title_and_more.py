@@ -6,20 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0008_rename_projectrequirement_requirementdocs_and_more'),
+        ("test_tracker", "0008_rename_projectrequirement_requirementdocs_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='requirements',
-            name='requirement_title',
-            field=models.CharField(default='', max_length=50),
+            model_name="requirements",
+            name="requirement_title",
+            field=models.CharField(default="", max_length=50),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='testcases',
-            name='testcase_title',
-            field=models.CharField(default='', max_length=50),
+            model_name="testcases",
+            name="testcase_title",
+            field=models.CharField(default="", max_length=50),
             preserve_default=False,
         ),
     ]

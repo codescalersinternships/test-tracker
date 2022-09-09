@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0012_testcases_unique_testcase_title_id'),
+        ("test_tracker", "0012_testcases_unique_testcase_title_id"),
     ]
 
     operations = [
         migrations.RemoveConstraint(
-            model_name='testcases',
-            name='unique_testcase_title_id',
+            model_name="testcases",
+            name="unique_testcase_title_id",
         ),
         migrations.AddField(
-            model_name='project',
-            name='REQ_TC_Title',
+            model_name="project",
+            name="REQ_TC_Title",
             field=models.JSONField(default=dict),
         ),
     ]

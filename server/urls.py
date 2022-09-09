@@ -4,22 +4,23 @@ from django.conf import settings
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include([
-        path('auth/', include('server.test_tracker.routs.auth')),
-
-        path('dashboard/', include('server.test_tracker.routs.dashboard')),
-
-        path('requirements/', include('server.test_tracker.routs.requirement')),
-
-        path('members/', include('server.test_tracker.routs.member')),
-        path('project/', include('server.test_tracker.routs.project')),
-
-        path('test_plan/', include('server.test_tracker.routs.test_plan')),
-        path('test_suites/', include('server.test_tracker.routs.test_suites')),
-        path('test_cases/', include('server.test_tracker.routs.test_cases')),
-        path('test_runs/', include('server.test_tracker.routs.test_runs')),
-    ])),
+    path("admin/", admin.site.urls),
+    path(
+        "api/",
+        include(
+            [
+                path("auth/", include("server.test_tracker.routs.auth")),
+                path("dashboard/", include("server.test_tracker.routs.dashboard")),
+                path("requirements/", include("server.test_tracker.routs.requirement")),
+                path("members/", include("server.test_tracker.routs.member")),
+                path("project/", include("server.test_tracker.routs.project")),
+                path("test_plan/", include("server.test_tracker.routs.test_plan")),
+                path("test_suites/", include("server.test_tracker.routs.test_suites")),
+                path("test_cases/", include("server.test_tracker.routs.test_cases")),
+                path("test_runs/", include("server.test_tracker.routs.test_runs")),
+            ]
+        ),
+    ),
 ]
 
 
@@ -32,22 +33,32 @@ if settings.DEBUG:
     schema_view = get_schema_view(
         openapi.Info(
             title="Api Documentation",
-            default_version='v1',
+            default_version="v1",
         ),
         public=False,
     )
 
-    urlpatterns = [
-        # URLs specific only to django-debug-toolbar:
-        path('__debug__/', include(debug_toolbar.urls)),
-        # Swagger
-        path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-        path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-
-        # noqa: DJ05
-    ] + urlpatterns + static(  # type: ignore
-        # Serving media files in development only:
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT,
+    urlpatterns = (
+        [
+            # URLs specific only to django-debug-toolbar:
+            path("__debug__/", include(debug_toolbar.urls)),
+            # Swagger
+            path(
+                "swagger/",
+                schema_view.with_ui("swagger", cache_timeout=0),
+                name="schema-swagger-ui",
+            ),
+            path(
+                "redoc/",
+                schema_view.with_ui("redoc", cache_timeout=0),
+                name="schema-redoc",
+            ),
+            # noqa: DJ05
+        ]
+        + urlpatterns
+        + static(  # type: ignore
+            # Serving media files in development only:
+            settings.MEDIA_URL,
+            document_root=settings.MEDIA_ROOT,
+        )
     )
-

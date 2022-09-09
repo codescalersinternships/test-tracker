@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0010_alter_testcases_unique_together'),
+        ("test_tracker", "0010_alter_testcases_unique_together"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='testcases',
+            name="testcases",
             unique_together=set(),
         ),
     ]

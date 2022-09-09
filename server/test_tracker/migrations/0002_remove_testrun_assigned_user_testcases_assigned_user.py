@@ -7,17 +7,22 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0001_initial'),
+        ("test_tracker", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='testrun',
-            name='assigned_user',
+            model_name="testrun",
+            name="assigned_user",
         ),
         migrations.AddField(
-            model_name='testcases',
-            name='assigned_user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='assigned_user', to='test_tracker.member'),
+            model_name="testcases",
+            name="assigned_user",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="assigned_user",
+                to="test_tracker.member",
+            ),
         ),
     ]

@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0018_testcases_last_saved'),
+        ("test_tracker", "0018_testcases_last_saved"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='testrun',
-            name='status',
-            field=models.CharField(choices=[('none', 'none'), ('not_started', 'not started'), ('in_progress', 'in progress'), ('completed', 'completed')], default='none', max_length=100),
+            model_name="testrun",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("none", "none"),
+                    ("not_started", "not started"),
+                    ("in_progress", "in progress"),
+                    ("completed", "completed"),
+                ],
+                default="none",
+                max_length=100,
+            ),
         ),
     ]

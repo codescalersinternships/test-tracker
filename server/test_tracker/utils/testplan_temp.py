@@ -2,7 +2,8 @@ from pyini_parser.configure.parser import ConfigParser
 
 from server.components import BASE_DIR
 
-class TestPlanTemp():
+
+class TestPlanTemp:
     """
     This class only to set something like plan temps to user
     """
@@ -11,8 +12,13 @@ class TestPlanTemp():
     def create_temps():
         config = ConfigParser()
         result = []
-        with open(f'{BASE_DIR}/server/temps.ini', 'r') as file:
+        with open(f"{BASE_DIR}/server/temps.ini", "r") as file:
             temps = config.read(file)
             for section in list(temps):
-                result.append({"title": section.replace('_', ' '), "content": temps.pop(section)['content']})
+                result.append(
+                    {
+                        "title": section.replace("_", " "),
+                        "content": temps.pop(section)["content"],
+                    }
+                )
         return result

@@ -1,23 +1,36 @@
-FROM python:3.8
+FROM python:3.8-slim-buster AS development_build
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ARG DJANGO_ENV
 
+ENV DJANGO_ENV=${DJANGO_ENV} \
+  # python:
+  PYTHONFAULTHANDLER=1 \
+  PYTHONUNBUFFERED=1 \
+  PYTHONHASHSEED=random \
+  # pip:
+  PIP_NO_CACHE_DIR=off \
+  PIP_DISABLE_PIP_VERSION_CHECK=on \
+  PIP_DEFAULT_TIMEOUT=100 \
+  # poetry:
+  POETRY_VERSION=1.0.5 \
+  POETRY_VIRTUALENVS_CREATE=false \
+  POETRY_CACHE_DIR='/var/cache/pypoetry'
+
+# System deps:
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends build-essential libpq-dev \
-  && rm -rf /var/lib/apt/lists/*
+  # Cleaning cache:
+  && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
+  && pip install "poetry==$POETRY_VERSION" && poetry --version
 
-COPY requirements.txt /tmp/requirements.txt
-RUN pip install --no-cache-dir -r /tmp/requirements.txt \
-    && rm -rf /tmp/requirements.txt \
-    && useradd -U app_user \
-    && install -d -m 0755 -o app_user -g app_user /app/static
-
+# set work directory
 WORKDIR /code
+COPY pyproject.toml poetry.lock /code/
 
-USER app_user:app_user
+# Install dependencies:
+RUN poetry install
+# copy project
+COPY . .
 
-COPY --chown=app_user:app_user . .
+EXPOSE 8000
 
-
-CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
