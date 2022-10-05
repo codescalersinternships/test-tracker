@@ -17,13 +17,12 @@ def get_project_by_id(project_id: str) -> Project or None:
 
 def get_projects_by_user(user: User or Member) -> Project or None:
     """Returns the project based on the user"""
-    try:
-        member = get_member_by_id(user.id)
+    member = get_member_by_id(user.id)
+    if member is not None:
         projects = Project.objects.filter(user=member.host_user, members__in=[member])
-    except Member.DoesNotExist:
+    else:
         projects = Project.objects.filter(user=user)
     return projects
-
 
 def get_project_by_user_id(user_id: int) -> Project or None:
     """Returns the project based on the user id"""
