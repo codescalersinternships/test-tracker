@@ -9,7 +9,7 @@ install:
 runserver:
 	$(CMD) python3 manage.py runserver
 runclient:
-	$(client) && npm install npm run dev
+	$(client) && npm install && npm run dev
 test:
 	$(CMD) python3 manage.py test
 lint:
