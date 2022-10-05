@@ -5,7 +5,6 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     let signature = urlParams.get('signature');
-    console.log(data);
     async function RegisterApi(){
         const password1 = document.getElementById('password1').value;
         const password2 = document.getElementById('password2').value;

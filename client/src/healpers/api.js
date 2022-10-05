@@ -1,4 +1,5 @@
 import axios from "./axios";
+import { validateEmail, validateFields} from "./validateFields";
 
 
 let config = {
@@ -27,6 +28,21 @@ export async function loadProjects(){
         config
     );
     return await responseProjects.data.data;
+}
+
+export async function inviteNewMember(data){
+    if (!validateFields(data)){
+        return {class:"danger", message:"Please fill all fields"};
+    }
+    if (!validateEmail(data.email)){
+        return {class:"danger", message:"Please enter a valid email address."};
+    }
+    else {
+        const response = await axios.post(
+            "/dashboard/members/", data, config
+        );
+        return {class:"success", message:response.data.message, data: response.data.data};
+    }
 }
 
 export async function loadTestSuiteBasedOnProjectID(projectID){

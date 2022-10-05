@@ -1,23 +1,38 @@
 <script>
     import { onMount } from "svelte";
     import { Link } from "svelte-navigator";
+    import { createEventDispatcher } from 'svelte';
     import axios from "../healpers/axios";
+    import { inviteNewMemberFields, newMemberPermission } from "../healpers/fields";
+    import { validateFields, claerFields } from "../healpers/validateFields"
+    import { inviteNewMember } from "../healpers/api"
     import Alert from "../components/ui/Alert.svelte";
     import Modal from "../components/ui/Modal.svelte";
 
     import NavBar from "../components/NavBar.svelte";
     import Search from "../components/Search.svelte";
+    import Input from "../components//ui/Input.svelte";
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
     import MemberCard from "../components/MemberCard.svelte";
 
     export let user;
 
-    let members, membersCopy, thisMember, showModal;
+    let members, membersCopy, thisMember, showModal, showAlert, _class, message;
     let showDeleteModal = false;
 
     const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+
+    let newMember = inviteNewMemberFields();
+    let memberPermission = newMemberPermission();
+    const dispatch = createEventDispatcher();
+
+    function logger(_class_, _message_) {
+        showAlert = true;
+        _class = _class_;
+        message = _message_;
     };
 
     onMount(async () => {
@@ -31,6 +46,23 @@
             }
         }
     });
+
+    async function validateAndSubmit(){
+        const response = await inviteNewMember(newMember);
+        _class = response.class;
+        message = response.message;
+        logger(_class, message);
+        if (response.data) {
+            setTimeout(() => {
+                showAlert = false;
+                showModal = false;
+                members.push(response.data);
+                for (const filed in newMember) {
+                    newMember[filed] = "";
+                }
+            }, 500);
+        }
+    }
 
     async function handleDelete(event) {
         const member = event.detail.obj;
@@ -47,6 +79,10 @@
     function setMember(member) {
         thisMember = member;
         showDeleteModal = true;
+    }
+
+    function openAddMemberModal(member) {
+        showModal = true;
     }
 </script>
 
@@ -70,10 +106,8 @@
                         </p>
                     {/if}
                 </div>
-                <div class="col-2">
-                    <button class="btn btn-primary" on:click={
-                        () => {showModal = true; console.log(showModal);}
-                    }>
+                <div class="col-2 mb-3">
+                    <button class="btn btn-primary" on:click={openAddMemberModal}>
                         Invite member
                     </button>
                 </div>
@@ -119,6 +153,54 @@
         obj={thisMember}
         onRequest="/members"
     />
-    <Modal show={showModal} />
+    <Modal show={showModal}>
+        <div slot="modal-body">
+            <Input
+                bind:value={newMember.first_name} 
+                id={"f-name"} 
+                title={"First Name"} 
+                type={"text"}
+            />
+            <Input
+                bind:value={newMember.last_name} 
+                id={"l-name"} 
+                title={"Last Name"} 
+                type={"text"}
+            />
+            <Input
+                bind:value={newMember.email} 
+                id={"email"} 
+                title={"Email"} 
+                type={"email"}
+            />
+            <div class="form-group p-2 mb-3">
+                <strong>
+                    <label for={newMember.permission}>Permission</label>
+                </strong>
+                <select
+                    class="form-select mt-2 input"
+                    aria-label={newMember.permission}
+                    id={newMember.permission}
+                    bind:value={newMember.permission}
+                    >
+                    {#each Object.entries(memberPermission) as [title, permission] }                        
+                        <option class="mt-2 pt-2" value={permission}>{title}</option>
+                    {/each}
+                </select>
+            </div>
+            <Alert {showAlert} {message} {_class}/>
+        </div>
+        <div slot="modal-footer">
+            <button type="button" class="btn btn-primary" data-mdb-dismiss="modal"
+                on:click={() => (showModal = false)}>
+                Close
+            </button>
+            <button type="button" class="btn btn-success"
+                disabled={!validateFields(newMember)}
+                on:click={validateAndSubmit}>
+                <i class="fas fa-plus"></i> Add
+            </button>
+        </div>
+    </Modal>
     <!-- </Modal> -->
 </section>
