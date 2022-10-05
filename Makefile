@@ -3,6 +3,7 @@ client=cd client
 up:
 	docker-compose up --build -d
 install:
+	curl -sSL https://install.python-poetry.org | python3 -
 	poetry install
 	poetry check
 runserver:
