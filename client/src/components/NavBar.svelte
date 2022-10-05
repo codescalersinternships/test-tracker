@@ -87,7 +87,11 @@
         <NavBarDropdown>
             <span slot="dropdown-toggle" 
                 class="user_photo_nav">
-                {user.first_name[0]}{user.last_name[0]}
+                {#if user.first_name}
+                    {user.first_name[0]}{user.last_name[0]}
+                {:else}
+                    {user.email[0]}
+                {/if}
             </span>
             <span slot="dropdown-li">
                 <li>
