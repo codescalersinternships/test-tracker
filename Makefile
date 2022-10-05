@@ -21,4 +21,4 @@ migrations:
 	$(CMD) python3 manage.py makemigrations
 user:
 	$(CMD) python3 manage.py createsuperuser
-	$(CMD) python3 manage.py sqlmigrate cshr 0006
+	$(CMD) python3 manage.py sqlmigrate test_tracker 0006

@@ -100,7 +100,7 @@ def get_plans_based_on_project(project: Project) -> TestPlan:
 def my_projects(user: User or Member) -> Dict or int:
     """Get total of projects based on user type"""
     try:
-        member = get_member_by_id(user.id)
+        member = Member.objects.get(id=user.id)
         user = member.host_user
         projects = Project.objects.filter(members__in=[member], user=user)
     except Member.DoesNotExist:
