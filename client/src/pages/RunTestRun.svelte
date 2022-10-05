@@ -77,7 +77,7 @@
             {:else if testRun }
                 <div class="col-12">
                     <span class="h4">Test Run | </span>
-                    <a class="h4 mb-2" href="/projects/10/runs/{testRun.id}">
+                    <a class="h4 mb-2" href="/projects/{projectID}/runs/{testRun.id}">
                         <strong class="h4 text-primary">{testRun.title}</strong>
                     </a>
                     <p class="text-muted">

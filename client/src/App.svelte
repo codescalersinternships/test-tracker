@@ -44,7 +44,9 @@
     onMount(async () => {
         setTheme(mode);
         isAuthenticated();
+        console.log("watch");
         const userDetails = await axios.get('/dashboard/user/', config);
+        console.log(userDetails.status);
         user = await userDetails.data.data
         if (!user) {
             return {
