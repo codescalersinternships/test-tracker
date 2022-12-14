@@ -145,7 +145,7 @@ export function updateSettingsFields(user) {
         phone: user.phone,
     };
     return body
-}
+};
 
 export function newSectionFields(){
     return {
@@ -156,4 +156,22 @@ export function newSectionFields(){
             "test_suites":pram,
         }
     };
-}
+};
+
+export function inviteNewMemberFields() {
+    let body = {
+        first_name: "",
+        last_name: "",
+        email: "",
+        permission: "",
+    };
+    return body;
+};
+
+export function newMemberPermission() {
+    let permissions = {
+        "Full access": "full_access",
+        "Admin access": "admin_access"
+    };
+    return permissions;
+};

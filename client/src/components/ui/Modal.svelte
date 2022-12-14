@@ -1,10 +1,8 @@
 <script>
-    let show = false;
+    export let show;
 </script>
 
-<div class="modal fade" tabindex="-1" aria-hidden="true"
-    style={`display: ${show ? "block" : "none"};`}
-    >
+<div class="modal" style={`display: ${show ? "block" : "none"};`}>
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">

@@ -27,7 +27,6 @@ export function claerFields (data) {
         
         if (!standerdFields.includes(filed)){
             if (data[filed] === true || data[filed] === false){
-                console.log("Hello");
                 data[filed] = false;
             } else {
                 data[filed] = "";
@@ -35,3 +34,11 @@ export function claerFields (data) {
         };
     };
 };
+
+export function validateEmail(email) {
+    return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+}
