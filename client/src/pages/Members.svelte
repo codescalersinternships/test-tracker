@@ -72,7 +72,7 @@
                 </div>
                 <div class="col-2">
                     <button class="btn btn-primary" on:click={
-                        () => {showModal = true; console.log(showModal);}
+                        () => {showModal = true}
                     }>
                         Invite member
                     </button>

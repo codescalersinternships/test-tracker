@@ -19,6 +19,7 @@ class Project(TimeStampedModel):
     )
     members = models.ManyToManyField("Member", related_name="project_members")
     title = models.CharField(max_length=100)
+    repo_link = models.CharField(max_length=300, null=True, blank=True)
     short_description = models.TextField(max_length=500)
     activity = models.JSONField(default=dict)
     TC_Title = models.JSONField(default=list)

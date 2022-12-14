@@ -388,6 +388,72 @@
         .bill-5{
             background: var(--text-primary-5);
         }
+        .check-box{
+            width: 70px;
+            height: 40px;
+            background: rgb(255, 255, 255);
+            border-radius: 50px;
+            cursor: pointer;
+            border: 1px solid var(--text-primary);
+            position: relative;
+        }
+        .checkbox-span{
+            content: "";
+            position: absolute;
+            border: none;
+            z-index: 2;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            background-color: var(--text-primary);
+            box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+            transition: background-color .2s,transform .2s;
+            top: 50%;
+            transform: translateY(-50%)
+        }
+        .checkbox-span:not(.checkbox-span-checked) {
+            left: 5px;
+        }
+        .checkbox-span-checked{
+            background-color: var(--text-light)!important;
+            right: 5px;
+        }
+        .checkbox--checked{
+            border: 1px solid var(--text-light) !important;
+            background-color: var(--text-primary) !important;
+        }
+        .p-relative{
+            position: relative;
+        }
+        .p-abs{
+            position: absolute;
+        }
+        .right-0{
+            right: 0px
+        }
+        .new-section-button{
+            border: 1px solid var(--text-primary);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .new-section-button-api{
+            border: 1px solid var(--text-primary);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            width: 100%;
+        }
+        .default-text-color{
+            color: var(--text-color);
+        }
+        .new-section-button:hover{
+            border: 1px solid var(--bg-color);
+            background-color: var(--text-primary);
+            color: var(--text-color);
+            transition: 0.3s;
+        }
+        .new-section-clicked{
+            display: none !important;
+        }
         .dark{
             transition: 0.3s;
             --bg-color: #1a1a1a;

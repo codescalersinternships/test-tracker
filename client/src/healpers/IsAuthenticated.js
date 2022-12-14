@@ -1,4 +1,6 @@
 import JWTPars from "./JWTPars";
+
+
 export default function isAuthenticated(){
     /// This is a helper function that returns true if the user is authenticated.
     let exp;

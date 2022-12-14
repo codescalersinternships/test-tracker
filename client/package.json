@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "sirv-cli": "^2.0.0"
+    "sirv-cli": "^2.0.0",
+    "svelte-github-login": "^1.3.1"
   }
 }

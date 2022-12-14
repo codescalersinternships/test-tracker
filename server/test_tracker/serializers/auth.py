@@ -2,7 +2,7 @@ from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer,
     TokenRefreshSerializer,
 )
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer, CharField
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.state import token_backend
 from rest_framework_simplejwt.settings import api_settings
@@ -107,3 +107,11 @@ class UpdateUserSettingsSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ["first_name", "last_name", "phone", "password"]
+
+class GitHubRequestToGetAccessTokenSerializers(Serializer):
+    client_id = CharField()
+    client_secret = CharField()
+    code = CharField()
+
+class GitHubUserDataSerializers(Serializer):
+    access_token = CharField()

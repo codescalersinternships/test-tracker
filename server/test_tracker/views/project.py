@@ -8,6 +8,7 @@ from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthentic
 from server.test_tracker.models.dashboard import Member, Project
 from server.test_tracker.serializers.dashboard import ProjectsSerializer
 from server.test_tracker.serializers.member import ProjectTeamSerializer
+from server.test_tracker.serializers.project import TestSuiteSectionSerializer
 from server.test_tracker.utils.validations import Validator
 
 from server.test_tracker.services.dashboard import is_success_project, get_project_by_id
@@ -301,3 +302,19 @@ class AccountMembersNotInProjectAPIView(GenericAPIView):
         return CustomResponse.unauthorized(
             message="You are not authorized to access this view"
         )
+
+
+class TestSuitesSectionAPIView(GenericAPIView):
+    serializer_class = TestSuiteSectionSerializer
+    permission_classes = (HasProjectAccess,)
+    
+    def post(self, request: Request, project_id: str):
+        """Post new section, required fields is [Title,]"""
+        project = get_project_by_id(project_id)
+        if not project:
+            return CustomResponse.not_found(message="Project not found")
+        serializer = self.get_serializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return CustomResponse.success(message="Success created new section.", data=serializer.data)
+        return CustomResponse.bad_request(message="Please make sure that you entered a valid data")

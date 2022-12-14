@@ -1,4 +1,5 @@
 """Everything related to authentication."""
+import json
 from django.contrib.auth.hashers import make_password
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
@@ -8,7 +9,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from server.test_tracker.api.permission import UserIsAuthenticated
 from server.test_tracker.api.response import CustomResponse
+from server.test_tracker.models.users import User
 from server.test_tracker.serializers.auth import (
+    GitHubRequestToGetAccessTokenSerializers,
+    GitHubUserDataSerializers,
     MyTokenObtainPairSerializer,
     MyTokenRefreshSerializer,
     RegisterSerializer,
@@ -17,6 +21,11 @@ from server.test_tracker.serializers.auth import (
 )
 from server.test_tracker.services.dashboard import get_signature
 from server.test_tracker.services.users import get_user_by_id, get_user_or_member
+from urllib import parse
+import requests
+from server.components import config
+
+from server.test_tracker.utils.generate_password import generate_password
 
 
 class RegisterAPIView(GenericAPIView):
@@ -125,4 +134,63 @@ class UpdateUserSettingsAPIView(GenericAPIView):
         return CustomResponse.bad_request(
             error=serializer.errors,
             message="Profile update failed.",
+        )
+
+class GetHubAccessTokenAPIView(GenericAPIView):
+    serializer_class = GitHubRequestToGetAccessTokenSerializers
+    
+    def post(self, request: Request) -> CustomResponse:
+        """Request to get user access token from github"""
+        serializer = self.get_serializer(data=request.data)
+        token_url: str = "https://github.com/login/oauth/access_token"
+        if serializer.is_valid():
+            response = requests.post(token_url, data=serializer.data)
+            token_url = token_url + "?" + str(response.content).replace("b'", "").replace("'","")
+            data = dict(parse.parse_qsl(parse.urlsplit(token_url).query))
+            return CustomResponse.success(data=data, message="Success")
+        return CustomResponse.bad_request(
+            message="Please make sure that you entered a vaild data", 
+            errors=serializer.errors
+        )
+
+class GetHubUserDataAPIView(GenericAPIView):
+    serializer_class = GitHubUserDataSerializers
+
+    def post(self, request: Request) -> CustomResponse:
+        """Request to get user info"""
+        serializer = self.get_serializer(data=request.data)
+        user_url: str = "https://api.github.com/user"
+        if serializer.is_valid():
+            response = requests.get(user_url, data=serializer.data, headers={
+                "Authorization": f"Bearer {serializer.data.get('access_token')}"
+            })
+            response = response.json()
+            try:
+                user = User.objects.get(email=response.get("email"))
+            except:
+                User.objects.create(
+                    email = response.get("email"),
+                    first_name = response.get("name"),
+                    password = make_password(serializer.data.get('access_token')),
+                    github_token = serializer.data.get('access_token')
+                )
+            sys_user = User.objects.get(email=response.get("email"))
+            sys_user.github_token = serializer.data.get('access_token')
+            sys_user.password = make_password(sys_user.github_token)
+            sys_user.save()
+            cerds = {
+                "email" : sys_user.email,
+                "password" : sys_user.github_token
+            }
+            login = requests.post(
+                f"{config('SERVER_URL')}/api/auth/login/",
+                data=json.dumps(cerds),
+                headers={
+                    "Content-Type": "application/json"
+                }
+            )
+            return CustomResponse.success(data=login.json(), message="User found")
+        return CustomResponse.bad_request(
+            message="Please make sure that you entered a vaild data", 
+            errors=serializer.errors
         )

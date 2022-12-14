@@ -87,8 +87,10 @@
         <NavBarDropdown>
             <span slot="dropdown-toggle" 
                 class="user_photo_nav">
-                {#if user.first_name}
+                {#if user.first_name && user.last_name != ""}
                     {user.first_name[0]}{user.last_name[0]}
+                {:else if user.first_name && user.last_name == ""}
+                    {user.first_name[0]}{user.first_name[1]}
                 {:else}
                     {user.email[0]}
                 {/if}

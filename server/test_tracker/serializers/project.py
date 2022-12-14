@@ -1,7 +1,7 @@
 """Everything related to the project."""
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
 
-from server.test_tracker.models.project import TestPlan
+from server.test_tracker.models.project import TestPlan, TestSuitesSection
 
 
 class TestPlanSerializer(ModelSerializer):
@@ -53,3 +53,9 @@ class TestPlanTempsSerializer(ModelSerializer):
     class Meta:
         model = TestPlan
         fields = ("title", "content")
+
+class TestSuiteSectionSerializer(ModelSerializer):
+    
+    class Meta:
+        model = TestSuitesSection
+        fields = ("title", "test_suites",)

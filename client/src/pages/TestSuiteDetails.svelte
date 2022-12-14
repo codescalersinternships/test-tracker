@@ -6,6 +6,7 @@
     import Search from "../components/Search.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
     import Alert from "../components/ui/Alert.svelte";
+    import AddNewSection from "../components/Sections/AddNewSection.svelte";
     import Dropdown from "../components/ui/Dropdown.svelte";
 
     import snarkdown from "snarkdown";
@@ -133,10 +134,12 @@
                     on:message={handleSearch}
                 />
             </div>
+            <AddNewSection />
             {#if testSuite.test_cases && testSuite.test_cases.length}
                 <div class="row pt-4">
-                        {#each testSuite.test_cases as test_case}
-                            <div class="col-12">
+                    {#each testSuite.test_cases as test_case}
+                        <div class="col-12">
+                            <div class="card test_case_card">
                                 <div class="card test_case_card">
                                     <Dropdown>
                                         <li>
@@ -161,7 +164,7 @@
                                             {test_case.title}
                                         </span>
                                     </a>
-
+    
                                     <div class="test_case_info">
                                         <a
                                             class="collapse_span"
@@ -195,7 +198,7 @@
                                             <div class="col-6">
                                                 <small>Associated requirements</small>
                                             </div>
-
+    
                                             <div class="col-3">
                                                 <strong
                                                     ><small>{test_case.modified}</small
@@ -248,13 +251,14 @@
                                     </div>
                                 </div>
                             </div>
-                        {/each}
+                        </div>
+                    {/each}
                 </div>
             {:else}
                 <div class="col-12">
                     <Alert 
                         showAlert = {true} 
-                        message = {"There are no test suites yet, try to create one"} 
+                        message = {"There are no test cases yet, try to create one"} 
                         _class = {"info"}
                     />
                 </div>

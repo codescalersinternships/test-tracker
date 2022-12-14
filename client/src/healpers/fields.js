@@ -1,10 +1,11 @@
+let path = window.location.pathname;
+let projectID = path.split("/")[2];
+let pram = path.split("/")[4]; // Thats mean there is one more param like ['projectTestPlan', 'projectTestSuite'] etc..
+let objID = Number.isInteger(parseInt(pram)) // To check if this real int number or not.
+
 export function formFields() {
     // Return form fileds based on key => Backend Model
     // We have one modal for all [post, create] request
-    let path = window.location.pathname;
-    let projectID = path.split("/")[2];
-    let pram = path.split("/")[4]; // Thats mean there is one more param like ['projectTestPlan', 'projectTestSuite'] etc..
-    let objID = Number.isInteger(parseInt(pram)) // To check if this real int number or not.
 
     let objectsModels = {
         "project": {
@@ -13,6 +14,8 @@ export function formFields() {
             "fields":{
                 "title":"",
                 "short_description":"",
+                "github_repo":false,
+                "repo_link":"",
             }
         },
     };
@@ -142,4 +145,15 @@ export function updateSettingsFields(user) {
         phone: user.phone,
     };
     return body
+}
+
+export function newSectionFields(){
+    return {
+        "message": "New Section",
+        "url": `/test_suites/${projectID}/section/`,
+        "fields":{
+            "title":"",
+            "test_suites":pram,
+        }
+    };
 }

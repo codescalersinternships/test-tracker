@@ -47,6 +47,7 @@ class User(AbstractBaseUser, TimeStampedModel):
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=70, unique=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
+    github_token = models.CharField(max_length=250, null=True, blank=True)
 
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

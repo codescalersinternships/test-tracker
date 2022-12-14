@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { createEventDispatcher } from 'svelte';
     import AreaSelect from "./AreaSelect.svelte";
+    import CheckBox from "./CheckBox.svelte";
     import Alert from "./Alert.svelte";
     import Input from "./Input.svelte";
     import Radio from "./Radio.svelte";
@@ -29,6 +30,7 @@
         selectedSuites = [];
     
     let nodes = [];
+    let githubRepoLinkInput = false;
 
     function logger(_class_, _message_) {
         showAlert = true;
@@ -44,10 +46,10 @@
         if(!selectedSuites.some(_suite => _suite.id === suite.id)){
             selectedSuites.push(suite);
             data.fields.test_suites = selectedSuites;
-        }
+        };
         node.classList.add("selected-suite");
-        nodes.push(node)
-    }
+        nodes.push(node);
+    };
 
     onMount(async () => {
         testPlans = await loadTestPlanBasedOnProjectID(
@@ -63,11 +65,11 @@
 
     function handleNodes(_nodes){
         for (const node of _nodes) {
-                node.disabled = false;
-                node.classList.remove("selected-suite");
-            }
+            node.disabled = false;
+            node.classList.remove("selected-suite");
+        };
         nodes = [];
-    }
+    };
 
     const postObject = async function(){
         const response = await postNewObject(data);
@@ -85,16 +87,21 @@
             }, 1500);
         }
         logger(_class, message);
-    }
+    };
 
     async function handleCloseModalClick() {
         data.showPostModal = false;
         showAlert = false;
         selectedSuites = [];
         handleNodes(nodes);
-    }
+        claerFields(data);
+    };
 
+    const isGithubRepo = () => {
+        githubRepoLinkInput = githubRepoLinkInput ? false : true;
+    };
 </script>
+
 <div class="modal update-modal" tabindex="-1"
     style={`display: ${data.showPostModal ? "block" : "none"};`}
     >
@@ -118,6 +125,15 @@
                             bind:value={data.fields.short_description} 
                             title={'Short Description'}
                         />
+                        <CheckBox label={"Github repository"} bind:value={data.fields.github_repo} onClick={isGithubRepo}/>
+                        {#if data.fields.github_repo}
+                            <Input 
+                                bind:value={data.fields.repo_link} 
+                                id={"project-repo-link"} 
+                                title={"Repository Link"} 
+                                type={"text"}
+                            />
+                        {/if}
                     {:else if data.obj == 'test_plan'}
                         <div class="form-group p-2 mb-2">
                             <Radio 
