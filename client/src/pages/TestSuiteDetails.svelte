@@ -5,11 +5,8 @@
     import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
     import Search from "../components/Search.svelte";
     import DeleteModal from "../components/ui/DeleteModal.svelte";
-    import Alert from "../components/ui/Alert.svelte";
     import AddNewSection from "../components/Sections/AddNewSection.svelte";
-    import Dropdown from "../components/ui/Dropdown.svelte";
-
-    import snarkdown from "snarkdown";
+    import TestSuiteSections from "../components/Sections/TestSuiteSections.svelte";
 
     export let user;
 
@@ -44,11 +41,6 @@
         testSuite.test_cases = searchTestCase;
     }
 
-    function setTestCase(testCase) {
-        thisTestCase = testCase;
-        showDeleteModal = true;
-    }
-
     async function handleDelete(event) {
         const testCase = event.detail.obj;
         const indx = testSuite.test_cases.findIndex(
@@ -75,7 +67,7 @@
         <div class="container pb-5">
             <div class="pt-4">
                 <p class="h4 mb-2">
-                    Test Runs |
+                    Test Suite |
                     <strong class="h4 text-primary">{testSuite.title}</strong>
                 </p>
                 <p class="text-muted">
@@ -135,134 +127,7 @@
                 />
             </div>
             <AddNewSection />
-            {#if testSuite.test_cases && testSuite.test_cases.length}
-                <div class="row pt-4">
-                    {#each testSuite.test_cases as test_case}
-                        <div class="col-12">
-                            <div class="card test_case_card">
-                                <div class="card test_case_card">
-                                    <Dropdown>
-                                        <li>
-                                            <button
-                                                class="dropdown-item text-danger drop-size plus-hover"
-                                                on:click={setTestCase(test_case)}
-                                                >Delete
-                                            </button>
-                                        </li>
-                                    </Dropdown>
-                                    <a
-                                        data-mdb-toggle="collapse"
-                                        href="#collapse-{test_case.id}"
-                                        role="button"
-                                        aria-expanded="false"
-                                        aria-controls="collapse-{test_case.id}"
-                                    >
-                                        <span class="text-primary h5">
-                                            {test_case.testcase_title}
-                                        </span>
-                                        <span class="text-muted h5">
-                                            {test_case.title}
-                                        </span>
-                                    </a>
-    
-                                    <div class="test_case_info">
-                                        <a
-                                            class="collapse_span"
-                                            data-mdb-toggle="collapse"
-                                            href="#collapse-{test_case.id}"
-                                            role="button"
-                                            aria-expanded="false"
-                                            aria-controls="collapse-{test_case.id}"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="25"
-                                                height="30"
-                                                fill="currentColor"
-                                                class="bi bi-chevron-compact-down"
-                                                viewBox="0 0 16 16"
-                                            >
-                                                <path
-                                                    fill-rule="evenodd"
-                                                    d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z"
-                                                />
-                                            </svg>
-                                        </a>
-                                        <div class="row" style="margin-left: 10px;">
-                                            <div class="col-3">
-                                                <small>Updated on</small>
-                                            </div>
-                                            <div class="col-3">
-                                                <small>Last saved by</small>
-                                            </div>
-                                            <div class="col-6">
-                                                <small>Associated requirements</small>
-                                            </div>
-    
-                                            <div class="col-3">
-                                                <strong
-                                                    ><small>{test_case.modified}</small
-                                                    ></strong
-                                                >
-                                            </div>
-                                            <div class="col-3">
-                                                <strong
-                                                    ><small>
-                                                        <a
-                                                            style="font-size: 15px;"
-                                                            class="text-primary"
-                                                            href="/members/{test_case
-                                                                .last_saved.id}"
-                                                            >@{test_case.last_saved
-                                                                .full_name}</a
-                                                        >
-                                                    </small></strong
-                                                >
-                                            </div>
-                                            {#if test_case.requirement}
-                                                <div class="col-6">
-                                                    <a href="/projects/{projectID}/requirements/{test_case.requirement.requirement_doc}">
-                                                        <strong>
-                                                            <small>
-                                                                {test_case.requirement
-                                                                .requirement_title}-{test_case
-                                                                .requirement.title}
-                                                            </small>
-                                                        </strong>
-                                                    </a>
-                                                </div>
-                                            {:else}
-                                                <div class="col-6">
-                                                    <small>No associated requirement</small>
-                                                </div>
-                                            {/if}
-                                        </div>
-                                        <div
-                                            class="collapse collapse-style"
-                                            id="collapse-{test_case.id}"
-                                        >
-                                            <small>Description:</small><br />
-                                            <p>{test_case.description}</p>
-                                            <small>Test steps:</small><br />
-                                            {@html snarkdown(test_case.test_steps)}
-                                            <small>Expected result</small><br />
-                                            {@html snarkdown(test_case.expected_result)}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {/each}
-                </div>
-            {:else}
-                <div class="col-12">
-                    <Alert 
-                        showAlert = {true} 
-                        message = {"There are no test cases yet, try to create one"} 
-                        _class = {"info"}
-                    />
-                </div>
-            {/if}
+            <TestSuiteSections {projectID} testSuiteID={testSuite.id}/>
         </div>
     {/if}
 {:else}

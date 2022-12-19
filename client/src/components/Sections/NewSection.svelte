@@ -33,7 +33,6 @@
             alertClassName = "success";
             form.fields.title = "";
         } catch (error) {
-            console.log(error);
             if (error.response.status != 200){
                 alertMessage = error.message;
                 alertClassName = "danger";
@@ -45,6 +44,7 @@
                 () => {
                     if(alertClassName == "success"){
                         showAlert = false;
+                        value = false;
                     }
                 }, 5000
             );

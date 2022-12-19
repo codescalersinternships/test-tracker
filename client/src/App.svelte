@@ -447,14 +447,46 @@
         .default-text-color{
             color: var(--text-color);
         }
+        .cases-card{
+            width: 80%;
+            margin: 0 auto;
+        }
+        .over-scroll{
+            height: 300px;
+            overflow-y: scroll;
+            padding: 15px 0;
+        }
+        .case-content{
+            border: 1px solid var(--text-primary);
+            width: 95%;
+            margin: 0 auto 6px;
+            border-radius: 0px !important;
+        }
+        .case-content:last-child {
+            margin-bottom:0;
+        }
         .new-section-button:hover{
             border: 1px solid var(--bg-color);
             background-color: var(--text-primary);
-            color: var(--text-color);
+            color: var(--text-light);
             transition: 0.3s;
         }
         .new-section-clicked{
             display: none !important;
+        }
+        .list-item {
+            display: block;
+            cursor: move;
+        }
+        .list-item.is-active {
+            background-color: var(--text-primary) !important;
+            color: var(--text-color);
+        }
+        .new-test-case{
+            margin-top: 15px;
+            border-left: 4px solid var(--text-primary) !important;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
         .dark{
             transition: 0.3s;

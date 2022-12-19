@@ -2,6 +2,7 @@
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
 
 from server.test_tracker.models.project import TestPlan, TestSuitesSection
+from server.test_tracker.serializers.test_cases import TestCaseSerializer
 
 
 class TestPlanSerializer(ModelSerializer):
@@ -59,3 +60,12 @@ class TestSuiteSectionSerializer(ModelSerializer):
     class Meta:
         model = TestSuitesSection
         fields = ("title", "test_suites",)
+
+class GetTestSuiteSectionSerializer(ModelSerializer):
+    test_cases = SerializerMethodField()
+    class Meta:
+        model = TestSuitesSection
+        fields = ("id", "title", "test_suites","test_cases")
+        
+    def get_test_cases(self, obj):
+        return TestCaseSerializer(obj.test_cases, many=True).data

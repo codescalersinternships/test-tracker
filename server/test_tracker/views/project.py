@@ -8,7 +8,8 @@ from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthentic
 from server.test_tracker.models.dashboard import Member, Project
 from server.test_tracker.serializers.dashboard import ProjectsSerializer
 from server.test_tracker.serializers.member import ProjectTeamSerializer
-from server.test_tracker.serializers.project import TestSuiteSectionSerializer
+from server.test_tracker.serializers.project import GetTestSuiteSectionSerializer, TestSuiteSectionSerializer
+from server.test_tracker.services.test_suites import filter_sections_based_on_test_suite, get_test_suite_by_id
 from server.test_tracker.utils.validations import Validator
 
 from server.test_tracker.services.dashboard import is_success_project, get_project_by_id
@@ -318,3 +319,21 @@ class TestSuitesSectionAPIView(GenericAPIView):
             serializer.save()
             return CustomResponse.success(message="Success created new section.", data=serializer.data)
         return CustomResponse.bad_request(message="Please make sure that you entered a valid data")
+
+class GetTestSuitesSectionsAPIView(GenericAPIView):
+    serializer_class = GetTestSuiteSectionSerializer
+    permission_classes = (HasProjectAccess,)
+
+    def get(self, request: Request, project_id: str, test_suite: str) -> Response:
+        """Get all project test suite sections"""
+        project = get_project_by_id(project_id)
+        if not project:
+            return CustomResponse.not_found(message="Project not found.")
+        test_suite = get_test_suite_by_id(test_suite)
+        if not test_suite:
+            return CustomResponse.not_found(message="Test Suite not found.")
+        sectrions = filter_sections_based_on_test_suite(test_suite).order_by("-created")
+        return CustomResponse.success(
+            data=self.get_serializer(sectrions, many=True).data,
+            message="Test suite sections found."
+        )

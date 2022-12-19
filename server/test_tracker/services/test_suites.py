@@ -1,5 +1,5 @@
 """Everything related to test suites"""
-from server.test_tracker.models.project import TestSuites
+from server.test_tracker.models.project import TestSuites, TestSuitesSection
 
 
 def get_test_suite_by_id(test_suite_id: str) -> TestSuites:
@@ -12,3 +12,7 @@ def get_test_suite_by_id(test_suite_id: str) -> TestSuites:
         return TestSuites.objects.get(id=test_suite_id)
     except TestSuites.DoesNotExist:
         return None
+
+def filter_sections_based_on_test_suite(test_suite: TestSuites) -> TestSuitesSection:
+    """Filter sections based on test suite obj"""
+    return TestSuitesSection.objects.filter(test_suites=test_suite)

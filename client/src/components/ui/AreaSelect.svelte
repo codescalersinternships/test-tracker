@@ -1,5 +1,5 @@
 <script>
-    export let objects, id, labelTitle, value, user=false;
+    export let objects, id, labelTitle, value, user=false, onClick;
 </script>
 
 <div class="form-group p-2 mb-3">
@@ -11,6 +11,7 @@
         aria-label={id}
         id={id}
         bind:value={value}
+        on:change={() => onClick()}
         >
         {#each objects as object }
             {#if user}
