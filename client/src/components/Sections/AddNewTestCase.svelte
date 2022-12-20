@@ -2,47 +2,63 @@
     import Loadingbtn from "../ui/Loadingbtn.svelte";
     import { createEventDispatcher } from 'svelte';
     import NewTestCase from "./NewTestCase.svelte";
-    import { newTestCaseFields } from "../../healpers/fields"
 
-    export let testCases = [];
+    export let section;
+    export let testSuite;
+    export let onClick;
+    export let disabled;
+    export let text;
 
-    let isLoading = false;
-    let clickedButton;
+    let isOpined = false;
     let openModal = false;
-    let fields = newTestCaseFields();
+    let isLoading = false;
+
     const dispatch = createEventDispatcher();
 
-    const addNewTestCase = async () => {
+    const addNewTestCase = () => {
         isLoading = true;
+        isOpined = true;
         openModal = true;
-        console.log(fields["test_case"]);
-        // response = clickedButton.classList.toggle("new-section-clicked");
-        // isLoading = false;
-    }
+        isLoading = false;
+    };
+    
 </script>
 
 
 {#if openModal}
-    <NewTestCase 
-        fields={fields} 
+    <NewTestCase
+        section={section}
+        testSuite={testSuite}
         on:message={(event) => {
             dispatch('message', {
                 obj: event.detail.obj,
             });
+            openModal = false;
         }}
     />
 {/if}
 
-<div class="d-flex align-items-center justify-content-end" bind:this={clickedButton}>
-    <button
-        disabled={false}
-        class="btn new-section-button" 
-        on:click={addNewTestCase}>
-        {#if isLoading}
-            <Loadingbtn />
-        {:else}
-            Add new test case
-        {/if}
-    </button>
-</div>
-
+{#if !isOpined}
+    <div class="d-flex mt-4 align-items-center justify-content-end">
+        <button
+            disabled={disabled}
+            class="btn new-section-button" 
+            on:click|preventDefault={async () => {
+                isLoading = true;
+                isOpined = true;
+                if(onClick){
+                    await onClick()
+                } else {
+                    addNewTestCase()
+                }
+                isLoading = false;
+                isOpined = false;
+            }}>
+            {#if isLoading}
+                <Loadingbtn />
+            {:else}
+                {text}
+            {/if}
+        </button>
+    </div>
+{/if}

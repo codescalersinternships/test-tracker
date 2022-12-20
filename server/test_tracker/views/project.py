@@ -9,7 +9,9 @@ from server.test_tracker.models.dashboard import Member, Project
 from server.test_tracker.serializers.dashboard import ProjectsSerializer
 from server.test_tracker.serializers.member import ProjectTeamSerializer
 from server.test_tracker.serializers.project import GetTestSuiteSectionSerializer, TestSuiteSectionSerializer
-from server.test_tracker.services.test_suites import filter_sections_based_on_test_suite, get_test_suite_by_id
+from server.test_tracker.serializers.test_cases import TestCaseSerializer
+from server.test_tracker.services.test_cases import get_test_case_by_id
+from server.test_tracker.services.test_suites import filter_sections_based_on_test_suite, get_section_by_id, get_test_suite_by_id
 from server.test_tracker.utils.validations import Validator
 
 from server.test_tracker.services.dashboard import is_success_project, get_project_by_id
@@ -304,7 +306,6 @@ class AccountMembersNotInProjectAPIView(GenericAPIView):
             message="You are not authorized to access this view"
         )
 
-
 class TestSuitesSectionAPIView(GenericAPIView):
     serializer_class = TestSuiteSectionSerializer
     permission_classes = (HasProjectAccess,)
@@ -332,8 +333,42 @@ class GetTestSuitesSectionsAPIView(GenericAPIView):
         test_suite = get_test_suite_by_id(test_suite)
         if not test_suite:
             return CustomResponse.not_found(message="Test Suite not found.")
-        sectrions = filter_sections_based_on_test_suite(test_suite).order_by("-created")
+        sectrions = filter_sections_based_on_test_suite(test_suite).order_by("-modified")
         return CustomResponse.success(
             data=self.get_serializer(sectrions, many=True).data,
             message="Test suite sections found."
         )
+        
+class AddTestCaseToTestSuiteSectionAPIView(GenericAPIView):
+    """Add a test case to test suite section"""
+    permission_classes = (HasProjectAccess,)
+    # serializer_class = AddTestCaseToTestSuiteSectionSerializers
+    
+    def put(self, request: Request, project_id: str):
+        """Required query parameters is [TestSuiteSectionID: int, TestCaseID: int]"""
+        project = get_project_by_id(project_id)
+        if not project:
+            return CustomResponse.not_found(message="Project not found.")
+
+        section_id = request.query_params.get("TestSuiteSectionID")
+        if not section_id:
+            return CustomResponse.bad_request(message = "You have to send test suite section id.")
+
+        case_id = request.query_params.get("TestCaseID")
+        if not case_id:
+            return CustomResponse.bad_request(message = "You have to send test case id.")
+
+        section = get_section_by_id(section_id)
+        if section is None:
+            return CustomResponse.not_found(message="Section not found.")
+    
+        test_case = get_test_case_by_id(case_id)
+        if test_case is None:
+            return CustomResponse.not_found(message="Section not found.")
+        
+        section.test_cases.add(test_case)
+        return CustomResponse.success(
+            message=f"Success added test case to section {section.title}",
+            data = TestCaseSerializer(test_case).data
+        )
+        

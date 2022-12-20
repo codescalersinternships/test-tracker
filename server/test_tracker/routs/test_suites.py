@@ -1,7 +1,11 @@
 """Everything related to the project test suites, test case"""
 
 from django.urls import path
-from server.test_tracker.views.project import TestSuitesSectionAPIView, GetTestSuitesSectionsAPIView
+from server.test_tracker.views.project import (
+    TestSuitesSectionAPIView,
+    GetTestSuitesSectionsAPIView,
+    AddTestCaseToTestSuiteSectionAPIView
+)
 
 from server.test_tracker.views.test_suites import (
     SearchTestSuiteAPIView,
@@ -12,6 +16,7 @@ from server.test_tracker.views.test_suites import (
 
 urlpatterns = [
     path("<str:project_id>/section/", TestSuitesSectionAPIView.as_view()),
+    path("<str:project_id>/section/add/", AddTestCaseToTestSuiteSectionAPIView.as_view()),
     path("<str:project_id>/section/<str:test_suite>/", GetTestSuitesSectionsAPIView.as_view()),
     path("<str:project_id>/", TestSuitesAPIView.as_view()),
     path(

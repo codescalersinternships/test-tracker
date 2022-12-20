@@ -9,6 +9,7 @@
     <select
         class="form-select mt-2 input"
         aria-label={id}
+        selected={objects[0]}
         id={id}
         bind:value={value}
         on:change={() => onClick()}

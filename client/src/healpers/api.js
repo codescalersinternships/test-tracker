@@ -86,3 +86,34 @@ export async function loadProjectRequirementsBasedOnProjectID(projectID){
         }
     }
 }
+
+export async function addNewCaseToSuite(projectID, testSuiteSectionID, testCaseID){
+    try {
+        const response = await axios.put(
+            `/test_suites/${projectID}/section/add/?TestSuiteSectionID=${testSuiteSectionID}&TestCaseID=${testCaseID}`,
+            [], config
+        );
+        return response.data.data;
+    } catch (err) {
+        throw new Error(err.message);
+    }
+}
+
+export async function GetTestCasesBasedOnTestSuite(testSuiteID){
+    try {
+        const response = await axios.get(`test_cases/test_suite/${testSuiteID}/`, config);
+        return response.data.data;
+    } catch (err) {
+        return false;
+    }
+};
+
+export async function postNewTestCase(data){
+    try {
+        const response = await axios.post(`/test_cases/suites/${data.test_suite}/?section_id=${data.section_id}`, data, config);
+        return response.data.data;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+};

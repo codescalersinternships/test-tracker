@@ -5,9 +5,11 @@
     import Loadingbtn from '../ui/Loadingbtn.svelte';
     import axios from "../../healpers/axios";
     import Alert from '../ui/Alert.svelte';
+    import { createEventDispatcher } from 'svelte';
 
     export let value;
     
+    const dispatch = createEventDispatcher();
 
     let form = newSectionFields()
     let isLoading = false;
@@ -29,6 +31,9 @@
             const response = await axios.post(
                 form.url, form.fields, config
             );
+            dispatch('message', {
+                section: response.data.data
+            });
             alertMessage = response.data.message;
             alertClassName = "success";
             form.fields.title = "";

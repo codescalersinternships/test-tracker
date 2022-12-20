@@ -1,6 +1,10 @@
 <script>
     import NewSection from "./NewSection.svelte"
     import Loadingbtn from "../ui/Loadingbtn.svelte"
+    import { createEventDispatcher } from 'svelte';
+    
+    const dispatch = createEventDispatcher();
+
     let isLoading = false;
     let clickedButton;
     let value = false;
@@ -16,7 +20,11 @@
 
 {#if value}
     <div class="clicked">
-        <NewSection bind:value />
+        <NewSection bind:value on:message={(event) => {
+            dispatch('message', {
+                section: event.detail.section
+            });
+        }}/>
     </div>
 {:else}
     <div class="d-flex align-items-center justify-content-end" bind:this={clickedButton}>

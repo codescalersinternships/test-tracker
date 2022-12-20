@@ -18,7 +18,7 @@ from server.test_tracker.services.member import get_member_by_id
 from server.test_tracker.services.project import update_activity
 from server.test_tracker.services.requirement import get_requirement_by_id
 from server.test_tracker.services.test_cases import get_test_case_by_id
-from server.test_tracker.services.test_suites import get_test_suite_by_id
+from server.test_tracker.services.test_suites import get_section_by_id, get_test_suite_by_id
 
 import datetime
 
@@ -48,12 +48,22 @@ class TestCasesAPIView(GenericAPIView):
             else:
                 last_title = str(last_title + 1)
             tc_id_project.append(f"TC{last_title}")
+            section = None
+            if request.query_params.get("section_id"):
+                section_id = request.query_params.get("section_id")
+                section = get_section_by_id(section_id)
+                if section is None:
+                    return CustomResponse.not_found(message=f"Cannot find section {section_id}")
             testcase = serializer.save(
                 test_suite=test_suite,
                 testcase_title=f"TC{last_title}",
                 last_saved=request.user,
             )
-            print(request.query_params)
+
+            if section:
+                section.test_cases.add(testcase)
+                section.save()
+
             if request.query_params.get("requirement"):
                 requirement = get_requirement_by_id(
                     request.query_params.get("requirement")
@@ -62,6 +72,7 @@ class TestCasesAPIView(GenericAPIView):
                     return CustomResponse.not_found(message="Requirement not found")
                 testcase.verify_requirement = requirement
                 testcase.save()
+
             update_activity(
                 datetime.datetime.now(),
                 request.user,
@@ -70,9 +81,11 @@ class TestCasesAPIView(GenericAPIView):
                 "Test Case",
                 testcase.title,
             )
+
             return CustomResponse.success(
                 data=serializer.data, message="Test suite created successfully"
             )
+
         return CustomResponse.bad_request(
             data=serializer.errors, message="Test suite not created", status_code=201
         )

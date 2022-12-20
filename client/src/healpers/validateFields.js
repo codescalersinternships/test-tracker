@@ -21,7 +21,7 @@ export function claerFields (data) {
         data = data.fields
     };
 
-    const standerdFields = ["project_id", "requirement_Doc", "requirement", "test_suite"];
+    const standerdFields = ["project_id", "requirement_Doc", "requirement", "test_suite", "section_id"];
     
     for (const filed in data) {
         

@@ -457,10 +457,13 @@
             padding: 15px 0;
         }
         .case-content{
-            border: 1px solid var(--text-primary);
             width: 95%;
             margin: 0 auto 6px;
             border-radius: 0px !important;
+        }
+        .cases-lines{
+            border: 1px solid var(--text-primary);
+            padding: 10px;
         }
         .case-content:last-child {
             margin-bottom:0;
@@ -477,16 +480,22 @@
         .list-item {
             display: block;
             cursor: move;
+            margin-bottom: 20px!important;
         }
         .list-item.is-active {
             background-color: var(--text-primary) !important;
             color: var(--text-color);
+            padding: 10px;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            border-radius: 15px;
         }
         .new-test-case{
             margin-top: 15px;
             border-left: 4px solid var(--text-primary) !important;
             border-radius: 10px;
             margin-bottom: 20px;
+            padding: 15px;
         }
         .dark{
             transition: 0.3s;

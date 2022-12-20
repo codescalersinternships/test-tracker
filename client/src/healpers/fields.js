@@ -171,9 +171,10 @@ export function newTestCaseFields(){
         "url": `/test_cases/suites/${pram}/`,
         "fields":{
             "title":"",
-            "type":"",
+            "type":"new",
             "description":"",
             "test_steps":"",
+            "section_id":null,
             "expected_result":"",
             "test_suite":pram,
             "project_id":projectID,

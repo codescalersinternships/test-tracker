@@ -16,6 +16,7 @@
 
     let testSuite, testSuiteCopy, projectID, suiteID, thisTestCase;
     let showDeleteModal = false;
+    let postedSection;
 
     onMount(async () => {
         // Loading test suite
@@ -126,8 +127,10 @@
                     on:message={handleSearch}
                 />
             </div>
-            <AddNewSection />
-            <TestSuiteSections {projectID} testSuiteID={testSuite.id}/>
+            <AddNewSection on:message={(event) => {
+                postedSection = event.detail.section;
+            }}/>
+            <TestSuiteSections postedSection={postedSection} {projectID} testSuite={testSuite}/>
         </div>
     {/if}
 {:else}

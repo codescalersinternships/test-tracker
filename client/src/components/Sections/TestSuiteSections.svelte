@@ -4,7 +4,8 @@
     import LoadingComponent from "../ui/LoodingSpiner.svelte"
     import DraggableSections from "./DraggableSections.svelte"
     export let projectID;
-    export let testSuiteID;
+    export let testSuite;
+    export let postedSection;
 
     let isLoading = false;
     let sections;
@@ -15,18 +16,29 @@
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         };
         const response = await axios.get(
-            `/test_suites/${projectID}/section/${testSuiteID}/`, config
+            `/test_suites/${projectID}/section/${testSuite.id}/`, config
         );
         sections = response.data.data;
         isLoading = false;
     });
+
+    const updateSections = () => {
+        if(postedSection){
+            sections = sections;
+            sections.unshift(postedSection);
+            console.log(postedSection);
+        }
+        // postedSection = undefined;
+    };
+
+    $: postedSection, updateSections();
 
 </script>
 
 {#if isLoading}
     <LoadingComponent />
 {:else if sections}
-    <DraggableSections list={sections} />
+    <DraggableSections testSuite={testSuite} list={sections} />
 {/if}
 
 
@@ -66,7 +78,7 @@
             position: relative;
             border-radius: 10px;
             padding: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 0px;
         }
         .test_case_card a {
             text-decoration: none;
@@ -90,7 +102,6 @@
         .collapse-style {
             margin-left: 25px;
             margin-top: 15px;
-            margin-bottom: 20px;
         }
         .collapse-style a {
             display: inline;

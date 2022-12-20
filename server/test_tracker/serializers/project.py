@@ -59,7 +59,7 @@ class TestSuiteSectionSerializer(ModelSerializer):
     
     class Meta:
         model = TestSuitesSection
-        fields = ("title", "test_suites",)
+        fields = ("id", "title", "test_suites",)
 
 class GetTestSuiteSectionSerializer(ModelSerializer):
     test_cases = SerializerMethodField()
