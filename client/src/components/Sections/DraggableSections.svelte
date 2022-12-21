@@ -2,11 +2,16 @@
     import {flip} from 'svelte/animate';
     import TestCasesSections from "./TestCasesSections.svelte"
     import Alert from "../ui/Alert.svelte";
+    import Dropdown from "../ui/Dropdown.svelte";
+    import DeleteSectionModal from "./DeleteSectionModal.svelte";
+
     
     export let list = [];
     export let testSuite;
   
     let hovering = false;
+    let openDeleteModal = false;
+    let thisSection;
   
     const drop = (event, target) => {
       event.dataTransfer.dropEffect = 'move'; 
@@ -43,6 +48,25 @@
         on:dragenter={() => hovering = index}
         class:is-active={hovering === index}>
         <div class="card test_case_card">
+          <Dropdown>
+            <li>
+              <button
+                  class="dropdown-item text-primary drop-size plus-hover"
+                  on:click={() => {}}
+                  >Edit
+              </button>
+            </li>
+            <li>
+              <button
+                  class="dropdown-item text-danger drop-size plus-hover"
+                  on:click={() => {
+                    openDeleteModal = true;
+                    thisSection = section;
+                  }}
+                  >Delete
+              </button>
+            </li>
+          </Dropdown>
           <a data-mdb-toggle="collapse" href="#collapse-{section.id}" role="button"
             aria-expanded="false" aria-controls="collapse-{section.id}">
             <span class="text-primary h5">
@@ -72,3 +96,38 @@
     _class={"info mt-4"}
     />
 {/if}
+
+
+{#if openDeleteModal}
+  <DeleteSectionModal 
+    {openDeleteModal} 
+    section={thisSection}
+    on:message={(event) => {
+      const indx = list.findIndex((v) => v.id === event.detail.deletedSection.id);
+      list = list;
+      list.splice(indx, 1);
+    }}
+  />
+{/if}
+
+<svelte:head>
+  <style>
+    .collapse_span {
+      position: absolute;
+      right: 25px;
+      height: 30px;
+      width: 30px;
+      text-align: center;
+      border-radius: 50%;
+      top: 10px;
+      cursor: pointer;
+    }
+    .dropdowncustom {
+      position: absolute;
+      font-size: 0;
+      right: 2px;
+      top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</svelte:head>

@@ -169,8 +169,12 @@
         }
         .dropdown-menu{
             margin-top: 15px!important;
-            border-radius: 0px;
             background: var(--boxes-bg);
+            border: 1px solid var(--text-primary);
+            border-radius: 5px;
+        }
+        .dropdown-item{
+            border-radius: 5px !important;
         }
         .setting-drop{
             border-radius: 0px!important;

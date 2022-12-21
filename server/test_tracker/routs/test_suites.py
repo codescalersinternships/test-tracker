@@ -2,6 +2,7 @@
 
 from django.urls import path
 from server.test_tracker.views.project import (
+    DeleteTestSuiteSectionAPIView,
     TestSuitesSectionAPIView,
     GetTestSuitesSectionsAPIView,
     AddTestCaseToTestSuiteSectionAPIView
@@ -18,6 +19,7 @@ urlpatterns = [
     path("<str:project_id>/section/", TestSuitesSectionAPIView.as_view()),
     path("<str:project_id>/section/add/", AddTestCaseToTestSuiteSectionAPIView.as_view()),
     path("<str:project_id>/section/<str:test_suite>/", GetTestSuitesSectionsAPIView.as_view()),
+    path("<str:project_id>/section/<str:section_id>/delete/", DeleteTestSuiteSectionAPIView.as_view()),
     path("<str:project_id>/", TestSuitesAPIView.as_view()),
     path(
         "<str:project_id>/actions/<str:test_suite_id>/",

@@ -338,6 +338,25 @@ class GetTestSuitesSectionsAPIView(GenericAPIView):
             data=self.get_serializer(sectrions, many=True).data,
             message="Test suite sections found."
         )
+
+class DeleteTestSuiteSectionAPIView(GenericAPIView):
+    """Delete a test suite section by its id."""
+    permission_classes = (HasProjectAccess,)
+
+    def delete(self, request: Request, project_id: str, section_id: str) -> Response:
+        """Delete a section with given id"""
+        project = get_project_by_id(project_id)
+        if not project:
+            return CustomResponse.not_found(message="Project not found.")
+        
+        section = get_section_by_id(section_id)
+        if not section:
+            return CustomResponse.not_found(message="Test Suite not found.")
+        section.delete()
+        return CustomResponse.success(
+            message="Section deleted successfully.",
+            status_code=204
+        )
         
 class AddTestCaseToTestSuiteSectionAPIView(GenericAPIView):
     """Add a test case to test suite section"""

@@ -144,7 +144,7 @@
                     <div class="row">
                         {#each project.teams as member}
                             <div class="col-2">
-                                <a href="/members/{member.id}"
+                                <a class="text-primary" href="/members/{member.id}"
                                     >@{member.first_name}</a
                                 >
                             </div>

@@ -115,5 +115,15 @@ export async function postNewTestCase(data){
     } catch (err) {
         console.log(err);
         return false;
-    }
+    };
+};
+
+export async function deleteSection(projectID, sectionID){
+    try{
+        const deleted = await axios.delete(`test_suites/${projectID}/section/${sectionID}/delete/`, config);
+        return true;
+    } catch (err){
+        console.log(err);
+        return false;
+    };
 };

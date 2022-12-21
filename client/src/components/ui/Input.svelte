@@ -7,10 +7,16 @@
 </script>
 
 <div class="form-group p-2 mb-2">
-    <strong>
-        <label for={id}>{title}</label>
-    </strong>
-    <input bind:value use:typeAction disabled={disabled}
-        class="form-control mt-2 input" id={id}
-    >
+    {#if title}
+        <strong>
+            <label for={id}>{title}</label>
+        </strong>
+        <input bind:value use:typeAction disabled={disabled}
+            class="form-control mt-2 input" id={id}
+        >
+    {:else}
+        <input bind:value use:typeAction disabled={disabled}
+            class="form-control mt-2 input" id={id}
+        >
+    {/if}
 </div>
