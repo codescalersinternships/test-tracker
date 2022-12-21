@@ -49,13 +49,13 @@
         class:is-active={hovering === index}>
         <div class="card test_case_card">
           <Dropdown>
-            <li>
+            <!-- <li>
               <button
                   class="dropdown-item text-primary drop-size plus-hover"
                   on:click={() => {}}
                   >Edit
               </button>
-            </li>
+            </li> -->
             <li>
               <button
                   class="dropdown-item text-danger drop-size plus-hover"
