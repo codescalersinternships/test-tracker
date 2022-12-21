@@ -67,20 +67,21 @@ export function formFields() {
                         "content":"",
                     }
                 };
-            } else if (path.includes(`/projects/${projectID}/test-suites/${pram}`)) {
-                objectsModels["test_case"] = {
-                    "message": "New Test Case",
-                    "url": `/test_cases/suites/${pram}/`,
-                    "fields":{
-                        "title":"",
-                        "description":"",
-                        "test_steps":"",
-                        "expected_result":"",
-                        "test_suite":pram,
-                        "project_id":projectID,
-                    }
-                };
-            }
+            } 
+            // else if (path.includes(`/projects/${projectID}/test-suites/${pram}`)) {
+            //     objectsModels["test_case"] = {
+            //         "message": "New Test Case",
+            //         "url": `/test_cases/suites/${pram}/`,
+            //         "fields":{
+            //             "title":"",
+            //             "description":"",
+            //             "test_steps":"",
+            //             "expected_result":"",
+            //             "test_suite":pram,
+            //             "project_id":projectID,
+            //         }
+            //     };
+            // }
         }
         objectsModels["test_run"] = {
             "message": "New Test Run",

@@ -105,7 +105,7 @@
 <div class="modal update-modal" tabindex="-1"
     style={`display: ${data.showPostModal ? "block" : "none"};`}
     >
-    <div class:modal-xl="{current === 'test_case' || current === 'test_run'}" 
+    <div class:modal-xl="{current === 'test_run'}" 
         class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body p-4">
@@ -172,27 +172,6 @@
                                 showAlert = {true} 
                                 message = {"You have to create at least one test plan, before creating a test suite."} 
                                 _class = {"warning"}
-                            />
-                        {/if}
-                    {:else if data.obj == 'test_case'}
-                        <TextArea
-                            bind:value={data.fields.description}
-                            title="Description"
-                        />
-                        <TextArea
-                            bind:value={data.fields.test_steps}
-                            title="Test Steps"
-                        />
-                        <TextArea
-                            bind:value={data.fields.expected_result}
-                            title="Expected Result"
-                        />
-                        {#if projectRequirements && projectRequirements.length > 0}
-                            <AreaSelect
-                                objects={projectRequirements}
-                                bind:value={data.fields.requirement}
-                                id={"select-testcase-requirement"}
-                                labelTitle={"Verify requirement"}
                             />
                         {/if}
                     {:else if data.obj == 'test_run'}

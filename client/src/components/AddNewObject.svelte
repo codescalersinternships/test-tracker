@@ -24,7 +24,7 @@
         <span slot="dropdown-li">
             {#each Object.entries(fields) as [key, value]}
                 <li>
-                    <button class="dropdown-item plus-color plus-hover"
+                    <button class="dropdown-item text-primary plus-color primary-hover"
                         on:click={() => createNewObj(key)}>
                         {value.message}
                     </button>

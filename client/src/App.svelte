@@ -185,6 +185,11 @@
             background: var(--text-primary) !important;
             color: var(--text-light) !important;
         }
+        .add-obj{
+            background: var(--text-primary);
+            line-height: 42px !important;
+            font-size: 23px;
+        }
         .plus-background{
             background: var(--text-danger) !important;
         }
@@ -193,6 +198,9 @@
             border-radius: 0px!important;
         }
         .plus-hover{
+            padding: 15px;
+        }
+        .primary-hover{
             padding: 15px;
         }
         .drop-size{
@@ -216,8 +224,12 @@
             background: var(--text-danger);
             color: var(--text-light);
         }
-        .plus-hover:focus{
-            background: var(--text-danger) !important;
+        .primary-hover:hover{
+            background: var(--text-primary);
+            color: var(--text-light)!important;
+        }
+        .primary-hover:focus{
+            background: var(--text-primary) !important;
             color: var(--text-light) !important;
         }
         .form-check-input:checked:focus:before,

@@ -32,10 +32,5 @@
             text-decoration: none !important;
             color: #5a79b1 !important;
         }
-        .add-obj{
-            background: #bf4e62;
-                line-height: 42px;
-                font-size: 28px;
-        }
     </style>
 </svelte:head>
