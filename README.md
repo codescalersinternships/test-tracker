@@ -16,3 +16,10 @@
     <li>Run all of test cases that you have and mark whoso fail and whoso success</li>
 </ul>
 .
+
+
+### To run instance in local machine
+```sh
+    $ make runserver
+    $ make runclient
+```
