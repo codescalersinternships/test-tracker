@@ -1,5 +1,10 @@
 <script>
-    export let objects, id, labelTitle, value, user=false, onClick;
+    export let objects;
+    export let id;
+    export let labelTitle;
+    export let value;
+    export let user=false;
+    export let onClick;
 </script>
 
 <div class="form-group p-2 mb-3">

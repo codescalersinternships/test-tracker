@@ -21,7 +21,7 @@
         formDisabled = true;
         const accessToken = await getToken(code);
         const user = await getUser(accessToken);
-        const token = user.data.data.access_token;
+        const token = user.data.results.access_token;
         localStorage.setItem("token", token);
         window.location.href = '/';
         loadingGithub = false;

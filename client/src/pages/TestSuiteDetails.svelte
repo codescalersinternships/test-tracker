@@ -28,7 +28,7 @@
                 `test_suites/${projectID}/actions/${suiteID}/`,
                 config
             );
-            testSuite = responseSuites.data.data;
+            testSuite = responseSuites.data.results;
             testSuiteCopy = testSuite;
         } catch (error) {
             if (error.response.status == 404) {

@@ -2,9 +2,10 @@
     import { onMount } from "svelte";
     import { runTestCaseFields } from "../healpers/fields";
     import axios from "../healpers/axios";
-    import NavBar from "../components/NavBar.svelte"
-    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte"
-    import Alert from "../components/ui/Alert.svelte"
+    import NavBar from "../components/NavBar.svelte";
+    import LoodingSpiner from "../components/ui/LoodingSpiner.svelte";
+    import Alert from "../components/ui/Alert.svelte";
+    import snarkdown from "snarkdown";
 
     export let user;
 
@@ -36,8 +37,8 @@
             `/test_runs/projects/${projectID}/runs/${testRunID}/cases/`,
             [],config
         );
-        testCases = testCasesResponse.data.data;
-        testRun = testRunDetails.data.data;
+        testCases = testCasesResponse.data.results
+        testRun = testRunDetails.data.results;
         testCase = testCases[0];
         loading = false;
     });
@@ -47,7 +48,7 @@
         let body = runTestCaseFields(type);
         body.comments = comment;
         const response = await axios.put(`test_cases/project/${projectID}/${testCase.id}/run/`, body, config);
-        const caseResponse = response.data.data;
+        const caseResponse = response.data.results
         const indx = testCases.findIndex((c) => c.id === caseResponse.id);
         testCases = testCases;
         testCases.splice(indx, 1);
@@ -146,19 +147,19 @@
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Title</h6>
-                                    <span class="text-primary f-18">{testCase.title}</span>
+                                    <span class="text-primary f-18">{@html snarkdown(testCase.title)}</span>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Description</h6>
-                                    <span class="text-primary f-18">{testCase.description}</span>
+                                    <span class="text-primary f-18">{@html snarkdown(testCase.description)}</span>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Test steps</h6>
-                                    <span class="text-primary f-18">{testCase.test_steps}</span>
+                                    <span class="text-primary f-18">{@html snarkdown(testCase.test_steps)}</span>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Expected results</h6>
-                                    <span class="text-primary f-18">{testCase.expected_result}</span>
+                                    <span class="text-primary f-18">{@html snarkdown(testCase.expected_result)}</span>
                                 </div>
                                 <div class="table-content p-2">
                                     <h6>Actual result / comments</h6>
@@ -204,9 +205,11 @@
                     <Alert 
                         showAlert = {true} 
                         message = {
-                            "There are no test cases related to this test suite, " + 
-                            "So try to create new on by pressing the + button on the navbar inside any test suite related to this test run."
-                        } 
+                            `
+                            There are currently no test cases associated with this test suite.
+                            To address this, please generate new test cases by selecting the + button on the navigation bar within any test suite associated with this test run.
+                            `
+                        }
                         _class = {'info'}
                     />
                 {/if}

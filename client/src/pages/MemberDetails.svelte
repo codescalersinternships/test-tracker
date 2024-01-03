@@ -17,7 +17,7 @@
         var memberID = path.split("/")[2];
         try {
             const response = await axios.get(`members/${memberID}/`, config);
-            member = response.data.data;
+            member = response.data.results
         } catch (err) {
             if (err.response.status === 404) {
                 window.location.href = "/not-found";

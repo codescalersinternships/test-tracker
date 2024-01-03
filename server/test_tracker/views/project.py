@@ -182,7 +182,7 @@ class AddMemberToProjectAPIView(GenericAPIView):
         return CustomResponse.success(status_code=204)
 
 
-class GetLast5ProjectsUpdatedAPIView(GenericAPIView):
+class GetRecentProjectsUpdatedAPIView(GenericAPIView):
     """
     * Usage
     Class to get last 5 Updated
@@ -206,7 +206,12 @@ class GetLast5ProjectsUpdatedAPIView(GenericAPIView):
             ).order_by("-modified")
         else:
             projects = Project.objects.filter(user=request.user).order_by("-modified")
-        projects = projects[:5]
+        
+        count = request.query_params.get("count")
+        if not count:
+            count = 5
+
+        projects = projects[:int(count)]
 
         return CustomResponse.success(
             message="Success projects found.",
@@ -214,7 +219,7 @@ class GetLast5ProjectsUpdatedAPIView(GenericAPIView):
         )
 
 
-class GetActivityOfLast5ProjectsAPIView(GenericAPIView):
+class GetRecentProjectsActivityAPIView(GenericAPIView):
     """
     * Usage
     This class to concatenate the activity of the last 5 projects updated.
@@ -231,7 +236,12 @@ class GetActivityOfLast5ProjectsAPIView(GenericAPIView):
             ).order_by("-modified")
         else:
             projects = Project.objects.filter(user=request.user).order_by("-modified")
-        projects = projects[:5]
+
+        count = request.query_params.get("count")
+        if not count:
+            count = 5
+
+        projects = projects[:int(count)]
         result = []
 
         for project in projects:

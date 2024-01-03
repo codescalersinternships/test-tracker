@@ -24,7 +24,7 @@
     onMount(async () => {
         try {
             const response = await axios.get(`project/${projectID}/`, config);
-            project = await response.data.data;
+            project = await response.data.results
             activity = project.activity;
         } catch (err) {
             if (err.response.status === 404 || err.response.status === 403) {

@@ -18,7 +18,7 @@ export async function postNewObject(data) {
             const response = await axios.post(
                 data.url, data.fields, config
             );
-            return {class:"success", message:response.data.message, data: response.data.data};
+            return {class:"success", message:response.data.message, data: response.data.results};
         }
     } catch (err) {
         if (err.response) {

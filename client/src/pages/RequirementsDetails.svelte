@@ -26,7 +26,7 @@
                 `requirements/projects/${projectID}/details/${projectReqID}/`,
                 config
             );
-            RequirementDocs = responseReq.data.data;
+            RequirementDocs = responseReq.data.results;
             requirements = RequirementDocs.requirements;
             requirementsCopy = requirements;
         } catch (error) {

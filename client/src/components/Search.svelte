@@ -19,7 +19,7 @@
             const response = await axios.get(
                 `${request}${word}/`,config
             )
-            objects = response.data.data
+            objects = response.data.results
         }else{
             objects = objectsCopy
         }

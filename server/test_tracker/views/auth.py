@@ -136,7 +136,7 @@ class UpdateUserSettingsAPIView(GenericAPIView):
             message="Profile update failed.",
         )
 
-class GetHubAccessTokenAPIView(GenericAPIView):
+class GithubAccessTokenAPIView(GenericAPIView):
     serializer_class = GitHubRequestToGetAccessTokenSerializers
     
     def post(self, request: Request) -> CustomResponse:
@@ -153,7 +153,7 @@ class GetHubAccessTokenAPIView(GenericAPIView):
             errors=serializer.errors
         )
 
-class GetHubUserDataAPIView(GenericAPIView):
+class GithubUserDataAPIView(GenericAPIView):
     serializer_class = GitHubUserDataSerializers
 
     def post(self, request: Request) -> CustomResponse:
@@ -166,7 +166,7 @@ class GetHubUserDataAPIView(GenericAPIView):
             })
             response = response.json()
             try:
-                user = User.objects.get(email=response.get("email"))
+                User.objects.get(email=response.get("email"))
             except:
                 User.objects.create(
                     email = response.get("email"),
@@ -182,15 +182,15 @@ class GetHubUserDataAPIView(GenericAPIView):
                 "email" : sys_user.email,
                 "password" : sys_user.github_token
             }
-            login = requests.post(
+            login_response = requests.post(
                 f"{config('SERVER_URL')}/api/auth/login/",
                 data=json.dumps(cerds),
                 headers={
                     "Content-Type": "application/json"
                 }
             )
-            return CustomResponse.success(data=login.json(), message="User found")
+            return CustomResponse.success(data=login_response.json(), message="User found")
         return CustomResponse.bad_request(
             message="Please make sure that you entered a vaild data", 
-            errors=serializer.errors
+            error=serializer.errors
         )

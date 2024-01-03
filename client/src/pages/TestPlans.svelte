@@ -26,7 +26,7 @@
             `/test_plan/${projectID}/`,
             config
         );
-        testPlans = responsePlans.data.data;
+        testPlans = responsePlans.data.results;
         testPlansCopy = testPlans;
     });
 

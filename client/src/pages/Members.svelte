@@ -38,7 +38,7 @@
     onMount(async () => {
         try {
             const response = await axios.get("/members/all/", config);
-            members = await response.data.data;
+            members = await response.data.results
             membersCopy = members;
         } catch (err) {
             if (err.response.status === 403) {

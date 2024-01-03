@@ -13,7 +13,7 @@
         onMount(async () => {
             try {
                 const response = await axios.get(`auth/invitation/?signature=${signature}`, data)
-            if (response.status === 200) { data = response.data.data }} 
+            if (response.status === 200) { data = response.data.results }} 
             catch(err) {
                 window.location.href = '/not-found'
             }

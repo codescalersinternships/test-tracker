@@ -18,7 +18,7 @@
         const response = await axios.get(
             `/test_suites/${projectID}/section/${testSuite.id}/`, config
         );
-        sections = response.data.data;
+        sections = response.data.results
         isLoading = false;
     });
 

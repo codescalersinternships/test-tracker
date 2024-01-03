@@ -20,7 +20,7 @@
     onMount(async () => {
         try {
             const response = await axios.get(`project/${projectID}/account-members-not-in-project-members/`, config);
-            members = response.data.data;
+            members = response.data.results
         } catch (err) {
             if (err.response.status === 404) {
                 window.location.href = "/not-found";

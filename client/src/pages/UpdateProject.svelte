@@ -34,7 +34,7 @@
     onMount(async () => {
         try {
             const response = await axios.get(`project/${projectID}/`, config);
-            project = await response.data.data;
+            project = await response.data.results
         } catch (err) {
             if (err.response.status === 404 || err.response.status === 403) {
                 window.location.href = "/not-found";
@@ -49,7 +49,7 @@
         }
         try{
             const response = await axios.put(`project/${projectID}/`, body, config);
-            project = response.data.data;
+            project = response.data.results
             showAlert = true;
             message = "Project updated successfully.";
             _class = "success";

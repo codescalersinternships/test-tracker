@@ -11,7 +11,7 @@ export async function getToken(code){
         code
     });
     console.log(_getToken);
-    return _getToken.data.data.access_token;
+    return _getToken.data.results.access_token;
 };
 
 export async function getUser(accessToken){

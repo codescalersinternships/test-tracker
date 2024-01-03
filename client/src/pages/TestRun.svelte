@@ -45,9 +45,9 @@
             `/test_runs/projects/${projectID}/last_week_report/`,
             config
         );
-        members = memberResponse.data.data;
-        testRuns = runsResponse.data.data;
-        report = lastWeekReport.data.data;
+        members = memberResponse.data.results
+        testRuns = runsResponse.data.results
+        report = lastWeekReport.data.results;
         testRunsCopy = testRuns;
     });
 
@@ -74,13 +74,13 @@
                 )}`,
                 config
             );
-            testRuns = response.data.data;
+            testRuns = response.data.results
         } else if (member.length !== 0 && status.length === 0) {
             const response = await axios.get(
                 `/test_runs/${projectID}/search/?member=${member}`,
                 config
             );
-            testRuns = response.data.data;
+            testRuns = response.data.results
         } else {
             const response = await axios.get(
                 `/test_runs/${projectID}/search/?member=${member}&status=${status.replace(
@@ -89,7 +89,7 @@
                 )}`,
                 config
             );
-            testRuns = response.data.data;
+            testRuns = response.data.results
         }
     }
 </script>
@@ -132,6 +132,7 @@
                                 bind:value={status}
                                 id={"select-status"}
                                 labelTitle={"Status"}
+                                onClick={() => {}}
                             />
                         </div>
                         <div class="col-2 pb-4 ">
@@ -205,7 +206,7 @@
                                             <div class="card-body pb-2">
                                                 <h5 class="card-title text-primary">
                                                     {#if run.assigned_user && run.assigned_user.first_name}
-                                                        {run.assigned_user.first_name}-{run.title}
+                                                        @{run.assigned_user.full_name} - [{run.title}]
                                                     {:else}
                                                         {run.title}
                                                     {/if}

@@ -32,7 +32,7 @@
                 form.url, form.fields, config
             );
             dispatch('message', {
-                section: response.data.data
+                section: response.data.results
             });
             alertMessage = response.data.message;
             alertClassName = "success";

@@ -41,8 +41,8 @@
             config
         );
         const memberResponse = await axios.get(`members/project/${projectID}/members/`, config);
-        testRun = testRunDetails.data.data;
-        members = memberResponse.data.data;
+        testRun = testRunDetails.data.results;
+        members = memberResponse.data.results
         testSuites = testRun.test_suites;
         testSuitesCopy = testSuites;
     });
@@ -76,7 +76,7 @@
                     [], config
                 );
                 if (response.data.status === 201){
-                    testRun.assigned_user = response.data.data.assigned_user;
+                    testRun.assigned_user = response.data.results.assigned_user;
                     message = response.data.message;
                     _class = "success";
                     showAlert = true;

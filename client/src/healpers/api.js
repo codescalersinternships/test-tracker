@@ -8,18 +8,18 @@ let config = {
 
 export async function loadLast5ProjectsUpdated(){
     const responseProjects = await axios.get(
-        "/project/last-5-projects/",
+        "/project/recent/?count=5",
         config
     );
-    return await responseProjects.data.data;
+    return await responseProjects.data.results;
 }
 
 export async function loadLast5ProjectsActivity(){
     const responseActivity = await axios.get(
-        "/project/last-5-projects/activity/",
+        "/project/recent/activity/?count=5",
         config
     );
-    return await responseActivity.data.data;
+    return await responseActivity.data.results;
 }
 
 export async function loadProjects(){
@@ -27,7 +27,7 @@ export async function loadProjects(){
         "/dashboard/projects/",
         config
     );
-    return await responseProjects.data.data;
+    return await responseProjects.data.results;
 }
 
 export async function inviteNewMember(data){
@@ -41,7 +41,7 @@ export async function inviteNewMember(data){
         const response = await axios.post(
             "/dashboard/members/", data, config
         );
-        return {class:"success", message:response.data.message, data: response.data.data};
+        return {class:"success", message:response.data.message, data: response.data.results};
     }
 }
 
@@ -52,7 +52,7 @@ export async function loadTestSuiteBasedOnProjectID(projectID){
                 `/test_suites/${projectID}/`,
                 config
             );
-            return await responseSuites.data.data;
+            return await responseSuites.data.results;
         } catch (err) {
             return false;
         }
@@ -66,7 +66,7 @@ export async function loadTestPlanBasedOnProjectID(projectID){
                 `/test_plan/${projectID}/`,
                 config
             );
-            return responsePlans.data.data;
+            return responsePlans.data.results;
         } catch (err) {
             return false;
         }
@@ -80,7 +80,7 @@ export async function loadProjectRequirementsBasedOnProjectID(projectID){
                 `/test_cases/project/${projectID}/requirements/`,
                 config
             );
-            return responsePlans.data.data;
+            return responsePlans.data.results;
         } catch (err) {
             return false;
         }
@@ -93,7 +93,7 @@ export async function addNewCaseToSuite(projectID, testSuiteSectionID, testCaseI
             `/test_suites/${projectID}/section/add/?TestSuiteSectionID=${testSuiteSectionID}&TestCaseID=${testCaseID}`,
             [], config
         );
-        return response.data.data;
+        return response.data.results
     } catch (err) {
         throw new Error(err.message);
     }
@@ -102,7 +102,7 @@ export async function addNewCaseToSuite(projectID, testSuiteSectionID, testCaseI
 export async function GetTestCasesBasedOnTestSuite(testSuiteID){
     try {
         const response = await axios.get(`test_cases/test_suite/${testSuiteID}/`, config);
-        return response.data.data;
+        return response.data.results
     } catch (err) {
         return false;
     }
@@ -111,7 +111,7 @@ export async function GetTestCasesBasedOnTestSuite(testSuiteID){
 export async function postNewTestCase(data){
     try {
         const response = await axios.post(`/test_cases/suites/${data.test_suite}/?section_id=${data.section_id}`, data, config);
-        return response.data.data;
+        return response.data.results
     } catch (err) {
         console.log(err);
         return false;

@@ -30,7 +30,7 @@
                 `/test_plan/${projectID}/actions/${planID}/`,
                 config
             );
-            testPlansContents = responseContents.data.data;
+            testPlansContents = responseContents.data.results;
             temps = testPlansContents.temps;
             tempsCopy = temps;
         } catch (error) {

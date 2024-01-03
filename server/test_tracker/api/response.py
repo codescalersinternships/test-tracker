@@ -1,23 +1,24 @@
-from typing import Optional
+from typing import Any, List, Optional, Union
 from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
-    HTTP_403_FORBIDDEN,
+    HTTP_401_UNAUTHORIZED,
 )
 
 
 class CustomResponse:
-    """Custom response methods"""
+    """Custom response method"""
 
     @staticmethod
     def success(
-        data: list = [],
+        data: Union[List[Any], None] = None,
         message: Optional[str] = None,
         status_code: Optional[int] = None,
     ) -> Response:
-        """Http success response method including [CREATE, UPDATE, GET, DELETE]"""
+        """success response method"""
+        """ include GET, POST, DELETE, and PUT request"""
 
         if not message:
             message = "Success"
@@ -25,7 +26,10 @@ class CustomResponse:
             status_code = HTTP_200_OK
 
         return Response(
-            {"message": message, "data": data, "status": status_code},
+            {
+                "message": message,
+                "results": data,
+            },
             status=status_code,
         )
 
@@ -33,35 +37,38 @@ class CustomResponse:
     def not_found(
         message: Optional[str] = None, status_code: int = HTTP_404_NOT_FOUND
     ) -> Response:
-        """Http not found response method"""
+        """not found response method"""
 
         if not message:
-            message = "Not Found"
+            message = "Not found"
 
-        return Response({"message": message, "status": status_code}, status=status_code)
+        return Response({"message": message}, status=status_code)
 
     @staticmethod
     def bad_request(
-        error: list = [],
         message: Optional[str] = None,
-        data: list = [],
+        error: Union[List[Any], None] = None,
+        data: Union[List[Any], None] = None,
         status_code: int = HTTP_400_BAD_REQUEST,
     ) -> Response:
-        """Http bad request method"""
+        """bad request response method"""
         if not message:
-            message = "Make sure that you entered a valid data."
-
+            message = "Make sure you entered a valid data."
         return Response(
-            {"message": message, "data": data, "error": error, "status": status_code},
+            {
+                "results": data,
+                "message": message,
+                "error": error,
+            },
             status=status_code,
         )
 
     @staticmethod
     def unauthorized(
-        message: Optional[str] = None, status_code: int = HTTP_403_FORBIDDEN
+        message: Optional[str] = None, status_code: int = HTTP_401_UNAUTHORIZED
     ) -> Response:
-        """Http bad request method"""
+        """unauthorized response method"""
         if not message:
             message = "You are not authorized to access this resource."
 
-        return Response({"message": message, "status": status_code}, status=status_code)
+        return Response({"message": message}, status=status_code)

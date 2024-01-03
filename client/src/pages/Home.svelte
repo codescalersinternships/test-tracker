@@ -93,30 +93,32 @@
                         on:message={handleSearch}
                     />
                 </div>
-                <div class="pt-5">
-                    <p class="last-projects">
-                        Last <strong class="text-primary">{projects.length}</strong> of
-                        {projects.length === 1 ? "Project" : "Projects"} Updated
-                    </p>
-                    <div class="row p-1">
-                        {#each projects as project}
-                            <ProjectCard {project}>
-                                <button
-                                    class="dropdown-item plus-color plus-hover"
-                                    on:click={setProject.bind(
-                                        undefined,
-                                        project
-                                    )}>Delete</button
-                                >
-                            </ProjectCard>
-                        {/each}
+                {#if projects.length}
+                    <div class="pt-5">
+                        <p class="last-projects">
+                            Last <strong class="text-primary">{projects.length}</strong> of
+                            updated {projects.length === 1 ? "project" : "projects"}.
+                        </p>
+                        <div class="row p-1">
+                            {#each projects as project}
+                                <ProjectCard {project}>
+                                    <button
+                                        class="dropdown-item plus-color plus-hover"
+                                        on:click={setProject.bind(
+                                            undefined,
+                                            project
+                                        )}>Delete</button
+                                    >
+                                </ProjectCard>
+                            {/each}
+                        </div>
+                        <div class="activity">
+                            {#if activity && activity.length > 0}
+                                <ActivityTable activity={activity} />
+                            {/if}
+                        </div>
                     </div>
-                    <div class="activity">
-                        {#if activity && activity.length > 0}
-                            <ActivityTable activity={activity} />
-                        {/if}
-                    </div>
-                </div>
+                {/if}
             {:else if loadData}
                 <LoodingSpiner />
             {:else}

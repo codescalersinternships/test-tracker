@@ -7,8 +7,8 @@ from server.test_tracker.views.auth import (
     MyTokenRefreshView,
     RegisterAPIView,
     UpdateUserSettingsAPIView,
-    GetHubAccessTokenAPIView,
-    GetHubUserDataAPIView
+    GithubAccessTokenAPIView,
+    GithubUserDataAPIView
 )
 
 
@@ -19,6 +19,6 @@ urlpatterns = [
     path("token/refresh/", MyTokenRefreshView.as_view()),
     path("invitation/", DecodeAndVerifySignatureAPIView.as_view()),
     path("settings/", UpdateUserSettingsAPIView.as_view()),
-    path("github/access_token/", GetHubAccessTokenAPIView.as_view()),
-    path("github/user/", GetHubUserDataAPIView.as_view()),
+    path("github/access_token/", GithubAccessTokenAPIView.as_view()),
+    path("github/user/", GithubUserDataAPIView.as_view()),
 ]

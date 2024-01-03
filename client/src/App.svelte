@@ -44,10 +44,8 @@
     onMount(async () => {
         setTheme(mode);
         isAuthenticated();
-        console.log("watch");
         const userDetails = await axios.get('/dashboard/user/', config);
-        console.log(userDetails.status);
-        user = await userDetails.data.data
+        user = await userDetails.data.results
         if (!user) {
             return {
                 status: 302,

@@ -26,7 +26,7 @@
             `/test_suites/${projectID}/`,
             config
         );
-        testSuites = responseSuites.data.data;
+        testSuites = responseSuites.data.results;
         testSuitesCopy = testSuites;
     });
 

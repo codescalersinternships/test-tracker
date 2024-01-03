@@ -35,7 +35,7 @@
     onMount(async () => {
         loading = true;
         const response = await axios.get(`test_runs/month/report/cases/?run=${testRunID}&month=${month+1}`, config)
-        report = response.data.data;
+        report = response.data.results
         loading = false;
     });
 </script>
