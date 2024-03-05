@@ -25,6 +25,8 @@ jobs:
           echo EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} >> .env
           echo EMAIL_HOST=${{ secrets.EMAIL_HOST }} >> .env
           echo ENV=${{ secrets.EMAIL_HOST }} >> .env
+          echo SERVER_DOMAIN_NAME=${{ secrets.SERVER_DOMAIN_NAME }} >> .env
+          echo CLIENT_DOMAIN_NAME=${{ secrets.CLIENT_DOMAIN_NAME }} >> .env
 
           cat .env
     - name: Set up Python ${{ matrix.python-version }}
