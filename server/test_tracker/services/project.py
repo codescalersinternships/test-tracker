@@ -2,10 +2,10 @@
 
 
 from datetime import datetime
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.dashboard import Member, Project
-from server.test_tracker.models.project import TestPlan, TestRun
-from server.test_tracker.models.users import User
+from test_tracker.api.response import CustomResponse
+from test_tracker.models.dashboard import Member, Project
+from test_tracker.models.project import TestPlan, TestRun
+from test_tracker.models.users import User
 
 
 def get_test_plan_by_id(test_plan_id: str):

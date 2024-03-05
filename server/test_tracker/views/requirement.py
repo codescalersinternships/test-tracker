@@ -6,26 +6,26 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 from django.db.models import Q
 
-from server.test_tracker.api.permission import HasProjectAccess
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.project import RequirementDocs, Requirements
-from server.test_tracker.serializers.requirement import (
+from test_tracker.api.permission import HasProjectAccess
+from test_tracker.api.response import CustomResponse
+from test_tracker.models.project import RequirementDocs, Requirements
+from test_tracker.serializers.requirement import (
     RequirementDocsSerializer,
     RequirementsSerializer,
 )
-from server.test_tracker.services.dashboard import get_project_by_id
-from server.test_tracker.services.project import update_activity
-from server.test_tracker.services.requirement import (
+from test_tracker.services.dashboard import get_project_by_id
+from test_tracker.services.project import update_activity
+from test_tracker.services.requirement import (
     filter_requirements_based_on_project_requirement,
     filter_requirements_by_project,
     get_project_requirement_by_id,
     get_requirement_doc_by_id,
 )
-from server.test_tracker.utils.handler import (
+from test_tracker.utils.handler import (
     RequirementDocssHandling,
     RequirementHandling,
 )
-from server.test_tracker.utils.validations import Validator
+from test_tracker.utils.validations import Validator
 
 
 class PostNewRequirementDocsAPIView(GenericAPIView):

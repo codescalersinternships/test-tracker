@@ -1,5 +1,5 @@
 """Everything related to the test case"""
-from server.test_tracker.models.project import TestCases, TestSuites
+from test_tracker.models.project import TestCases, TestSuites
 
 
 def get_test_case_by_id(test_case: str) -> TestCases:

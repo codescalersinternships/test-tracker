@@ -11,9 +11,9 @@ from django.contrib.auth.hashers import check_password
 
 
 from typing import Dict, Any
-from server.test_tracker.models.dashboard import Member
-from server.test_tracker.models.users import User
-from server.test_tracker.services.users import (
+from test_tracker.models.dashboard import Member
+from test_tracker.models.users import User
+from test_tracker.services.users import (
     get_user_by_email_for_login,
     get_user_by_id,
 )

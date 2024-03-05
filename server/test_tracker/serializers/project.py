@@ -1,8 +1,8 @@
 """Everything related to the project."""
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
 
-from server.test_tracker.models.project import TestPlan, TestSuitesSection
-from server.test_tracker.serializers.test_cases import TestCaseSerializer
+from test_tracker.models.project import TestPlan, TestSuitesSection
+from test_tracker.serializers.test_cases import TestCaseSerializer
 
 
 class TestPlanSerializer(ModelSerializer):

@@ -1,6 +1,6 @@
 from pyini_parser.configure.parser import ConfigParser
 
-from server.components import BASE_DIR
+from components import BASE_DIR
 
 
 class TestPlanTemp:

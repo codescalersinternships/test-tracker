@@ -1,5 +1,5 @@
 from datetime import timedelta
-from server.components import config, BASE_DIR
+from components import config, BASE_DIR
 
 
 SECRET_KEY = config("DJANGO_SECRET_KEY")
@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "server.test_tracker",
+    "test_tracker",
     # Third party
     "rest_framework",
     "corsheaders",
@@ -39,7 +39,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "server.urls"
+ROOT_URLCONF = "urls"
 
 TEMPLATES = [
     {
@@ -57,7 +57,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "server.wsgi.application"
+WSGI_APPLICATION = "wsgi.application"
 
 
 # Database
@@ -98,7 +98,7 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
         "rest_framework.parsers.MultiPartParser",
     ],
-    "DEFAULT_PAGINATION_CLASS": "server.test_tracker.api.pagination.CustomPagination",
+    "DEFAULT_PAGINATION_CLASS": "test_tracker.api.pagination.CustomPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",

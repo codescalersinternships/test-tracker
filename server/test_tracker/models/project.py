@@ -1,9 +1,9 @@
 """This file contains all sub tables based on the project table on 'models/dashboard' """
 from django.db import models
-from server.test_tracker.models.abstracts import TimeStampedModel
-from server.test_tracker.models.dashboard import Member, Project
+from test_tracker.models.abstracts import TimeStampedModel
+from test_tracker.models.dashboard import Member, Project
 
-from server.test_tracker.models.users import User
+from test_tracker.models.users import User
 
 
 class PLAN_CHOICES(models.TextChoices):
