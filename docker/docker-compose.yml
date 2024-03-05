@@ -1,0 +1,72 @@
+version: "3"
+
+services:
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - test_tracker-network
+
+  backend:
+    build:
+      context: ../
+      dockerfile: ./docker/backend.Dockerfile
+    container_name: test_tracker-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # Backend configurations
+      - ENV=${ENV}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      # Mail service configurations
+      - EMAIL=${EMAIL}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - EMAIL_HOST=${EMAIL_HOST}
+      # Servers configurations
+      - SERVER_DOMAIN_NAME=${SERVER_DOMAIN_NAME}
+      - CLIENT_DOMAIN_NAME=${CLIENT_DOMAIN_NAME}
+      # Database configurations
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_HOST=postgres_db
+    depends_on:
+      - postgres_db
+    volumes:
+      - backend_media:/server/mediafiles/profile_image
+    networks:
+      - test_tracker-network
+
+  frontend:
+    build:
+      context: ../
+      dockerfile: ./docker/frontend.Dockerfile
+    container_name: test_tracker-frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_DOMAIN_NAME_API=${SERVER_DOMAIN_NAME_API}
+    depends_on:
+      - backend
+    networks:
+      - test_tracker-network
+
+volumes:
+  postgres_data:
+  backend_media:
+
+networks:
+  test_tracker-network:
+  backend_media:

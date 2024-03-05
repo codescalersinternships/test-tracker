@@ -183,7 +183,7 @@ class GithubUserDataAPIView(GenericAPIView):
                 "password" : sys_user.github_token
             }
             login_response = requests.post(
-                f"{config('SERVER_URL')}/api/auth/login/",
+                f"http://{config('SERVER_DOMAIN_NAME')}/api/auth/login/",
                 data=json.dumps(cerds),
                 headers={
                     "Content-Type": "application/json"
