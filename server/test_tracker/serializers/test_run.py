@@ -1,8 +1,8 @@
 """Everything related to TestRuns"""
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from server.test_tracker.models.project import TestCases, TestRun, TestSuites
-from server.test_tracker.serializers.test_suites import TestSuitesDetailSerializer
+from test_tracker.models.project import TestCases, TestRun, TestSuites
+from test_tracker.serializers.test_suites import TestSuitesDetailSerializer
 
 
 class LastWeekTestRunReportSheetSerializer(ModelSerializer):
@@ -130,7 +130,7 @@ class TestRunsSerializer(ModelSerializer):
     def get_assigned_user(self, obj):
         """Return assigned user"""
         if obj.assigned_user:
-            from server.test_tracker.serializers.member import ProjectTeamSerializer
+            from test_tracker.serializers.member import ProjectTeamSerializer
 
             return ProjectTeamSerializer(obj.assigned_user).data
 

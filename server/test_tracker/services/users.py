@@ -1,6 +1,6 @@
-from server.test_tracker.models.dashboard import Member
-from server.test_tracker.models.users import User
-from server.test_tracker.services.member import get_member_by_email
+from test_tracker.models.dashboard import Member
+from test_tracker.models.users import User
+from test_tracker.services.member import get_member_by_email
 from django.contrib.auth.hashers import check_password
 
 

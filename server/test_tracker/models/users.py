@@ -8,7 +8,7 @@ from django.contrib.auth.models import (
     AnonymousUser,
 )
 
-from server.test_tracker.models.abstracts import (
+from test_tracker.models.abstracts import (
     TimeStampedModel,
 )
 

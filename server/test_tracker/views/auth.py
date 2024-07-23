@@ -7,10 +7,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from server.test_tracker.api.permission import UserIsAuthenticated
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.users import User
-from server.test_tracker.serializers.auth import (
+from test_tracker.api.permission import UserIsAuthenticated
+from test_tracker.api.response import CustomResponse
+from test_tracker.models.users import User
+from test_tracker.serializers.auth import (
     GitHubRequestToGetAccessTokenSerializers,
     GitHubUserDataSerializers,
     MyTokenObtainPairSerializer,
@@ -19,13 +19,13 @@ from server.test_tracker.serializers.auth import (
     UpdateUserSettingsSerializer,
     UserSerializer,
 )
-from server.test_tracker.services.dashboard import get_signature
-from server.test_tracker.services.users import get_user_by_id, get_user_or_member
+from test_tracker.services.dashboard import get_signature
+from test_tracker.services.users import get_user_by_id, get_user_or_member
 from urllib import parse
 import requests
-from server.components import config
+from components import config
 
-from server.test_tracker.utils.generate_password import generate_password
+from test_tracker.utils.generate_password import generate_password
 
 
 class RegisterAPIView(GenericAPIView):
@@ -183,7 +183,7 @@ class GithubUserDataAPIView(GenericAPIView):
                 "password" : sys_user.github_token
             }
             login_response = requests.post(
-                f"{config('SERVER_URL')}/api/auth/login/",
+                f"http://{config('SERVER_DOMAIN_NAME')}/api/auth/login/",
                 data=json.dumps(cerds),
                 headers={
                     "Content-Type": "application/json"

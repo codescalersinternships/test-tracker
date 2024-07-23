@@ -1,7 +1,7 @@
 """Everything related to Member"""
 
 
-from server.test_tracker.models.dashboard import Member, Project
+from test_tracker.models.dashboard import Member, Project
 
 
 def get_member_by_email(email: str) -> Member:

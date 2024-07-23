@@ -1,5 +1,5 @@
 from datetime import timedelta
-from server.components import config, BASE_DIR
+from components import config, BASE_DIR
 
 
 SECRET_KEY = config("DJANGO_SECRET_KEY")
@@ -7,8 +7,12 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG") == "ON"
 
-ALLOWED_HOSTS = ["127.0.0.1", "0.0.0.0"]
-
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "0.0.0.0",
+    config("SERVER_DOMAIN_NAME"),  # Server domain
+    config("CLIENT_DOMAIN_NAME"),  # Client domain
+]
 
 # Application definition
 
@@ -19,7 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "server.test_tracker",
+    "test_tracker",
     # Third party
     "rest_framework",
     "corsheaders",
@@ -39,7 +43,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "server.urls"
+ROOT_URLCONF = "urls"
 
 TEMPLATES = [
     {
@@ -57,19 +61,32 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "server.wsgi.application"
+WSGI_APPLICATION = "wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if config("ENV") == "production":
+    # use the postgres db for production process.
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config("DATABASE_NAME"),
+            "USER": config("DATABASE_USER"),
+            "PASSWORD": config("DATABASE_PASSWORD"),
+            "HOST": config("DATABASE_HOST"),
+            "PORT": config("DATABASE_PORT"),
+        }
     }
-}
-
+else:
+    # use the sqlite db for development process.
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -98,7 +115,7 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
         "rest_framework.parsers.MultiPartParser",
     ],
-    "DEFAULT_PAGINATION_CLASS": "server.test_tracker.api.pagination.CustomPagination",
+    "DEFAULT_PAGINATION_CLASS": "test_tracker.api.pagination.CustomPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
@@ -161,13 +178,13 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "test_tracker.User"
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:8080", "http://127.0.0.1:8080", "http://127.0.0.1:8081", "http://localhost:8081"]
-
+CORS_ALLOWED_ORIGINS = [f'https://{config("CLIENT_DOMAIN_NAME")}', f'http://{config("CLIENT_DOMAIN_NAME")}']
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # SMTP Mail service with decouple
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_HOST_USER = config("EMAIL")
-EMAIL_HOST_PASSWORD = config("EPASSWORD")
+EMAIL_HOST_PASSWORD = config("EMAIL_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

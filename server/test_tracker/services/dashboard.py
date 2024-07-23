@@ -1,10 +1,10 @@
 from typing import Dict
 from uuid import UUID
 
-from server.test_tracker.models.dashboard import PERMISSION_CHOICES, Member, Project
-from server.test_tracker.models.project import TestPlan
-from server.test_tracker.models.users import User
-from server.test_tracker.services.member import get_member_by_id
+from test_tracker.models.dashboard import PERMISSION_CHOICES, Member, Project
+from test_tracker.models.project import TestPlan
+from test_tracker.models.users import User
+from test_tracker.services.member import get_member_by_id
 
 
 def get_project_by_id(project_id: str) -> Project or None:

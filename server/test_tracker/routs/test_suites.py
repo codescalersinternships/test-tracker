@@ -1,14 +1,14 @@
 """Everything related to the project test suites, test case"""
 
 from django.urls import path
-from server.test_tracker.views.project import (
+from test_tracker.views.project import (
     DeleteTestSuiteSectionAPIView,
     TestSuitesSectionAPIView,
     GetTestSuitesSectionsAPIView,
     AddTestCaseToTestSuiteSectionAPIView
 )
 
-from server.test_tracker.views.test_suites import (
+from test_tracker.views.test_suites import (
     SearchTestSuiteAPIView,
     TestSuitesAPIView,
     TestSuitesDetailAPIView,

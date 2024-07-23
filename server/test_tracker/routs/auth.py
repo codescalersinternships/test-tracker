@@ -1,6 +1,6 @@
 from django.urls import path
 
-from server.test_tracker.views.auth import (
+from test_tracker.views.auth import (
     DecodeAndVerifySignatureAPIView,
     GetUserAPIView,
     LoginByTokenAPIView,
