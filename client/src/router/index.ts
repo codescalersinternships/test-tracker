@@ -6,11 +6,17 @@
 
 // Composables
 import { createRouter, createWebHistory } from 'vue-router/auto'
+import TodosView from '../views/TodosView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', component: () => import('@/pages/DashboardView.vue') },
+    // Home route
+    { path: '/', name: 'dashboard', component: () => import('@/pages/DashboardView.vue') },
+    // Nav bar routes
+    { path: '/members', name: 'members', component: () => import('@/pages/MembersView.vue') },
+    { path: '/projects', name: 'projects', component: () => import('@/pages/ProjectsView.vue') },
+    { path: '/settings', name: 'settings', component: () => import('@/pages/SettingsView.vue') },
   ],
 })
 
