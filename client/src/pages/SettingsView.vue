@@ -6,7 +6,7 @@
     width="400"
   >
     <template v-slot:title>
-      <span class="font-weight-black">Welcome to Dashboard</span>
+      <span class="font-weight-black">Welcome to Settings</span>
     </template>
 
     <v-card-text class="bg-surface-light pt-4">
