@@ -2,7 +2,7 @@
   import { RouterView } from 'vue-router'
   import NavigationBar from './layouts/NavigationBar.vue'
 
-  const routes = [
+  const menuRoutes = [
 
     {
       displayName: 'New Test Plan',
@@ -21,12 +21,19 @@
       routeName: 'newTestRun',
     },
   ]
+
+  const mainRoutes = [
+    {
+      displayName: 'Settings',
+      routeName: 'settings',
+    },
+  ]
 </script>
 
 <template>
   <v-app>
     <v-main>
-      <NavigationBar />
+      <NavigationBar :main-routes="mainRoutes" :menu-routes="menuRoutes" />
       <RouterView />
     </v-main>
   </v-app>

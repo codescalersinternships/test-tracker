@@ -4,7 +4,7 @@
   >
     <v-spacer />
     <RouterLink
-      v-for="(item,index) in navigationRoutes"
+      v-for="(item,index) in [...defaultMainRoutes, ...additionalMainRoutes]"
       :key="index"
       class="mx-3 text-white bg-teal-darken-3 pa-3 rounded-xl font-weight-black"
       :to="{ name: item.routeName}"
@@ -24,7 +24,7 @@
       </template>
       <v-list>
         <v-list-item
-          v-for="(item,index) in [...defaultRoutes,...additionalRoutes]"
+          v-for="(item,index) in [...defaultMenuRoutes, ...additionalMenuRoutes]"
           :key="index"
         >
           <RouterLink class="mx-3 text-white pa-3 font-weight-black" :to="{ name: item.routeName}">
@@ -69,26 +69,13 @@
         required: false,
         type: Array as PropType<AppRoute[]>,
       },
+      mainRoutes: {
+        required: false,
+        type: Array as PropType<AppRoute[]>,
+      },
     },
+
     setup (props) {
-      const navigationRoutes = [
-        {
-          displayName: 'Dashboard',
-          routeName: 'dashboard',
-        },
-        {
-          displayName: 'Members',
-          routeName: 'members',
-        },
-        {
-          displayName: 'Projects',
-          routeName: 'projects',
-        },
-        {
-          displayName: 'Settings',
-          routeName: 'settings',
-        },
-      ]
       const profileRoutes = [
         {
           displayName: 'Settings',
@@ -100,19 +87,41 @@
         },
       ]
 
-      const defaultRoutes = ref<AppRoute[]>(
+      const defaultMenuRoutes = ref<AppRoute[]>(
         [{
           displayName: 'New Project',
           routeName: 'newProject',
         }]
       )
-      const additionalRoutes = ref<AppRoute[]>(
+      const additionalMenuRoutes = ref<AppRoute[]>(
         props.menuRoutes || [] as AppRoute[]
       )
+
+      const defaultMainRoutes = ref<AppRoute[]>(
+        [
+          {
+            displayName: 'Dashboard',
+            routeName: 'dashboard',
+          },
+          {
+            displayName: 'Members',
+            routeName: 'members',
+          },
+          {
+            displayName: 'Projects',
+            routeName: 'projects',
+          },
+        ]
+      )
+      const additionalMainRoutes = ref<AppRoute[]>(
+        props.mainRoutes || [] as AppRoute[]
+      )
+
       return {
-        defaultRoutes,
-        additionalRoutes,
-        navigationRoutes,
+        defaultMenuRoutes,
+        additionalMenuRoutes,
+        defaultMainRoutes,
+        additionalMainRoutes,
         profileRoutes,
         RouterLink,
       }
