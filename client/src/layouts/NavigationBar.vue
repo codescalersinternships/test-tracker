@@ -6,7 +6,7 @@
     <RouterLink
       v-for="(item,index) in [...defaultMainRoutes, ...additionalMainRoutes]"
       :key="index"
-      class="mx-3 text-white bg-teal-darken-3 pa-3 rounded-xl font-weight-black"
+      class="mx-3 text-white bg-teal-darken-3 pa-3 rounded-lg font-weight-black"
       :to="{ name: item.routeName}"
     >
       {{ item.displayName }}
@@ -136,4 +136,5 @@ a {
   color: inherit;
   font-size: 0.75rem;
 }
+
 </style>

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
+    "@types/vuelidate": "^0.7.21",
     "core-js": "^3.37.1",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
