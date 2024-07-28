@@ -4,7 +4,7 @@
   >
     <v-spacer />
     <RouterLink
-      v-for="(item,index) in [...defaultMainRoutes, ...additionalMainRoutes]"
+      v-for="(item,index) in createMainRoutes(routeStore.routeName)"
       :key="index"
       class="mx-3 text-white bg-teal-darken-3 pa-3 rounded-lg font-weight-black"
       :to="{ name: item.routeName}"
@@ -20,11 +20,11 @@
 
     <v-menu transition="fab-transition">
       <template #activator="{ props }">
-        <v-btn icon="mdi-plus" size="large" v-bind="props" />
+        <v-btn v-if="routeStore.routeName !== 'dashboard'" icon="mdi-plus" size="large" v-bind="props" />
       </template>
       <v-list>
         <v-list-item
-          v-for="(item,index) in [...defaultMenuRoutes, ...additionalMenuRoutes]"
+          v-for="(item,index) in createMenuRoutes(routeStore.routeName)"
           :key="index"
         >
           <RouterLink class="mx-3 text-white pa-3 font-weight-black" :to="{ name: item.routeName}">
@@ -55,8 +55,9 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, type PropType, ref } from 'vue'
+  import { defineComponent, ref } from 'vue'
   import { RouterLink } from 'vue-router'
+  import { useCurrentRouteStore } from '../stores/route'
 
   type AppRoute = {
     displayName: string,
@@ -64,65 +65,156 @@
   }
 
   export default defineComponent({
-    props: {
-      menuRoutes: {
-        required: false,
-        type: Array as PropType<AppRoute[]>,
-      },
-      mainRoutes: {
-        required: false,
-        type: Array as PropType<AppRoute[]>,
-      },
-    },
 
-    setup (props) {
-      const profileRoutes = [
-        {
-          displayName: 'Settings',
-          routeName: 'settings',
-        },
-        {
-          displayName: 'Logout',
-          routeName: 'logout',
-        },
-      ]
+    setup () {
+      const routeStore = useCurrentRouteStore()
 
-      const defaultMenuRoutes = ref<AppRoute[]>(
-        [{
-          displayName: 'New Project',
-          routeName: 'newProject',
-        }]
-      )
-      const additionalMenuRoutes = ref<AppRoute[]>(
-        props.menuRoutes || [] as AppRoute[]
-      )
-
-      const defaultMainRoutes = ref<AppRoute[]>(
+      const profileRoutes = ref<AppRoute[]>(
         [
           {
-            displayName: 'Dashboard',
-            routeName: 'dashboard',
+            displayName: 'Settings',
+            routeName: 'settings',
           },
           {
-            displayName: 'Members',
-            routeName: 'members',
-          },
-          {
-            displayName: 'Projects',
-            routeName: 'projects',
+            displayName: 'Logout',
+            routeName: 'logout',
           },
         ]
       )
-      const additionalMainRoutes = ref<AppRoute[]>(
-        props.mainRoutes || [] as AppRoute[]
-      )
+
+      function createMainRoutes (routeName: string): AppRoute[] {
+        const mainRoutes: AppRoute[] =
+          [
+            {
+              displayName: 'Dashboard',
+              routeName: 'dashboard',
+            },
+            {
+              displayName: 'Members',
+              routeName: 'members',
+            },
+            {
+              displayName: 'Projects',
+              routeName: 'projects',
+            },
+          ]
+
+        if (routeName === 'dashboard') {
+          mainRoutes.push(
+            {
+              displayName: 'Settings',
+              routeName: 'settings',
+            },
+          )
+        } else if (routeName === 'projectDetails') {
+          mainRoutes.push(
+            {
+              displayName: 'Test Plan',
+              routeName: 'testPlan',
+            },
+            {
+              displayName: 'Requirment',
+              routeName: 'testRequirment',
+            },
+            {
+              displayName: 'Test Suite',
+              routeName: 'testSuite',
+            },
+            {
+              displayName: 'Test Run',
+              routeName: 'testRun',
+            },
+          )
+        }
+        return mainRoutes
+      }
+
+      function createMenuRoutes (routeName: string): AppRoute[] {
+        const menuRoutes: AppRoute[] = []
+
+        if (routeName === 'projects') {
+          menuRoutes.push(
+            {
+              displayName: 'New Project',
+              routeName: 'newProject',
+            }
+          )
+        }
+
+        if (routeName === 'projectDetails') {
+          menuRoutes.push(
+            {
+              displayName: 'New Test Plan',
+              routeName: 'newTestPlan',
+            },
+            {
+              displayName: 'New Requirment',
+              routeName: 'newRequirment',
+            },
+            {
+              displayName: 'New Test Suite',
+              routeName: 'newTestSuite',
+            },
+            {
+              displayName: 'New Test Run',
+              routeName: 'newTestRun',
+            },
+          )
+        }
+
+        if (routeName === 'testPlan') {
+          menuRoutes.push(
+            {
+              displayName: 'New Test Plan',
+              routeName: 'newTestPlan',
+            },
+          )
+        }
+
+        if (routeName === 'testRequirment') {
+          menuRoutes.push(
+            {
+              displayName: 'New Requirment',
+              routeName: 'newRequirment',
+            },
+          )
+        }
+
+        if (routeName === 'testSuite') {
+          menuRoutes.push(
+            {
+              displayName: 'New Test Suite',
+              routeName: 'newTestSuite',
+            },
+          )
+        }
+
+        if (routeName === 'testRun') {
+          menuRoutes.push(
+            {
+              displayName: 'New Test Run',
+              routeName: 'newTestRun',
+            },
+          )
+        }
+
+        if (routeName === 'members') {
+          menuRoutes.push(
+            {
+              displayName: 'Invite Member',
+              routeName: 'newMember',
+            },
+          )
+        }
+
+        return menuRoutes
+      }
 
       return {
-        defaultMenuRoutes,
-        additionalMenuRoutes,
-        defaultMainRoutes,
-        additionalMainRoutes,
         profileRoutes,
+        routeStore,
+        createMenuRoutes,
+        createMainRoutes,
         RouterLink,
       }
     },
