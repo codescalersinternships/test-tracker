@@ -1,9 +1,20 @@
 import axios, { AxiosInstance } from 'axios';
 
-const axiosInstance: AxiosInstance = axios.create({
-  baseURL: '',
-  timeout: 1000, 
-  headers: { 'Content-Type': 'application/json' },
+const axiosInstanceWithAuth: AxiosInstance = axios.create({
+  baseURL: 'https://your-api-base-url.com', 
+  timeout: 1000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ', 
+  },
 });
 
-export default axiosInstance;
+const axiosInstanceWithoutAuth: AxiosInstance = axios.create({
+  baseURL: 'https://your-api-base-url.com',
+  timeout: 1000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+export { axiosInstanceWithAuth, axiosInstanceWithoutAuth };
