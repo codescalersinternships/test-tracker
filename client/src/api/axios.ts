@@ -1,20 +1,17 @@
 import axios, { AxiosInstance } from 'axios';
 
-const axiosInstanceWithAuth: AxiosInstance = axios.create({
-  baseURL: 'https://your-api-base-url.com', 
+const AuthClient: AxiosInstance = axios.create({
+  baseURL: import.meta.env.vite_app_endpoint, 
   timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ', 
+    'Authorization': 'Bearer ' + localStorage.getItem("token"),
   },
 });
 
-const axiosInstanceWithoutAuth: AxiosInstance = axios.create({
-  baseURL: 'https://your-api-base-url.com',
+const BaseClient: AxiosInstance = axios.create({
+  baseURL: import.meta.env.vite_app_endpoint,
   timeout: 1000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
-export { axiosInstanceWithAuth, axiosInstanceWithoutAuth };
+export { AuthClient, BaseClient };
