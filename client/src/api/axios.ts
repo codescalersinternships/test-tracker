@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 const AuthClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.vite_app_endpoint, 
+  baseURL: import.meta.env.VITE_APP_ENDPOINT, 
   timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
@@ -10,7 +10,7 @@ const AuthClient: AxiosInstance = axios.create({
 });
 
 const BaseClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.vite_app_endpoint,
+  baseURL: import.meta.env.VITE_APP_ENDPOINT,
   timeout: 1000,
 });
 
