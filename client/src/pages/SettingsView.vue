@@ -5,7 +5,6 @@
     </v-card-title>
     <v-card-item>
       <v-btn-toggle
-        v-model="toggle"
         divided
         variant="outlined"
       >
@@ -21,15 +20,27 @@
   </v-card-item>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+  import { defineComponent, ref } from 'vue'
   import ProfileInformationForm from '@/components/settings/ProfileInformationForm.vue'
   import SecurityForm from '@/components/settings/SecurityForm.vue'
 
-  let profile = true
+  export default defineComponent({
 
-  function update () {
-    console.log(profile)
-    profile = !profile
-  }
+    setup () {
+      const profile = ref<boolean>(true)
 
+      function update () {
+        console.log(profile)
+        profile.value = !profile.value
+      }
+
+      return {
+        ProfileInformationForm,
+        SecurityForm,
+        update,
+        profile,
+      }
+    },
+  })
 </script>

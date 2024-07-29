@@ -20,7 +20,7 @@
 
     <v-menu transition="fab-transition">
       <template #activator="{ props }">
-        <v-btn v-if="routeStore.routeName !== 'dashboard'" icon="mdi-plus" size="large" v-bind="props" />
+        <v-btn v-if="displayMenuRoutes(routeStore.routeName)" icon="mdi-plus" size="large" v-bind="props" />
       </template>
       <v-list>
         <v-list-item
@@ -210,11 +210,24 @@
         return menuRoutes
       }
 
+      function displayMenuRoutes (routeName: string): boolean {
+        if (routeName === 'dashboard') {
+          return false
+        }
+
+        if (routeName === 'settings') {
+          return false
+        }
+
+        return true
+      }
+
       return {
         profileRoutes,
         routeStore,
         createMenuRoutes,
         createMainRoutes,
+        displayMenuRoutes,
         RouterLink,
       }
     },

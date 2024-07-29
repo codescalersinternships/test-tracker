@@ -6,7 +6,7 @@
     width="400"
   >
     <template #title>
-      <span class="font-weight-black">Welcome to Members</span>
+      <span class="font-weight-black">Welcome to Project detail's pge</span>
     </template>
 
     <v-card-text class="bg-surface-light pt-4">
