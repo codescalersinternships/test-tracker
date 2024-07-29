@@ -5,7 +5,8 @@ WORKDIR /client
 ENV SERVER_DOMAIN_NAME_API=$SERVER_DOMAIN_NAME_API
 
 # Copy package.json and package-lock.json separately to leverage Docker cache
-COPY ./client/package*.json /client
+COPY ./client/package.json /client
+COPY ./client/package-lock.json /client
 COPY ./docker/scripts/frontend/build-env.sh /client/scripts/
 
 RUN npm i -g pnpm && pnpm install
