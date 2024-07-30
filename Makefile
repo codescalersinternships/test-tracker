@@ -48,7 +48,7 @@ install:
 runserver:
 	$(server) && $(CMD) python3 manage.py runserver
 runclient:
-	$(client) && yarn && yarn dev
+	$(client) && pnpm install && pnpm dev
 test:
 	$(server) && $(CMD) python3 manage.py test
 lint:
