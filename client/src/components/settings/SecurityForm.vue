@@ -24,15 +24,16 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
+  import { ref } from 'vue'
 
   type FormState = {
     originalPassword: string,
     confirmPassword: string,
   }
 
-  export default defineComponent({
+  export default {
 
+    name: 'SecurityForm',
     setup () {
       const state = ref<FormState>(
         {
@@ -73,5 +74,5 @@
         confirmPasswordRules,
       }
     },
-  })
+  }
 </script>

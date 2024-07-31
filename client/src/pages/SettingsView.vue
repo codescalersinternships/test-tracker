@@ -21,12 +21,17 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
+  import { ref } from 'vue'
   import ProfileInformationForm from '@/components/settings/ProfileInformationForm.vue'
   import SecurityForm from '@/components/settings/SecurityForm.vue'
 
-  export default defineComponent({
+  export default {
 
+    name: 'SettingsView',
+    components: {
+      ProfileInformationForm,
+      SecurityForm,
+    },
     setup () {
       const profile = ref<boolean>(true)
 
@@ -42,5 +47,5 @@
         profile,
       }
     },
-  })
+  }
 </script>

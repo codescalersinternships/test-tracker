@@ -37,21 +37,16 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
+  import { ref } from 'vue'
+  import { putSettings } from '@/api/axios'
+  import { ProfileSettings } from '../../types/types'
 
-  type FormState = {
-    email: string,
-    firstName: string,
-    lastName: string,
-    phoneNumber: string,
-  }
+  export default {
 
-  export default defineComponent({
-
+    name: 'ProfileInformationForm',
     setup () {
-      const state = ref<FormState>(
+      const state = ref<ProfileSettings>(
         {
-          email: 'test@test.com',
           firstName: '',
           lastName: '',
           phoneNumber: '',
@@ -84,11 +79,17 @@
         },
       ]
 
+      const putProfileSettings = async () => {
+        // const valid: [boolean, string] = await phoneNumberRules()         //validation
+
+        putSettings(state)
+      }
+
       return {
         state,
         nameRules,
         phoneNumberRules,
       }
     },
-  })
+  }
 </script>

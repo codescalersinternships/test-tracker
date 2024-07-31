@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
+  import { ref } from 'vue'
   import { RouterLink } from 'vue-router'
   import { useCurrentRouteStore } from '../stores/route'
 
@@ -64,8 +64,9 @@
     routeName: string,
   }
 
-  export default defineComponent({
+  export default {
 
+    name: 'NavigationBar',
     setup () {
       const routeStore = useCurrentRouteStore()
 
@@ -231,7 +232,7 @@
         RouterLink,
       }
     },
-  })
+  }
 </script>
 
 <style lang="scss" scoped>

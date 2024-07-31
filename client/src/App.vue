@@ -1,6 +1,18 @@
-<script lang="ts" setup>
+<script lang="ts">
   import { RouterView } from 'vue-router'
   import NavigationBar from './layouts/NavigationBar.vue'
+
+  export default {
+
+    name: 'App',
+    components: {
+      RouterView,
+      NavigationBar,
+    },
+    setup () {
+
+    },
+  }
 
 </script>
 
