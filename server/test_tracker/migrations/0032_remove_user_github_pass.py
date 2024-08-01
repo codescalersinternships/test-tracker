@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0031_user_github_token'),
+        ("test_tracker", "0031_user_github_token"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='user',
-            name='github_pass',
+            model_name="user",
+            name="github_pass",
         ),
     ]

@@ -5,7 +5,7 @@
     subtitle="The #1 Vue UI Library"
     width="400"
   >
-    <template v-slot:title>
+    <template #title>
       <span class="font-weight-black">Welcome to Dashboard</span>
     </template>
 

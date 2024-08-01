@@ -108,10 +108,12 @@ class UpdateUserSettingsSerializer(ModelSerializer):
         model = User
         fields = ["first_name", "last_name", "phone", "password"]
 
+
 class GitHubRequestToGetAccessTokenSerializers(Serializer):
     client_id = CharField()
     client_secret = CharField()
     code = CharField()
+
 
 class GitHubUserDataSerializers(Serializer):
     access_token = CharField()

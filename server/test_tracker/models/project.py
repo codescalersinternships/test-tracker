@@ -81,6 +81,7 @@ class Requirements(TimeStampedModel):
     def __str__(self):
         return "{} - {}".format(self.requirement_title, self.title)
 
+
 class TestSuites(TimeStampedModel):
     """
     Class test suite model for create a new test suite for the project
@@ -96,6 +97,7 @@ class TestSuites(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
 
 class TestCases(TimeStampedModel):
     """
@@ -164,15 +166,17 @@ class TestRun(TimeStampedModel):
     def __str__(self):
         return self.title
 
+
 class TestSuitesSection(TimeStampedModel):
     title = models.CharField(max_length=100)
     test_cases = models.ManyToManyField(TestCases, related_name="section_test_cases")
     test_suites = models.ForeignKey(
         TestSuites,
         related_name="section_test_suites",
-        on_delete=models.CASCADE, 
-        null=True, blank=True
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
-    
+
     def __str__(self):
         return self.title

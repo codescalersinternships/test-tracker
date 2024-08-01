@@ -55,17 +55,23 @@ class TestPlanTempsSerializer(ModelSerializer):
         model = TestPlan
         fields = ("title", "content")
 
+
 class TestSuiteSectionSerializer(ModelSerializer):
-    
     class Meta:
         model = TestSuitesSection
-        fields = ("id", "title", "test_suites",)
+        fields = (
+            "id",
+            "title",
+            "test_suites",
+        )
+
 
 class GetTestSuiteSectionSerializer(ModelSerializer):
     test_cases = SerializerMethodField()
+
     class Meta:
         model = TestSuitesSection
-        fields = ("id", "title", "test_suites","test_cases")
-        
+        fields = ("id", "title", "test_suites", "test_cases")
+
     def get_test_cases(self, obj):
         return TestCaseSerializer(obj.test_cases, many=True).data

@@ -53,7 +53,9 @@ class TestCasesAPIView(GenericAPIView):
                 section_id = request.query_params.get("section_id")
                 section = get_section_by_id(section_id)
                 if section is None:
-                    return CustomResponse.not_found(message=f"Cannot find section {section_id}")
+                    return CustomResponse.not_found(
+                        message=f"Cannot find section {section_id}"
+                    )
             testcase = serializer.save(
                 test_suite=test_suite,
                 testcase_title=f"TC{last_title}",

@@ -13,9 +13,11 @@ def get_test_suite_by_id(test_suite_id: str) -> TestSuites:
     except TestSuites.DoesNotExist:
         return None
 
+
 def filter_sections_based_on_test_suite(test_suite: TestSuites) -> TestSuitesSection:
     """Filter sections based on test suite obj"""
     return TestSuitesSection.objects.filter(test_suites=test_suite)
+
 
 def get_section_by_id(section_id: str) -> TestSuitesSection:
     """Get test suite section by id"""

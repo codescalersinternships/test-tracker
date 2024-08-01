@@ -7,26 +7,45 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0034_project_repo_link'),
+        ("test_tracker", "0034_project_repo_link"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TestSuitesSection',
+            name="TestSuitesSection",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('title', models.CharField(max_length=100)),
-                ('test_cases', models.ManyToManyField(related_name='section_test_cases', to='test_tracker.testcases')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                ("title", models.CharField(max_length=100)),
+                (
+                    "test_cases",
+                    models.ManyToManyField(
+                        related_name="section_test_cases", to="test_tracker.testcases"
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.AddField(
-            model_name='testsuites',
-            name='sections',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='test_suites_sections', to='test_tracker.testsuitessection'),
+            model_name="testsuites",
+            name="sections",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="test_suites_sections",
+                to="test_tracker.testsuitessection",
+            ),
         ),
     ]

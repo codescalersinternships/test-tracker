@@ -8,10 +8,17 @@ from test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 from test_tracker.models.dashboard import Member, Project
 from test_tracker.serializers.dashboard import ProjectsSerializer
 from test_tracker.serializers.member import ProjectTeamSerializer
-from test_tracker.serializers.project import GetTestSuiteSectionSerializer, TestSuiteSectionSerializer
+from test_tracker.serializers.project import (
+    GetTestSuiteSectionSerializer,
+    TestSuiteSectionSerializer,
+)
 from test_tracker.serializers.test_cases import TestCaseSerializer
 from test_tracker.services.test_cases import get_test_case_by_id
-from test_tracker.services.test_suites import filter_sections_based_on_test_suite, get_section_by_id, get_test_suite_by_id
+from test_tracker.services.test_suites import (
+    filter_sections_based_on_test_suite,
+    get_section_by_id,
+    get_test_suite_by_id,
+)
 from test_tracker.utils.validations import Validator
 
 from test_tracker.services.dashboard import is_success_project, get_project_by_id
@@ -206,12 +213,12 @@ class GetRecentProjectsUpdatedAPIView(GenericAPIView):
             ).order_by("-modified")
         else:
             projects = Project.objects.filter(user=request.user).order_by("-modified")
-        
+
         count = request.query_params.get("count")
         if not count:
             count = 5
 
-        projects = projects[:int(count)]
+        projects = projects[: int(count)]
 
         return CustomResponse.success(
             message="Success projects found.",
@@ -241,7 +248,7 @@ class GetRecentProjectsActivityAPIView(GenericAPIView):
         if not count:
             count = 5
 
-        projects = projects[:int(count)]
+        projects = projects[: int(count)]
         result = []
 
         for project in projects:
@@ -316,20 +323,26 @@ class AccountMembersNotInProjectAPIView(GenericAPIView):
             message="You are not authorized to access this view"
         )
 
+
 class TestSuitesSectionAPIView(GenericAPIView):
     serializer_class = TestSuiteSectionSerializer
     permission_classes = (HasProjectAccess,)
-    
+
     def post(self, request: Request, project_id: str):
         """Post new section, required fields is [Title,]"""
         project = get_project_by_id(project_id)
         if not project:
             return CustomResponse.not_found(message="Project not found")
-        serializer = self.get_serializer(data = request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return CustomResponse.success(message="Success created new section.", data=serializer.data)
-        return CustomResponse.bad_request(message="Please make sure that you entered a valid data")
+            return CustomResponse.success(
+                message="Success created new section.", data=serializer.data
+            )
+        return CustomResponse.bad_request(
+            message="Please make sure that you entered a valid data"
+        )
+
 
 class GetTestSuitesSectionsAPIView(GenericAPIView):
     serializer_class = GetTestSuiteSectionSerializer
@@ -343,14 +356,18 @@ class GetTestSuitesSectionsAPIView(GenericAPIView):
         test_suite = get_test_suite_by_id(test_suite)
         if not test_suite:
             return CustomResponse.not_found(message="Test Suite not found.")
-        sectrions = filter_sections_based_on_test_suite(test_suite).order_by("-modified")
+        sectrions = filter_sections_based_on_test_suite(test_suite).order_by(
+            "-modified"
+        )
         return CustomResponse.success(
             data=self.get_serializer(sectrions, many=True).data,
-            message="Test suite sections found."
+            message="Test suite sections found.",
         )
+
 
 class DeleteTestSuiteSectionAPIView(GenericAPIView):
     """Delete a test suite section by its id."""
+
     permission_classes = (HasProjectAccess,)
 
     def delete(self, request: Request, project_id: str, section_id: str) -> Response:
@@ -358,21 +375,22 @@ class DeleteTestSuiteSectionAPIView(GenericAPIView):
         project = get_project_by_id(project_id)
         if not project:
             return CustomResponse.not_found(message="Project not found.")
-        
+
         section = get_section_by_id(section_id)
         if not section:
             return CustomResponse.not_found(message="Test Suite not found.")
         section.delete()
         return CustomResponse.success(
-            message="Section deleted successfully.",
-            status_code=204
+            message="Section deleted successfully.", status_code=204
         )
-        
+
+
 class AddTestCaseToTestSuiteSectionAPIView(GenericAPIView):
     """Add a test case to test suite section"""
+
     permission_classes = (HasProjectAccess,)
     # serializer_class = AddTestCaseToTestSuiteSectionSerializers
-    
+
     def put(self, request: Request, project_id: str):
         """Required query parameters is [TestSuiteSectionID: int, TestCaseID: int]"""
         project = get_project_by_id(project_id)
@@ -381,23 +399,24 @@ class AddTestCaseToTestSuiteSectionAPIView(GenericAPIView):
 
         section_id = request.query_params.get("TestSuiteSectionID")
         if not section_id:
-            return CustomResponse.bad_request(message = "You have to send test suite section id.")
+            return CustomResponse.bad_request(
+                message="You have to send test suite section id."
+            )
 
         case_id = request.query_params.get("TestCaseID")
         if not case_id:
-            return CustomResponse.bad_request(message = "You have to send test case id.")
+            return CustomResponse.bad_request(message="You have to send test case id.")
 
         section = get_section_by_id(section_id)
         if section is None:
             return CustomResponse.not_found(message="Section not found.")
-    
+
         test_case = get_test_case_by_id(case_id)
         if test_case is None:
             return CustomResponse.not_found(message="Section not found.")
-        
+
         section.test_cases.add(test_case)
         return CustomResponse.success(
             message=f"Success added test case to section {section.title}",
-            data = TestCaseSerializer(test_case).data
+            data=TestCaseSerializer(test_case).data,
         )
-        

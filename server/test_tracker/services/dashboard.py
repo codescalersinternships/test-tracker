@@ -24,6 +24,7 @@ def get_projects_by_user(user: User or Member) -> Project or None:
         projects = Project.objects.filter(user=user)
     return projects
 
+
 def get_project_by_user_id(user_id: int) -> Project or None:
     """Returns the project based on the user id"""
     return Project.objects.filter(user_id=user_id)

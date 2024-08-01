@@ -8,7 +8,7 @@ from test_tracker.views.auth import (
     RegisterAPIView,
     UpdateUserSettingsAPIView,
     GithubAccessTokenAPIView,
-    GithubUserDataAPIView
+    GithubUserDataAPIView,
 )
 
 

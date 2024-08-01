@@ -7,17 +7,23 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0035_testsuitessection_testsuites_sections'),
+        ("test_tracker", "0035_testsuitessection_testsuites_sections"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='testsuites',
-            name='sections',
+            model_name="testsuites",
+            name="sections",
         ),
         migrations.AddField(
-            model_name='testsuitessection',
-            name='test_suites',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='section_test_suites', to='test_tracker.testsuites'),
+            model_name="testsuitessection",
+            name="test_suites",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="section_test_suites",
+                to="test_tracker.testsuites",
+            ),
         ),
     ]

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('test_tracker', '0033_alter_user_github_token'),
+        ("test_tracker", "0033_alter_user_github_token"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='repo_link',
+            model_name="project",
+            name="repo_link",
             field=models.CharField(blank=True, max_length=300, null=True),
         ),
     ]
