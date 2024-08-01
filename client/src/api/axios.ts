@@ -15,7 +15,7 @@ const BaseClient: AxiosInstance = axios.create({
   timeout: 1000,
 })
 
-export async function putSettings (settings :ProfileSettings) {
+export async function putSettings (settings :ProfileSettings | string) {
   // await this.refresh_token()
   return AuthClient.put('/auth/settings/', { settings })
 }

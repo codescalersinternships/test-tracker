@@ -30,6 +30,7 @@
     <v-btn
       class="me-4"
       type="submit"
+      @click="putProfileSettings"
     >
       submit
     </v-btn>
@@ -56,17 +57,25 @@
 
       const email = ref<string>('test@test.com')
 
-      // const putProfileSettings = async () => {
-      //   // const valid: [boolean, string] = await phoneNumberRules()         //validation
+      const done = ref<boolean>(false)
 
-      //   putSettings(state)
-      // }
+      const putProfileSettings = async () => {
+        putSettings(state.value)
+          .catch(response => {
+            const { err } = response.response.data
+            if (err != null) {
+              done.value = false
+            }
+            done.value = true
+          })
+      }
 
       return {
         state,
         email,
         nameRules,
         phoneNumberRules,
+        putProfileSettings,
       }
     },
   }
