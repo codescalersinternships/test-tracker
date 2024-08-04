@@ -8,9 +8,9 @@
         divided
         variant="outlined"
       >
-        <v-btn @click="update">Profile Information</v-btn>
+        <v-btn @click="profile = true">Profile Information</v-btn>
 
-        <v-btn @click="update">Security Information</v-btn>
+        <v-btn @click="profile = false">Security Information</v-btn>
       </v-btn-toggle>
     </v-card-item>
   </v-card>
@@ -35,15 +35,9 @@
     setup () {
       const profile = ref<boolean>(true)
 
-      function update () {
-        console.log(profile)
-        profile.value = !profile.value
-      }
-
       return {
         ProfileInformationForm,
         SecurityForm,
-        update,
         profile,
       }
     },
