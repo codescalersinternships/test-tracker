@@ -103,7 +103,7 @@
       mainRoutes () {
         const routeName = this.routeStore.routeName
 
-        if (routeName === 'dashboard' | routeName === 'settings') {
+        if (routeName === 'dashboard' || routeName === 'settings') {
           return [
             {
               displayName: 'Dashboard',
