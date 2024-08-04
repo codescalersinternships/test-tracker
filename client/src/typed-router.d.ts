@@ -26,13 +26,13 @@ declare module 'vue-router/auto-routes' {
     '/projects/ProjectDetailsView': RouteRecordInfo<'/projects/ProjectDetailsView', '/projects/ProjectDetailsView', Record<never, never>, Record<never, never>>,
     '/projects/ProjectsView': RouteRecordInfo<'/projects/ProjectsView', '/projects/ProjectsView', Record<never, never>, Record<never, never>>,
     '/requirements/RequirementDetailsView': RouteRecordInfo<'/requirements/RequirementDetailsView', '/requirements/RequirementDetailsView', Record<never, never>, Record<never, never>>,
-    '/requirements/RequirementView': RouteRecordInfo<'/requirements/RequirementView', '/requirements/RequirementView', Record<never, never>, Record<never, never>>,
+    '/requirements/RequirementsView': RouteRecordInfo<'/requirements/RequirementsView', '/requirements/RequirementsView', Record<never, never>, Record<never, never>>,
     '/settings/SettingsView': RouteRecordInfo<'/settings/SettingsView', '/settings/SettingsView', Record<never, never>, Record<never, never>>,
     '/test-plans/TestPlanDetailsView': RouteRecordInfo<'/test-plans/TestPlanDetailsView', '/test-plans/TestPlanDetailsView', Record<never, never>, Record<never, never>>,
-    '/test-plans/TestPlanView': RouteRecordInfo<'/test-plans/TestPlanView', '/test-plans/TestPlanView', Record<never, never>, Record<never, never>>,
+    '/test-plans/TestPlansView': RouteRecordInfo<'/test-plans/TestPlansView', '/test-plans/TestPlansView', Record<never, never>, Record<never, never>>,
     '/test-runs/TestRunDetailsView': RouteRecordInfo<'/test-runs/TestRunDetailsView', '/test-runs/TestRunDetailsView', Record<never, never>, Record<never, never>>,
-    '/test-runs/TestRunView': RouteRecordInfo<'/test-runs/TestRunView', '/test-runs/TestRunView', Record<never, never>, Record<never, never>>,
+    '/test-runs/TestRunsView': RouteRecordInfo<'/test-runs/TestRunsView', '/test-runs/TestRunsView', Record<never, never>, Record<never, never>>,
     '/test-suites/TestSuiteDetailsView': RouteRecordInfo<'/test-suites/TestSuiteDetailsView', '/test-suites/TestSuiteDetailsView', Record<never, never>, Record<never, never>>,
-    '/test-suites/TestSuiteView': RouteRecordInfo<'/test-suites/TestSuiteView', '/test-suites/TestSuiteView', Record<never, never>, Record<never, never>>,
+    '/test-suites/TestSuitesView': RouteRecordInfo<'/test-suites/TestSuitesView', '/test-suites/TestSuitesView', Record<never, never>, Record<never, never>>,
   }
 }

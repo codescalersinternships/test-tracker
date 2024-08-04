@@ -6,7 +6,7 @@
 
   export default {
 
-    name: 'ProjectDetailsView',
+    name: 'TestPlansView',
     components: {
     },
     setup () {
