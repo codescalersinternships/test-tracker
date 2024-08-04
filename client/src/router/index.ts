@@ -12,29 +12,25 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     // Home route
-    { path: '', name: 'dashboard', component: () => import('@/pages/DashboardView.vue') },
+    { path: '', name: 'dashboard', component: () => import('@/pages/dashboard/DashboardView.vue') },
     // Nav bar routes
-    { path: '/members', name: 'members', component: () => import('@/pages/MembersView.vue') },
-    { path: '/projects', name: 'projects', component: () => import('@/pages/ProjectsView.vue') },
-    { path: '/settings', name: 'settings', component: () => import('@/pages/SettingsView.vue') },
+    { path: '/members', name: 'members', component: () => import('@/pages/members/MembersView.vue') },
+    { path: '/projects', name: 'projects', component: () => import('@/pages/projects/ProjectsView.vue') },
+    { path: '/settings', name: 'settings', component: () => import('@/pages/settings/SettingsView.vue') },
     // Nav bar routes
-    { path: '/signup', name: 'signup', component: () => import('@/pages/MembersView.vue') },
-    { path: '/login', name: 'login', component: () => import('@/pages/ProjectsView.vue') },
-    { path: '/logout', name: 'logout', component: () => import('@/pages/SettingsView.vue') },
-    // new routes
-    { path: '/newProject', name: 'newProject', component: () => import('@/pages/MembersView.vue') },
-    { path: '/newTestPlan', name: 'newTestPlan', component: () => import('@/pages/ProjectsView.vue') },
-    { path: '/newRequirment', name: 'newRequirment', component: () => import('@/pages/SettingsView.vue') },
-    { path: '/newTestSuite', name: 'newTestSuite', component: () => import('@/pages/MembersView.vue') },
-    { path: '/newTestRun', name: 'newTestRun', component: () => import('@/pages/ProjectsView.vue') },
+    { path: '/signup', name: 'signup', component: () => import('@/pages/authorization/SignupView.vue') },
+    { path: '/login', name: 'login', component: () => import('@/pages/authorization/LoginView.vue') },
+    { path: '/logout', name: 'logout', component: () => import('@/pages/authorization/LogoutView.vue') },
     // project routes
-    { path: '/projects/:id', name: 'projectDetails', component: () => import('@/pages/ProjectDetailsView.vue') },
-    { path: '/projects/:id/test-plan', name: 'testPlan', component: () => import('@/pages/ProjectsView.vue') },
-    { path: '/projects/:id/requirment', name: 'testRequirment', component: () => import('@/pages/SettingsView.vue') },
-    { path: '/projects/:id/test-suite', name: 'testSuite', component: () => import('@/pages/MembersView.vue') },
-    { path: '/projects/:id/test-run', name: 'testRun', component: () => import('@/pages/ProjectsView.vue') },
-    // members routes
-    { path: '/newMember', name: 'newMember', component: () => import('@/pages/MembersView.vue') },
+    { path: '/projects/:id', name: 'projectDetails', component: () => import('@/pages/projects/ProjectDetailsView.vue') },
+    { path: '/projects/:id/test-plan', name: 'testPlan', component: () => import('@/pages/test-plans/TestPlanView.vue') },
+    { path: '/projects/:id/requirement', name: 'testRequirement', component: () => import('@/pages/requirements/RequirementView.vue') },
+    { path: '/projects/:id/test-suite', name: 'testSuite', component: () => import('@/pages/test-suites/TestSuiteView.vue') },
+    { path: '/projects/:id/test-run', name: 'testRun', component: () => import('@/pages/test-runs/TestRunView.vue') },
+    { path: '/projects/:id/test-plan/:id', name: 'testPlan', component: () => import('@/pages/test-plans/TestPlanDetailsView.vue') },
+    { path: '/projects/:id/requirement/:id', name: 'testRequirement', component: () => import('@/pages/requirements/RequirementDetailsView.vue') },
+    { path: '/projects/:id/test-suite/:id', name: 'testSuite', component: () => import('@/pages/test-suites/TestSuiteDetailsView.vue') },
+    { path: '/projects/:id/test-run/:id', name: 'testRun', component: () => import('@/pages/test-runs/TestRunDetailsView.vue') },
   ],
 })
 

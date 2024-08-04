@@ -142,7 +142,7 @@
             },
             {
               displayName: 'Requirement',
-              routeName: 'testRequirment',
+              routeName: 'testRequirement',
             },
             {
               displayName: 'Test Suite',
@@ -188,8 +188,8 @@
               routeName: 'newTestPlan',
             },
             {
-              displayName: 'New Requirment',
-              routeName: 'newRequirment',
+              displayName: 'New Requirement',
+              routeName: 'newRequirement',
             },
             {
               displayName: 'New Test Suite',
@@ -211,11 +211,11 @@
           ]
         }
 
-        if (routeName === 'testRequirment') {
+        if (routeName === 'testRequirement') {
           return [
             {
-              displayName: 'New Requirment',
-              routeName: 'newRequirment',
+              displayName: 'New Requirement',
+              routeName: 'newRequirement',
             },
           ]
         }
