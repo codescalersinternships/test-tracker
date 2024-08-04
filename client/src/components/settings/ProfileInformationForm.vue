@@ -30,7 +30,7 @@
     <v-btn
       class="me-4"
       type="submit"
-      @click="putProfileSettings"
+      @click.stop.prevent="putProfileSettings"
     >
       submit
     </v-btn>
