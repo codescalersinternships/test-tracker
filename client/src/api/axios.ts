@@ -36,7 +36,7 @@ async function LogInUser(userInfo:any) {
 }
 
 async function LogInGitHub(){
-  await BaseClient.post("/auth/github/user/")
+  await BaseClient.post("/auth/github/access_token/")
   .then(response=>{
 
   })

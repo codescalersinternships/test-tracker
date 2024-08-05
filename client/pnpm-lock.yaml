@@ -23,9 +23,6 @@ importers:
       vue:
         specifier: ^3.4.31
         version: 3.4.33(typescript@5.5.3)
-      vue-toastification:
-        specifier: ^1.7.14
-        version: 1.7.14(vue@3.4.33(typescript@5.5.3))
       vuetify:
         specifier: ^3.6.11
         version: 3.6.13(typescript@5.5.3)(vite-plugin-vuetify@2.0.3)(vue@3.4.33(typescript@5.5.3))
@@ -1850,11 +1847,6 @@ packages:
 
   vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}
-
-  vue-toastification@1.7.14:
-    resolution: {integrity: sha512-khZR8t3NWZ/JJ2MZxXLbesHrRJ8AKa75PY5Zq8yMifF9x8lHq8ljYkC0d2PD9yahooygQB5tcFyRDkbbIPx8hw==}
-    peerDependencies:
-      vue: ^2.0.0
 
   vue-tsc@2.0.28:
     resolution: {integrity: sha512-PQ/OFDM3NtQVMThaVlQf8plyL0j7UGdak4lb1KkUOSL0uyx/F9Liu6aOclgHiMMBKNGIjJWoiFh3HjIdV6DS/Q==}
@@ -3847,10 +3839,6 @@ snapshots:
     dependencies:
       de-indent: 1.0.2
       he: 1.2.0
-
-  vue-toastification@1.7.14(vue@3.4.33(typescript@5.5.3)):
-    dependencies:
-      vue: 3.4.33(typescript@5.5.3)
 
   vue-tsc@2.0.28(typescript@5.5.3):
     dependencies:
