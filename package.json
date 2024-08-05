@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "install": "^0.13.0",
+    "pnpm": "^9.6.0"
+  }
+}

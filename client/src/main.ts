@@ -6,15 +6,17 @@
 
 // Plugins
 import { registerPlugins } from '@/plugins'
+import router from './router'
 
 // Components
 import App from './App.vue'
 
 // Composables
 import { createApp } from 'vue'
+import vuetify from './plugins/vuetify'
 
 const app = createApp(App)
 
 registerPlugins(app)
 
-app.mount('#app')
+app.use(router).use(vuetify).mount('#app')
