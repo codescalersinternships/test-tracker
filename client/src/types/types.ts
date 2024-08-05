@@ -3,3 +3,9 @@ export type ProfileSettings = {
     lastName: string,
     phoneNumber: string,
 }
+
+export enum AlertType {
+    Success = 'success',
+    error = 'error',
+    warning = 'warning',
+}

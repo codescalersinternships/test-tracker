@@ -21,13 +21,9 @@
         </template>
         <v-list>
           <v-list-item
-            v-for="(item,index) in menuRoutes"
+            v-for="(item,index) in newForms"
             :key="index"
-          >
-            <RouterLink class="mx-3 text-white pa-3 font-weight-black" :to="{ name: item.routeName}">
-              {{ item.displayName }}
-            </RouterLink>
-          </v-list-item>
+          />
         </v-list>
       </v-menu>
 
@@ -169,84 +165,7 @@
           },
         ]
       },
-      menuRoutes () {
-        const routeName = this.routeStore.routeName
-
-        if (routeName === 'projects') {
-          return [
-            {
-              displayName: 'New Project',
-              routeName: 'newProject',
-            },
-          ]
-        }
-
-        if (routeName === 'projectDetails') {
-          return [
-            {
-              displayName: 'New Test Plan',
-              routeName: 'newTestPlan',
-            },
-            {
-              displayName: 'New Requirement',
-              routeName: 'newRequirement',
-            },
-            {
-              displayName: 'New Test Suite',
-              routeName: 'newTestSuite',
-            },
-            {
-              displayName: 'New Test Run',
-              routeName: 'newTestRun',
-            },
-          ]
-        }
-
-        if (routeName === 'testPlan') {
-          return [
-            {
-              displayName: 'New Test Plan',
-              routeName: 'newTestPlan',
-            },
-          ]
-        }
-
-        if (routeName === 'testRequirement') {
-          return [
-            {
-              displayName: 'New Requirement',
-              routeName: 'newRequirement',
-            },
-          ]
-        }
-
-        if (routeName === 'testSuite') {
-          return [
-            {
-              displayName: 'New Test Suite',
-              routeName: 'newTestSuite',
-            },
-          ]
-        }
-
-        if (routeName === 'testRun') {
-          return [
-            {
-              displayName: 'New Test Run',
-              routeName: 'newTestRun',
-            },
-          ]
-        }
-
-        if (routeName === 'members') {
-          return [
-            {
-              displayName: 'Invite Member',
-              routeName: 'newMember',
-            },
-          ]
-        }
-
+      newForms () {
         return []
       },
     },

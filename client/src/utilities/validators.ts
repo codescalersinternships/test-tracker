@@ -1,5 +1,10 @@
 export const passwordRules = [
   (value: string) => {
+    if (value) return true
+
+    return 'You must enter a password.'
+  },
+  (value: string) => {
     if (value?.length > 3) return true
     return 'Password must be at least 4 character.'
   },
@@ -10,6 +15,11 @@ export const passwordRules = [
 ]
 
 export const nameRules = [
+  (value: string) => {
+    if (value) return true
+
+    return 'You must enter a name.'
+  },
   (value: string) => {
     if (value?.length > 4) return true
     return 'Name must be at least 5 character.'
@@ -25,6 +35,11 @@ export const nameRules = [
 ]
 
 export const phoneNumberRules = [
+  (value: string) => {
+    if (value) return true
+
+    return 'You must enter a phone number.'
+  },
   (value: string) => {
     if (value?.length < 19) return true
     return 'Phone number must be at most 20 digits.'

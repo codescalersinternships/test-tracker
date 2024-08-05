@@ -1,5 +1,9 @@
 <template>
-  <v-form>
+  <v-form
+    fast-fail
+    validate-on="submit"
+    @submit.prevent
+  >
     <v-text-field
       v-model="state.originalPassword"
       label="Password"
@@ -16,19 +20,26 @@
       type="password"
     />
 
+    <v-alert
+      v-if="alert"
+      :title="alertText"
+      :type="alertType"
+    />
+
     <v-btn
+      block
       class="me-4"
+      text="Change Password"
       type="submit"
-      @click.stop.prevent="putProfileSettings"
-    >
-      Change Password
-    </v-btn>
+      @click="putProfileSettings"
+    />
   </v-form>
 </template>
 
 <script lang="ts">
   import { ref } from 'vue'
   import { passwordRules } from '@/utilities/validators'
+  import { AlertType } from '@/types/types'
   import { putSettings } from '@/api/axios'
 
   type FormState = {
@@ -47,21 +58,30 @@
         }
       )
 
-      const done = ref<boolean>(false)
+      const alert = ref<boolean>(false)
+      const alertType = ref<AlertType>()
+      const alertText = ref<string>('')
 
       const putProfileSettings = async () => {
+        alert.value = true
         putSettings(state.value.originalPassword)
           .catch(response => {
             const { err } = response.response.data
             if (err != null) {
-              done.value = false
+              alertType.value = AlertType.error
+              alertText.value = 'Can not change password'
+              return
             }
-            done.value = true
+            alertType.value = AlertType.Success
+            alertText.value = 'Password changed Successfully'
           })
       }
 
       return {
         state,
+        alert,
+        alertType,
+        alertText,
         passwordRules,
         putProfileSettings,
       }
