@@ -1,7 +1,6 @@
 export const passwordRules = [
   (value: string) => {
     if (value) return true
-
     return 'You must enter a password.'
   },
   (value: string) => {
@@ -14,10 +13,21 @@ export const passwordRules = [
   },
 ]
 
+export function confirmedPasswordRule (originalPassword: string) {
+  return [
+    (confirmPassword: string) => {
+      if (originalPassword) {
+        if (originalPassword === confirmPassword) return true
+        return 'Passwords does not match'
+      }
+      return 'You must enter password first.'
+    },
+  ]
+}
+
 export const nameRules = [
   (value: string) => {
     if (value) return true
-
     return 'You must enter a name.'
   },
   (value: string) => {

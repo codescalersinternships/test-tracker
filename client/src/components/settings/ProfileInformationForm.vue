@@ -49,7 +49,7 @@
 
 <script lang="ts">
   import { ref } from 'vue'
-  import { putSettings } from '@/api/axios'
+  import { putSettings } from '@/api/userservice'
   import { AlertType, ProfileSettings } from '../../types/types'
   import { nameRules, phoneNumberRules } from '@/utilities/validators'
 
@@ -74,17 +74,17 @@
       const putProfileSettings = async () => {
         alert.value = true
         putSettings(state.value)
-          .catch(response => {
-            const { err } = response.response.data
-            if (err != null) {
-              alertType.value = AlertType.error
-              alertText.value = 'Can not change password'
-              return
-            }
+          .then((response: any) => {
             alertType.value = AlertType.Success
             alertText.value = 'Password changed Successfully'
           })
+          .catch((err: any) => {
+            alertType.value = AlertType.error
+            alertText.value = 'Can not change password'
+            console.error(err)
+          })
       }
+
       return {
         state,
         email,

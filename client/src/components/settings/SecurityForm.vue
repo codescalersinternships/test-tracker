@@ -1,7 +1,7 @@
 <template>
   <v-form
+    ref="form"
     fast-fail
-    validate-on="submit"
     @submit.prevent
   >
     <v-text-field
@@ -16,7 +16,7 @@
       v-model="state.confirmPassword"
       label="Confirm Password"
       required
-      :rules="passwordRules"
+      :rules="confirmedPasswordRule(state.originalPassword)"
       type="password"
     />
 
@@ -29,8 +29,10 @@
     <v-btn
       block
       class="me-4"
+      :disabled="!form?.isValid"
       text="Change Password"
       type="submit"
+
       @click="putProfileSettings"
     />
   </v-form>
@@ -38,9 +40,9 @@
 
 <script lang="ts">
   import { ref } from 'vue'
-  import { passwordRules } from '@/utilities/validators'
+  import { confirmedPasswordRule, passwordRules } from '@/utilities/validators'
   import { AlertType } from '@/types/types'
-  import { putSettings } from '@/api/axios'
+  import { putSettings } from '@/api/userservice'
 
   type FormState = {
     originalPassword: string,
@@ -51,6 +53,8 @@
 
     name: 'SecurityForm',
     setup () {
+      const form = ref()
+
       const state = ref<FormState>(
         {
           originalPassword: '',
@@ -63,26 +67,28 @@
       const alertText = ref<string>('')
 
       const putProfileSettings = async () => {
+        console.log('entered')
         alert.value = true
         putSettings(state.value.originalPassword)
-          .catch(response => {
-            const { err } = response.response.data
-            if (err != null) {
-              alertType.value = AlertType.error
-              alertText.value = 'Can not change password'
-              return
-            }
+          .then((response: any) => {
             alertType.value = AlertType.Success
             alertText.value = 'Password changed Successfully'
+          })
+          .catch((err: any) => {
+            alertType.value = AlertType.error
+            alertText.value = 'Can not change password'
+            console.error(err)
           })
       }
 
       return {
+        form,
         state,
         alert,
         alertType,
         alertText,
         passwordRules,
+        confirmedPasswordRule,
         putProfileSettings,
       }
     },
