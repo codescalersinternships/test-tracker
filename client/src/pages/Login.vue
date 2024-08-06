@@ -7,7 +7,7 @@
         max-width="448"
         rounded="lg"
       >
-        <v-row class="d-flex justify-center mb-4" no-gutters>
+        <v-row class="d-flex justify-center" no-gutters>
           <v-col class="d-flex justify-center" style="max-width: 100px; width: 100px;">
             <v-img
               src="@/assets/logo.png"
@@ -19,13 +19,13 @@
   
         <v-row class="d-flex justify-center mb-4" no-gutters>
           <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
-            <v-typography class="mt-2 text-h5" variant="h5">Welcome</v-typography>
+            <v-typography class="mt-2 text-h5 text-grey-darken-2" variant="h5">Welcome</v-typography>
           </v-col>
         </v-row>
   
         <v-row>
           <v-col class="d-flex justify-center">
-            <v-typography class="text-center">
+            <v-typography class="text-center grey-darken-3">
               Sign in with your
               <v-typography class="font-weight-bold" variant="body-1">Test Tracker</v-typography> account
             </v-typography>
@@ -44,7 +44,7 @@
             <v-text-field
               v-model="userInfo.password"
               :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-              :type="visible ? 'text' : 'password'"
+              :type="visible ? 'password' : 'text'"
               density="compact"
               placeholder="Password"
               prepend-inner-icon="mdi-lock-outline"
@@ -54,7 +54,7 @@
             <v-row>
               <v-col class="d-flex justify-end">
                 <a
-                  class="text-caption text-decoration-none text-grey"
+                  class="text-caption text-decoration-none text-grey-darken-2"
                   href="#"
                   rel="noopener noreferrer"
                   target="_blank"
@@ -101,7 +101,7 @@
 
         <v-row>
           <v-col class="d-flex justify-center">
-            <a class="text-caption text-decoration-none text-grey">New to Test Tracker?</a>
+            <a class="text-caption text-decoration-none text-grey-darken-2">New to Test Tracker?</a>
           </v-col>
         </v-row>
   
@@ -150,6 +150,7 @@ export default{
             SumbitLogIn,
             SubmitLoginGithub,
             userInfo,
+            visible,
         }
     }
 }

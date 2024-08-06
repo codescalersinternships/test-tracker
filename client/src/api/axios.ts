@@ -24,6 +24,16 @@ async function SignUp(newUser:any){
   })
 }
 
+async function SignUpInvitation(passwords:any) {
+  await BaseClient.post("/members/set_password/",passwords)
+  .then(response=>{
+
+  })
+  .catch(error=>{
+    
+  })
+}
+
 async function LogInUser(userInfo:any) {
   await BaseClient.post("/auth/login/",userInfo)
   .then(response=>{
@@ -45,4 +55,4 @@ async function LogInGitHub(){
   })
 }
 
-export default { AuthClient, BaseClient, LogInUser,LogInGitHub, SignUp };
+export default { AuthClient, BaseClient, LogInUser,LogInGitHub, SignUp, SignUpInvitation };
