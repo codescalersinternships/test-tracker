@@ -25,7 +25,7 @@ async function SignUp(newUser:any){
 }
 
 async function SignUpInvitation(passwords:any) {
-  await BaseClient.post("/members/set_password/",passwords)
+  await BaseClient.put("/members/set_password/",passwords)
   .then(response=>{
 
   })
