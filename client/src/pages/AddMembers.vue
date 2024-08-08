@@ -1,70 +1,48 @@
 <template>
-    <v-container>
-        <v-row >
-            <v-col>
-                <h2>ALL MEMBERS</h2>
-            </v-col>
-
-            <v-col class="justify-end">
-                <v-btn class="pink white--text" color="info" @click="addMember">
-                INVITE MEMBERS
+    <div style="margin-left: 7cm; margin-right: 7cm;">
+        <v-container>
+            <v-row >
+                <v-typography class="mt-2 text-h4 text-blue-darken-4" variant="h5">ALL MEMBERS</v-typography>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="addMember">
+                    INVITE MEMBERS
                 </v-btn>
-            </v-col>
+            </v-row>
+
+            <v-row>
+                <v-typography class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">-There are {{ count }} members registered</v-typography>
+            </v-row>
+            <br>
+
+            <v-row>
+                <h4  class="mb-2">Search Members</h4>
+            </v-row>
+
+            <v-row>
+                <v-text-field v-model="searchText" label="Search" variant="outlined"></v-text-field>
+                <v-btn color="primary" variant="outlined" @click="SearchMember"  style="height: 56px; width:80px; padding: 0; margin: 0;">Search</v-btn>
+            </v-row>
+
+                    <!-- seperate component for displaying members? -->
+            <v-row>
+                <v-col v-for="member in members" :key="member.email" cols="12" sm="6" md="4">
+                    <v-card class="ma-2" outlined>
+                        <v-card-title>{{ member.name }}</v-card-title>
+                        <v-card-subtitle>{{ member.email }}</v-card-subtitle>
+                        <v-card-actions>
+                        <v-btn @click="viewMember(member.id)">View Details</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
         </v-row>
-
-        <v-row>
-            <v-col>
-                <h4>-There are {{ count }} members registered</h4>
-            </v-col>
-        </v-row>
-
-        <v-row>
-            <v-col>
-                <h4>Search Members</h4>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <v-text-field label="Search" />
-            </v-col>
-            <v-col>
-                <v-btn color="primary" @click="search">Search</v-btn>
-            </v-col>
-        </v-row>
-        <v-row>
-
-            <!-- <v-card
-                title="Search Members"
-                flat
-            >
-                <template v-slot:text>
-                <v-text-field
-                    v-model="search"
-                    label="Search"
-                    prepend-inner-icon="mdi-magnify"
-                    variant="outlined"
-                    hide-details
-                    single-line
-                ></v-text-field>
-                </template>
-
-                <v-data-table
-                :headers="headers"
-                :items="desserts"
-                :search="search"
-                :show-current-page="false"
-                ></v-data-table>
-            </v-card> -->
-        </v-row>
-    </v-container>
-
-
-
+        </v-container>
+    </div>
 </template>
 
 <script>
 import { ref } from 'vue';
 import { defineProps } from 'vue';
+import axios from '@/api/axios';
 export default{
     setup(){
         const props =defineProps({
@@ -78,17 +56,26 @@ export default{
             },
         });
 
+
+        let searchText=ref("");
+
         const addMember = () => {
         };
 
-        const buttonHover =()=>{
 
-        }
+        const SearchMember = async () => {
+            try {
+               members.value= await axios.Search(searchText.value);
+            } catch (error) {
+                console.error('Error searching for members:', error);
+            }
+        };
 
         return{
             props,
+            SearchMember,
             addMember,
-            buttonHover,
+            searchText
         }
     }
     

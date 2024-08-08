@@ -14,4 +14,15 @@ const BaseClient: AxiosInstance = axios.create({
   timeout: 1000,
 });
 
-export { AuthClient, BaseClient };
+async function Search(searchInput:any) {
+  await AuthClient.get(`/members/search/${searchInput}`)
+  .then(response=>{
+    console.log('Search results:', response.data);
+    return response.data;
+  })
+  .catch(error=>{
+    console.error('Error searching for members:', error);
+  })
+}
+
+export default{ AuthClient, BaseClient, Search };
