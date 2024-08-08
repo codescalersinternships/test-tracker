@@ -1,42 +1,64 @@
 <template>
   <v-app-bar
     class="px-9"
-    color="teal-darken-4"
+    color="white"
+    height="75"
   >
     <div class="app-component mx-9">
-      <RouterLink
-        v-for="(item,index) in mainRoutes"
-        :key="index"
-        class="mx-3 text-white bg-teal-darken-3 pa-3 rounded-lg font-weight-black"
-        :to="{ name: item.routeName}"
-      >
-        {{ item.displayName }}
-      </RouterLink>
+      <div class="left-nav-bar">
+        <v-img
+          alt="Test Tracker Logo"
+          contain
+          src="/navbarlogo.png"
+          style="width: 188.5px; height: 30px;"
+        />
+      </div>
+
+      <div class="right-nav-bar">
+        <RouterLink
+          v-for="(item,index) in mainRoutes"
+          :key="index"
+          class="mx-5 text-blue bg-white pa-3 rounded-lg font-weight-black"
+          :to="{ name: item.routeName}"
+        >
+          {{ item.displayName }}
+        </RouterLink>
+      </div>
+
     </div>
 
     <div class="app-component mx-9">
       <v-menu transition="fab-transition">
         <template #activator="{ props }">
-          <v-btn v-if="displayMenuRoutes(routeStore.routeName)" icon="mdi-plus" size="large" v-bind="props" />
+          <v-btn
+            v-if="displayMenuRoutes(routeStore.routeName)"
+            color="blue"
+            icon="mdi-plus-circle"
+            size="x-large"
+            v-bind="props"
+          />
         </template>
         <v-list>
           <v-list-item
             v-for="(item,index) in newForms"
             :key="index"
           />
+          <v-btn class="mx-3  pa-3 font-weight-black text-blue">
+            {{ item.displayName }}
+          </v-btn>
         </v-list>
       </v-menu>
 
       <v-menu transition="fab-transition">
         <template #activator="{ props }">
-          <v-btn icon="mdi-account" size="large" v-bind="props" />
+          <v-btn color="blue" icon="mdi-account" size="x-large" v-bind="props" />
         </template>
         <v-list>
           <v-list-item
             v-for="(item,index) in profileRoutes"
             :key="index"
           >
-            <RouterLink class="mx-3 text-white pa-3 font-weight-black" :to="{ name: item.routeName}">
+            <RouterLink class="mx-3 pa-3 font-weight-black text-blue" :to="{ name: item.routeName}">
               {{ item.displayName }}
             </RouterLink>
           </v-list-item>
@@ -177,7 +199,17 @@
 a {
   text-decoration: none;
   color: inherit;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.left-nav-bar {
+  width: 250px;
+  float: left;
+}
+.right-nav-bar {
+  width: 50%;
+  float: left;
+  padding-top: 3px;
 }
 
 ::v-deep .v-toolbar__content {
