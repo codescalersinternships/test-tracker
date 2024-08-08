@@ -1,6 +1,6 @@
 <template>
   <div class="background pa-0">
-    <v-container>
+    <v-container >
       <v-card
         class="ma-auto pa-12 pb-8"
         elevation="8"
@@ -17,7 +17,7 @@
           </v-col>
         </v-row>
   
-        <v-row class="d-flex justify-center mb-4" no-gutters>
+        <v-row class="d-flex justify-center" no-gutters>
           <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
             <v-typography class="mt-2 text-h5 text-grey-darken-2" variant="h5">Welcome</v-typography>
           </v-col>
@@ -27,7 +27,7 @@
           <v-col class="d-flex justify-center">
             <v-typography class="text-center grey-darken-3">
               Sign in with your
-              <v-typography class="font-weight-bold" variant="body-1">Test Tracker</v-typography> account
+              <v-typography class="font-weight-bold" >Test Tracker</v-typography> account
             </v-typography>
           </v-col>
         </v-row>
@@ -107,7 +107,7 @@
   
         <v-row>
           <v-col class="d-flex justify-center">
-            <v-btn class="mb-8 w-100" color="primary" size="large">
+            <v-btn class="mb-8 w-100" color="primary" size="large" @click="CreateAccount">
               Create Account
             </v-btn>
           </v-col>
@@ -118,40 +118,49 @@
   </div> 
 </template>
 
-<style scoped>
+<style>
 .background {
   background: url('../assets/authPagesBackGround.png');
   background-size: 100% 100%;
+  /* background-size: cover */
 }
 </style>
 
 <script>
 import axios from '../api/axios.ts';
+import { useRouter } from 'vue-router';
 
 export default{
     setup(){
 
-        const userInfo=ref({
-        email: "",
-        password: "",
-        })
+      const router=useRouter();
 
-        let visible = ref(false);
+      const userInfo=ref({
+      email: "",
+      password: "",
+      })
 
-        function SumbitLogIn(){
-            axios.LogInUser(userInfo.value)
-        }
-    
-        function SubmitLoginGithub(){
-            axios.LogInGitHub();
-        }
+      let visible = ref(false);
 
-        return{
-            SumbitLogIn,
-            SubmitLoginGithub,
-            userInfo,
-            visible,
-        }
+      function SumbitLogIn(){
+          axios.LogInUser(userInfo.value)
+      }
+  
+      function SubmitLoginGithub(){
+          axios.LogInGitHub();
+      }
+
+      function CreateAccount(){
+        router.push(`/signup`)
+      }
+
+      return{
+          SumbitLogIn,
+          SubmitLoginGithub,
+          CreateAccount,
+          userInfo,
+          visible,
+      }
     }
 }
 </script>

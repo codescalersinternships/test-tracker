@@ -16,7 +16,7 @@
                     </v-col>
                 </v-row>
 
-                <v-row class="d-flex justify-center mb-4" no-gutters>
+                <v-row class="d-flex justify-center" no-gutters>
                     <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
                         <v-typography class="mt-2 text-h5 text-grey-darken-2" variant="h5">Sign up</v-typography>
                     </v-col>
@@ -95,8 +95,7 @@
                         <a
                         class="text-caption text-decoration-none text-blue"
                         href="#"
-                        rel="noopener noreferrer"
-                        target="_blank"
+                        @click.prevent="LogIn"
                         >
                         Sign in
                         </a></a>
@@ -116,9 +115,12 @@ background-size: 100% 100%;
 
 <script>
 import axios from '../api/axios.ts';
+import { useRouter } from 'vue-router';
 
 export default{
     setup(){
+
+        const router=useRouter();
 
         const newUser=ref({
         first_name: "",
@@ -137,10 +139,15 @@ export default{
             axios.LogInGitHub();
         }
 
+        function LogIn(){
+            router.push(`/`);
+        }
+
 
         return{
             RegisterNewUser,
-            LogInGitHub,
+            SubmitLoginGithub,
+            LogIn,
             visible,
             newUser,
         }

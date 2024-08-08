@@ -81,17 +81,16 @@
         <br>
 
         <v-row>
-          <v-col class="d-flex justify-center">
+            <v-col class="d-flex justify-center">
             <a class="text-caption text-decoration-none text-grey-darken-2">Already have an account? 
-              <a
+                <a
                 class="text-caption text-decoration-none text-blue"
                 href="#"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+                @click.prevent="LogIn"
+                >
                 Sign in
-              </a></a>
-          </v-col>
+                </a></a>
+            </v-col>
         </v-row>
   
       </v-card>
@@ -108,32 +107,41 @@
 
 <script>
 import axios from '@/api/axios';
+import { useRouter } from 'vue-router';
+
 export default{
     setup(){
 
-        const userPassword=ref({
-        password1: "",
-        password2: "",
-        })
+      const router=useRouter();
 
-        let visible1 = ref(false);
-        let visible2 = ref(false);
+      const userPassword=ref({
+      password1: "",
+      password2: "",
+      })
 
-        const username=ref("");
-        const invitor=ref("");
+      let visible1 = ref(false);
+      let visible2 = ref(false);
 
-        function RegisterUser(){
-          axios.SignUpInvitation(userPassword.value)
-        }
-  
-        return{
-            userPassword,
-            visible1,
-            visible2,
-            RegisterUser,
-            username,
-            invitor,
-        }
+      const username=ref("");
+      const invitor=ref("");
+
+      function RegisterUser(){
+        axios.SignUpInvitation(userPassword.value)
+      }
+
+      function LogIn(){
+        router.push(`/`);
+      }
+
+      return{
+          userPassword,
+          visible1,
+          visible2,
+          RegisterUser,
+          LogIn,
+          username,
+          invitor,
+      }
     }
 }
 </script>
