@@ -44,17 +44,17 @@ endif
 install:
 	$(server) && poetry install
 	$(server) && poetry check
-	$(client) && yarn
+	$(client) && pnpm install
 runserver:
 	$(server) && $(CMD) python3 manage.py runserver
 runclient:
-	$(client) && yarn && yarn dev
+	$(client) && pnpm run dev
 test:
 	$(server) && $(CMD) python3 manage.py test
 lint:
 	$(server) && $(CMD) black .  --exclude=__init__.py
 	$(server) && $(CMD) flake8 .  --exclude=__init__.py
-	$(client) && yarn lint
+	$(client) && pnpm run lint
 migrate:
 	$(server) && $(CMD) python3 manage.py makemigrations
 	$(server) && $(CMD) python3 manage.py migrate
