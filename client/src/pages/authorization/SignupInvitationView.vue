@@ -6,7 +6,7 @@
 
   export default {
 
-    name: 'SignupView',
+    name: 'SignupInvitationView',
     components: {
     },
     setup () {

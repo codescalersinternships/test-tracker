@@ -19,6 +19,7 @@ const router = createRouter({
     { path: '/settings', name: 'settings', component: () => import('@/pages/settings/SettingsView.vue') },
     // Nav bar routes
     { path: '/signup', name: 'signup', component: () => import('@/pages/authorization/SignupView.vue') },
+    { path: '/signupinvitation', name: 'signupinvitation', component: () => import('@/pages/authorization/SignupInvitationView.vue') },
     { path: '/login', name: 'login', component: () => import('@/pages/authorization/LoginView.vue') },
     { path: '/logout', name: 'logout', component: () => import('@/pages/authorization/LogoutView.vue') },
     // project routes

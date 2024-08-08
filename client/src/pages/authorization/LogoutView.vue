@@ -2,7 +2,7 @@
   <p>To be implemented</p>
 </template>
 
-<script lang="ts">
+  <script lang="ts">
 
   export default {
 
@@ -14,4 +14,4 @@
       }
     },
   }
-</script>
+  </script>
