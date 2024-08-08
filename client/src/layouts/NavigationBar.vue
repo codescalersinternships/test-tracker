@@ -4,13 +4,13 @@
     color="white"
     height="75"
   >
-    <div class="app-component mx-9">
+    <div class="app-component mx-9 main-routes">
       <div class="left-nav-bar">
         <v-img
           alt="Test Tracker Logo"
           contain
           src="/navbarlogo.png"
-          style="width: 188.5px; height: 30px;"
+          style="width: 188.5px; height: 50px;"
         />
       </div>
 
@@ -32,9 +32,10 @@
         <template #activator="{ props }">
           <v-btn
             v-if="displayMenuRoutes(routeStore.routeName)"
-            color="blue"
-            icon="mdi-plus-circle"
-            size="x-large"
+            class="mx-3 bg-blue"
+            color="white"
+            icon="mdi-plus"
+            size="large"
             v-bind="props"
           />
         </template>
@@ -51,7 +52,13 @@
 
       <v-menu transition="fab-transition">
         <template #activator="{ props }">
-          <v-btn color="blue" icon="mdi-account" size="x-large" v-bind="props" />
+          <v-btn
+            class="bg-blue"
+            color="white"
+            icon="mdi-account"
+            size="large"
+            v-bind="props"
+          />
         </template>
         <v-list>
           <v-list-item
@@ -199,22 +206,29 @@
 a {
   text-decoration: none;
   color: inherit;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
+.main-routes {
+  display: flex;
+}
 .left-nav-bar {
   width: 250px;
-  float: left;
 }
 .right-nav-bar {
   width: 50%;
-  float: left;
   padding-top: 3px;
+  display: flex;
 }
 
 ::v-deep .v-toolbar__content {
   display: flex !important;
   justify-content: space-between !important;
+}
+
+.v-btn--icon.v-btn--density-default {
+  width: calc(var(--v-btn-height) + 3px);
+  height: calc(var(--v-btn-height) + 3px);
 }
 
 </style>

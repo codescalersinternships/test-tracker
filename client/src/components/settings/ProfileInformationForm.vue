@@ -1,7 +1,7 @@
 <template>
   <v-form
+    ref="form"
     fast-fail
-    validate-on="submit"
     @submit.prevent
   >
     <v-text-field
@@ -31,17 +31,13 @@
       :rules="phoneNumberRules"
     />
 
-    <v-alert
-      v-if="alert"
-      :title="alertText"
-      :type="alertType"
-    />
-
     <v-btn
       block
       class="me-4"
+      :disabled="!form?.isValid"
       text="Submit"
       type="submit"
+
       @click="putProfileSettings"
     />
   </v-form>
@@ -50,13 +46,18 @@
 <script lang="ts">
   import { ref } from 'vue'
   import { putSettings } from '@/api/userservice'
-  import { AlertType, ProfileSettings } from '../../types/types'
+  import { ProfileSettings } from '../../types/types'
   import { nameRules, phoneNumberRules } from '@/utilities/validators'
+  import { useNotifier } from 'vue3-notifier'
 
   export default {
 
     name: 'ProfileInformationForm',
     setup () {
+      const notifier = useNotifier()
+
+      const form = ref()
+
       const state = ref<ProfileSettings>(
         {
           firstName: '',
@@ -67,30 +68,22 @@
 
       const email = ref<string>('test@test.com')
 
-      const alert = ref<boolean>(false)
-      const alertType = ref<AlertType>()
-      const alertText = ref<string>('')
-
       const putProfileSettings = async () => {
         alert.value = true
         putSettings(state.value)
           .then((response: any) => {
-            alertType.value = AlertType.Success
-            alertText.value = 'Password changed Successfully'
+            notifier.notify()
           })
           .catch((err: any) => {
-            alertType.value = AlertType.error
-            alertText.value = 'Can not change password'
+            notifier.notify()
             console.error(err)
           })
       }
 
       return {
+        form,
         state,
         email,
-        alert,
-        alertType,
-        alertText,
         nameRules,
         phoneNumberRules,
         putProfileSettings,

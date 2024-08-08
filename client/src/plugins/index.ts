@@ -5,9 +5,10 @@
  */
 
 // Plugins
-import vuetify from './vuetify'
+import { $vuetify } from './vuetify'
 import pinia from '../stores'
 import router from '../router'
+import { useNotifierPlugin } from 'vue3-notifier'
 
 // Types
 import type { App } from 'vue'
@@ -15,6 +16,7 @@ import type { App } from 'vue'
 export function registerPlugins (app: App) {
   app
     .use(pinia)
-    .use(vuetify)
+    .use($vuetify)
+    .use(useNotifierPlugin())
     .use(router)
 }

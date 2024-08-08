@@ -26,6 +26,9 @@ importers:
       vue:
         specifier: ^3.4.31
         version: 3.4.33(typescript@5.5.3)
+      vue3-notifier:
+        specifier: 1.0.3
+        version: 1.0.3(typescript@5.5.3)
       vuetify:
         specifier: ^3.6.11
         version: 3.6.13(typescript@5.5.3)(vite-plugin-vuetify@2.0.3)(vue@3.4.33(typescript@5.5.3))
@@ -735,6 +738,10 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
+  chalk@5.3.0:
+    resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
     engines: {node: '>= 8.10.0'}
@@ -1149,6 +1156,9 @@ packages:
 
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
+
+  gsap@3.12.5:
+    resolution: {integrity: sha512-srBfnk4n+Oe/ZnMIOXt3gT605BX9x5+rh/prT2F1SsNJsU1XuMiP0E2aptW481OnonOGACZWBqseH5Z7csHxhQ==}
 
   has-bigints@1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
@@ -1869,6 +1879,9 @@ packages:
     peerDependencies:
       typescript: '>=5.0.0'
 
+  vue3-notifier@1.0.3:
+    resolution: {integrity: sha512-W8cZtq3N7NJLNaP+LDOpABusSyT1zAHEvHFPuGn+Jo/rxHHrbFGD0jar8vDXOmhti7ZqenaTiRz1nKHA/9Cu7g==}
+
   vue@3.4.33:
     resolution: {integrity: sha512-VdMCWQOummbhctl4QFMcW6eNtXHsFyDlX60O/tsSQuCcuDOnJ1qPOhhVla65Niece7xq/P2zyZReIO5mP+LGTQ==}
     peerDependencies:
@@ -2574,6 +2587,8 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
+  chalk@5.3.0: {}
+
   chokidar@3.6.0:
     dependencies:
       anymatch: 3.1.3
@@ -3142,6 +3157,8 @@ snapshots:
       get-intrinsic: 1.2.4
 
   graphemer@1.4.0: {}
+
+  gsap@3.12.5: {}
 
   has-bigints@1.0.2: {}
 
@@ -3872,6 +3889,14 @@ snapshots:
       '@vue/language-core': 2.0.28(typescript@5.5.3)
       semver: 7.6.3
       typescript: 5.5.3
+
+  vue3-notifier@1.0.3(typescript@5.5.3):
+    dependencies:
+      chalk: 5.3.0
+      gsap: 3.12.5
+      vue: 3.4.33(typescript@5.5.3)
+    transitivePeerDependencies:
+      - typescript
 
   vue@3.4.33(typescript@5.5.3):
     dependencies:
