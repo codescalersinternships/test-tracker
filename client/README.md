@@ -1,81 +1,210 @@
-# Vuetify (Default)
+# Test Tracker
 
-This is the official scaffolding tool for Vuetify, designed to give you a head start in building your new Vuetify application. It sets up a base template with all the necessary configurations and standard directory structure, enabling you to begin development without the hassle of setting up the project from scratch.
+## Introduction
 
-## ❗️ Important Links
+TestTracker allows the entire team to manage their test plans, requirements, test cases and test runs in a simple and efficient way. All essential tools to manage your test cases all in one place. 
 
-- 📄 [Docs](https://vuetifyjs.com/)
-- 🚨 [Issues](https://issues.vuetifyjs.com/)
-- 🏬 [Store](https://store.vuetifyjs.com/)
-- 🎮 [Playground](https://play.vuetifyjs.com/)
-- 💬 [Discord](https://community.vuetifyjs.com)
+## Features
 
-## 💿 Install
+<details>
+  <summary>Authorization</summary>
+  <p>&nbsp;</p>
 
-Set up your project using your preferred package manager. Use the corresponding command to install the dependencies:
+  Signup
 
-| Package Manager                                                | Command        |
-|---------------------------------------------------------------|----------------|
-| [yarn](https://yarnpkg.com/getting-started)                   | `yarn install` |
-| [npm](https://docs.npmjs.com/cli/v7/commands/npm-install)     | `npm install`  |
-| [pnpm](https://pnpm.io/installation)                          | `pnpm install` |
-| [bun](https://bun.sh/#getting-started)                        | `bun install`  |
+  Login
 
-After completing the installation, your environment is ready for Vuetify development.
+  Login via Github
 
-## ✨ Features
+  Login via Threefold
 
-- 🖼️ **Optimized Front-End Stack**: Leverage the latest Vue 3 and Vuetify 3 for a modern, reactive UI development experience. [Vue 3](https://v3.vuejs.org/) | [Vuetify 3](https://vuetifyjs.com/en/)
-- 🗃️ **State Management**: Integrated with [Pinia](https://pinia.vuejs.org/), the intuitive, modular state management solution for Vue.
-- 🚦 **Routing and Layouts**: Utilizes Vue Router for SPA navigation and vite-plugin-vue-layouts for organizing Vue file layouts. [Vue Router](https://router.vuejs.org/) | [vite-plugin-vue-layouts](https://github.com/JohnCampionJr/vite-plugin-vue-layouts)
-- 💻 **Enhanced Development Experience**: Benefit from TypeScript's static type checking and the ESLint plugin suite for Vue, ensuring code quality and consistency. [TypeScript](https://www.typescriptlang.org/) | [ESLint Plugin Vue](https://eslint.vuejs.org/)
-- ⚡ **Next-Gen Tooling**: Powered by Vite, experience fast cold starts and instant HMR (Hot Module Replacement). [Vite](https://vitejs.dev/)
-- 🧩 **Automated Component Importing**: Streamline your workflow with unplugin-vue-components, automatically importing components as you use them. [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
-- 🛠️ **Strongly-Typed Vue**: Use vue-tsc for type-checking your Vue components, and enjoy a robust development experience. [vue-tsc](https://github.com/johnsoncodehk/volar/tree/master/packages/vue-tsc)
+  Logout
+  
+  <p>&nbsp;</p>
+</details>
 
-These features are curated to provide a seamless development experience from setup to deployment, ensuring that your Vuetify application is both powerful and maintainable.
+<details>
+  <summary>Members</summary>
+  <p>&nbsp;</p>
 
-## 💡 Usage
+  Invite a member
 
-This section covers how to start the development server and build your project for production.
 
-### Starting the Development Server
+  Delete a member
 
-To start the development server with hot-reload, run the following command. The server will be accessible at [http://localhost:3000](http://localhost:3000):
 
-```bash
-yarn dev
-```
+  Search for a member
+  
+  <p>&nbsp;</p>
+</details>
 
-(Repeat for npm, pnpm, and bun with respective commands.)
+<details>
+  <summary>Projects</summary>
+  <p>&nbsp;</p>
 
-> Add NODE_OPTIONS='--no-warnings' to suppress the JSON import warnings that happen as part of the Vuetify import mapping. If you are on Node [v21.3.0](https://nodejs.org/en/blog/release/v21.3.0) or higher, you can change this to NODE_OPTIONS='--disable-warning=5401'. If you don't mind the warning, you can remove this from your package.json dev script.
+  Create a project
 
-### Building for Production
+  View Statistics
 
-To build your project for production, use:
+  View team members
 
-```bash
-yarn build
-```
+  View Test runs
 
-(Repeat for npm, pnpm, and bun with respective commands.)
+  View recent activities
 
-Once the build process is completed, your application will be ready for deployment in a production environment.
+  Add new test plan
 
-## 💪 Support Vuetify Development
+  Add new test requirments
 
-This project is built with [Vuetify](https://vuetifyjs.com/en/), a UI Library with a comprehensive collection of Vue components. Vuetify is an MIT licensed Open Source project that has been made possible due to the generous contributions by our [sponsors and backers](https://vuetifyjs.com/introduction/sponsors-and-backers/). If you are interested in supporting this project, please consider:
+  Add new test suite
 
-- [Requesting Enterprise Support](https://support.vuetifyjs.com/)
-- [Sponsoring John on Github](https://github.com/users/johnleider/sponsorship)
-- [Sponsoring Kael on Github](https://github.com/users/kaelwd/sponsorship)
-- [Supporting the team on Open Collective](https://opencollective.com/vuetify)
-- [Becoming a sponsor on Patreon](https://www.patreon.com/vuetify)
-- [Becoming a subscriber on Tidelift](https://tidelift.com/subscription/npm/vuetify)
-- [Making a one-time donation with Paypal](https://paypal.me/vuetify)
+  Add new test run
 
-## 📑 License
-[MIT](http://opensource.org/licenses/MIT)
+  Delete a project
 
-Copyright (c) 2016-present Vuetify, LLC
+  Search for a project
+
+  <p>&nbsp;</p>
+</details>
+
+<details>
+  <summary>Test Plans</summary>
+  <p>&nbsp;</p>
+
+  Create a defaullt test plan
+
+  Create a custom test plan
+
+  Update a test plan
+
+  Delete a test plan
+
+  Search for a test plan
+  
+  <p>&nbsp;</p>
+</details>
+
+<details>
+  <summary>Requirment Documents</summary>
+  <p>&nbsp;</p>
+
+  Create a requirment document
+
+  Delete a requirment document
+
+  Search for a requirment document
+  
+  Add a new requirment
+
+  Delete a requirment
+
+  Search for a requirment
+  
+  <p>&nbsp;</p>
+</details>
+
+<details>
+  <summary>Test Suites</summary>
+  <p>&nbsp;</p>
+
+  Create a test suite
+  
+  Delete a test suite
+
+  Search for a test suite
+
+  Assign to a test plan
+
+  Add test case section
+
+  Add new test case 
+
+  Add existing test case
+
+  Search for a test case
+  
+  <p>&nbsp;</p>
+</details>
+
+<details>
+  <summary>Test runs</summary>
+  <p>&nbsp;</p>
+
+  Create a test run
+
+  Delete a test run
+
+  Search for a test run
+  
+  View test run report
+
+  Involve a team member
+  
+  <p>&nbsp;</p>
+</details>
+
+
+## Setup
+
+1. Clone the Repository to a directory of your choice.
+2. Create .env file using the following template:
+
+        # === General ===        
+        DJANGO_SECRET_KEY=
+        SERVER_DOMAIN_NAME=
+        SERVER_DOMAIN_NAME_API=
+        CLIENT_DOMAIN_NAME=
+        ENV=production
+        DJANGO_DEBUG=OFF
+        
+        
+        # === Email ===
+        EMAIL=
+        EMAIL_PASSWORD=
+        EMAIL_HOST=
+        
+        # === Database ===
+        DATABASE_NAME=
+        DATABASE_USER=
+        DATABASE_PASSWORD=
+        DATABASE_HOST=
+        DATABASE_PORT=
+        
+        DJANGO_SUPERUSER_EMAIL=
+        DJANGO_SUPERUSER_PASSWORD=
+  
+4. Run the following command to install dependencies:
+      ```console
+   user@user-VirtualBox:~$ make install
+   ```
+5. Run the following command to setup the server:
+      ```console
+   user@user-VirtualBox:~$ make migrate
+   ```
+6. Run the following command to create a super user:
+      ```console
+   user@user-VirtualBox:~$ make user
+   ```
+7. Run the following command to run server:
+      ```console
+   user@user-VirtualBox:~$ make runserver
+   ```
+8. Open a new terminal tab.
+9. Run the following command to run client:
+      ```console
+   user@user-VirtualBox:~$ make runclient
+   ```
+10. Press Click + CTRL on the URL to open the client.
+11. Enjoy Test Tracker features.
+
+
+## Tests
+
+1. Run the following command to run tests:
+      ```console
+    user@user-VirtualBox:~$ make tests
+   ```
+2. Run the following command to run e2e tests:
+      ```console
+   user@user-VirtualBox:~$ make e2e
+   ```
