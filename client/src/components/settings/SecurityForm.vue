@@ -4,20 +4,36 @@
     fast-fail
     @submit.prevent
   >
+
     <v-text-field
-      v-model="state.originalPassword"
-      label="Password"
+      v-model="state.oldPassword"
+      :append-icon="showOld ? 'mdi-eye' : 'mdi-eye-off'"
+      clearable
+      label="Old password"
       required
       :rules="passwordRules"
-      type="password"
+      :type="showOld ? 'text' : 'password'"
+      @click:append="showOld = !showOld"
+    />
+    <v-text-field
+      v-model="state.originalPassword"
+      :append-icon="showNew ? 'mdi-eye' : 'mdi-eye-off'"
+      clearable
+      label="New password"
+      required
+      :rules="passwordRules"
+      :type="showNew ? 'text' : 'password'"
+      @click:append="showNew = !showNew"
     />
 
     <v-text-field
       v-model="state.confirmPassword"
-      label="Confirm Password"
+      :append-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+      label="Confirm new password"
       required
       :rules="confirmedPasswordRule(state.originalPassword)"
-      type="password"
+      :type="showConfirm ? 'text' : 'password'"
+      @click:append="showNew = !showNew"
     />
 
     <v-btn
@@ -39,6 +55,7 @@
   import { useNotifier } from 'vue3-notifier'
 
   type FormState = {
+    oldPassword: string,
     originalPassword: string,
     confirmPassword: string,
   }
@@ -47,12 +64,17 @@
 
     name: 'SecurityForm',
     setup () {
-      const notifier = useNotifier()
+      const notifier = useNotifier('bottom')
 
       const form = ref()
 
+      const showOld = ref(false)
+      const showNew = ref(false)
+      const showConfirm = ref(false)
+
       const state = ref<FormState>(
         {
+          oldPassword: '',
           originalPassword: '',
           confirmPassword: '',
         }
@@ -61,10 +83,22 @@
       const putProfileSettings = async () => {
         putSettings(state.value.originalPassword)
           .then((response: any) => {
-            notifier.notify()
+            notifier.notify({
+              title: 'Success',
+              description: 'Password changed Successfully',
+              showProgressBar: true,
+              timeout: 7_000,
+              type: 'success',
+            })
           })
           .catch((err: any) => {
-            notifier.notify()
+            notifier.notify({
+              title: 'Fail',
+              description: 'Can not change password',
+              showProgressBar: true,
+              timeout: 7_000,
+              type: 'error',
+            })
             console.error(err)
           })
       }
@@ -72,6 +106,9 @@
       return {
         form,
         state,
+        showOld,
+        showNew,
+        showConfirm,
         passwordRules,
         confirmedPasswordRule,
         putProfileSettings,

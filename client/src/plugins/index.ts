@@ -17,6 +17,9 @@ export function registerPlugins (app: App) {
   app
     .use(pinia)
     .use($vuetify)
-    .use(useNotifierPlugin())
+    .use(useNotifierPlugin({
+      id: 'bottom',
+      position: 'bottom',
+    }))
     .use(router)
 }

@@ -1,9 +1,7 @@
 <template>
+  <h1>Settings</h1>
   <v-card>
-    <v-card-title class="text-h3">
-      Settings
-    </v-card-title>
-    <v-card-item>
+    <v-card-title>
       <v-btn-toggle
         divided
         variant="outlined"
@@ -12,12 +10,12 @@
 
         <v-btn @click="profile = false">Security Information</v-btn>
       </v-btn-toggle>
+    </v-card-title>
+    <v-card-item>
+      <ProfileInformationForm v-if="profile" />
+      <SecurityForm v-else />
     </v-card-item>
   </v-card>
-  <v-card-item>
-    <ProfileInformationForm v-if="profile" />
-    <SecurityForm v-else />
-  </v-card-item>
 </template>
 
 <script lang="ts">
@@ -43,3 +41,27 @@
     },
   }
 </script>
+
+<style lang="scss" scoped>
+
+h1 {
+  margin: 55px;
+}
+
+.main-card {
+  margin: auto;
+  width: 95%;
+}
+
+.v-card {
+  width: 50%;
+  margin: auto;
+}
+
+.v-card-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+</style>

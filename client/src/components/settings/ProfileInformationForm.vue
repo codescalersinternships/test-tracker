@@ -13,6 +13,7 @@
 
     <v-text-field
       v-model="state.firstName"
+      clearable
       label="First Name"
       required
       :rules="nameRules"
@@ -20,6 +21,7 @@
 
     <v-text-field
       v-model="state.lastName"
+      clearable
       label="Last Name"
       required
       :rules="nameRules"
@@ -27,6 +29,7 @@
 
     <v-text-field
       v-model="state.phoneNumber"
+      clearable
       label="Phone Number"
       :rules="phoneNumberRules"
     />
@@ -54,7 +57,7 @@
 
     name: 'ProfileInformationForm',
     setup () {
-      const notifier = useNotifier()
+      const notifier = useNotifier('bottom')
 
       const form = ref()
 
@@ -69,13 +72,24 @@
       const email = ref<string>('test@test.com')
 
       const putProfileSettings = async () => {
-        alert.value = true
         putSettings(state.value)
           .then((response: any) => {
-            notifier.notify()
+            notifier.notify({
+              title: 'Success',
+              description: 'Profile changed Successfully',
+              showProgressBar: true,
+              timeout: 7_000,
+              type: 'success',
+            })
           })
           .catch((err: any) => {
-            notifier.notify()
+            notifier.notify({
+              title: 'Fail',
+              description: 'Can not change profile',
+              showProgressBar: true,
+              timeout: 7_000,
+              type: 'error',
+            })
             console.error(err)
           })
       }
