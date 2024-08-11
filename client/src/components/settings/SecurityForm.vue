@@ -33,7 +33,7 @@
       required
       :rules="confirmedPasswordRule(state.originalPassword)"
       :type="showConfirm ? 'text' : 'password'"
-      @click:append="showNew = !showNew"
+      @click:append="showConfirm = !showConfirm"
     />
 
     <v-btn
