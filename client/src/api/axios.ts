@@ -55,4 +55,12 @@ async function LogInGitHub(){
   })
 }
 
+// try {
+//   const response = await userservice.baseClient().get(`/note/${noteUrl}`);
+//   console.log('Response data:', response.data);
+//   msg.value = response.data.note_text;
+// } catch (err) {
+//   console.error('Error fetching note:', err);
+// }
+
 export default { AuthClient, BaseClient, LogInUser,LogInGitHub, SignUp, SignUpInvitation };
