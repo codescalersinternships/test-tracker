@@ -27,8 +27,8 @@
             <v-row>
                 <v-col v-for="member in members" :key="member.email" cols="12" sm="6" md="4">
                     <v-card class="ma-2" outlined>
-                        <v-card-title>{{ member.name }}</v-card-title>
-                        <v-card-subtitle>{{ member.email }}</v-card-subtitle>
+                        <!-- <v-card-title>{{ member.full_name }}</v-card-title> -->
+                        <v-card-subtitle>{{ member.full_name }}</v-card-subtitle>
                         <v-card-actions>
                         <v-btn @click="viewMember(member.id)">View Details</v-btn>
                         </v-card-actions>
