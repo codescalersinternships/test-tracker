@@ -33,5 +33,24 @@ async function CreateNewTestSuite(testSuiteDetails: any, project_id:any){
     return error
   })
 }
+async function GetTestSuites(project_id:any){
+  await AuthClient.get(`/test_suites/${project_id}/`)
+  .then(response=>{
+    return response.data
+  })
+  .catch(error=>{
+    return error
+  })
+}
 
-export default{ AuthClient, BaseClient,GetPlans, CreateNewTestSuite };
+async function SearchSuite(project_id:any,key_word:any){
+  await AuthClient.get(`/test_suites/${project_id}/search/${key_word}/`)
+  .then(response=>{
+    return response.data
+  })
+  .catch(error=>{
+    return error
+  })
+}
+
+export default{ AuthClient, BaseClient,GetPlans, CreateNewTestSuite, GetTestSuites,SearchSuite };
