@@ -2,12 +2,12 @@
     <div style="margin-left: 7cm; margin-right: 7cm;">
         <v-container>
             <v-row >
-                <v-typography class="mt-2 text-h4 text-blue-darken-4" variant="h5">Test Suites</v-typography>
+                <p class="mt-2 text-h4 text-blue-darken-4" variant="h5">Test Suites</p>
                 <v-spacer></v-spacer>
             </v-row>
 
             <v-row>
-                <v-typography class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">There are {{ count }} Test Suite</v-typography>
+                <p class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">There are {{ count }} Test Suite</p>
             </v-row>
             <br>
 
