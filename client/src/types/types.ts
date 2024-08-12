@@ -1,5 +1,5 @@
 export type Project = {
     title:string,
-    description:string,
-    githubRepo:string
+    short_description:string,
+    repo_link:string
 }

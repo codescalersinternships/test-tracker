@@ -5,7 +5,7 @@
     @submit.prevent
   >
     <v-text-field
-      v-model="state.title"
+      v-model="project.title"
       clearable
       label="Title"
       required
@@ -13,7 +13,7 @@
     />
 
     <v-text-field
-      v-model="state.Description"
+      v-model="project.short_description"
       clearable
       label="Description"
       required
@@ -26,7 +26,7 @@
 
     <v-text-field
       v-if="githubRepo"
-      v-model="state.githubRepo"
+      v-model="project.repo_link"
       clearable
       label="Github repository"
       :rules="githubRepoRules"
@@ -61,16 +61,26 @@
 
       const form = ref()
 
-      const state = ref<Project>(
+      const project = ref<Partial<Project>>(
         {
           title: '',
-          description: '',
-          githubRepo: '',
+          short_description: '',
+          repo_link: '',
         }
       )
 
       const createProject = async () => {
-        postProject(state.value)
+        let projectObject: Partial<Project> = {
+          title: project.value.title,
+          short_description: project.value.short_description,
+        }
+        if (project.value.repo_link !== '') {
+          projectObject = {
+            ...projectObject,
+            repo_link: project.value.repo_link,
+          }
+        }
+        postProject(projectObject)
           .then((response: any) => {
             notifier.notify({
               title: 'Success',
@@ -94,7 +104,7 @@
 
       return {
         form,
-        state,
+        project,
         githubRepo,
         titleRules,
         descriptionRules,

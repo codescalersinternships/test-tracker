@@ -16,39 +16,115 @@
       </v-row>
 
       <v-row>
-        <v-text-field v-model="searchText" label="Search" variant="outlined" />
-        <v-btn color="primary" style="height: 56px; width:80px; padding: 0; margin: 0;" variant="outlined" @click="search">Search</v-btn>
+        <v-text-field
+          append-inner-icon="mdi-magnify"
+          density="compact"
+          hide-details
+          single-line
+          variant="solo"
+          @click:append-inner="search"
+        />
       </v-row>
 
-      <!-- seperate component for displaying members? -->
+      <v-row>
 
+        <v-col
+          v-for="project in projects"
+          :key="project.id"
+          cols="12"
+          md="4"
+          sm="6"
+        >
+          <v-card class="ma-2" outlined>
+            <v-card-subtitle>{{ project.title }}</v-card-subtitle>
+            <v-card-actions>
+              <v-btn>View Details</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+
+      </v-row>
     </v-container>
   </div>
 </template>
 
-<script>
-  import { defineProps, ref } from 'vue'
+<script lang="ts">
+  import { ref } from 'vue'
   import { searchProject } from '@/api/userservice'
+  import { useNotifier } from 'vue3-notifier'
 
   export default {
-    setup () {
-      const count = ref(2)
 
-      const projectText = () => { if (count.value !== 1) { return 'There are ' + count.value + ' projects.' } return 'There is 1 project.' }
+    name: 'ProjectsView',
+    setup () {
+      const notifier = useNotifier('bottom')
+
+      const projects = [
+        {
+          title: 'title',
+          id: '1',
+        },
+        {
+          title: 'title',
+          id: '1',
+        },
+        {
+          title: 'title',
+          id: '1',
+        },
+        {
+          title: 'title',
+          id: '1',
+        },
+        {
+          title: 'title',
+          id: '1',
+        },
+        {
+          title: 'title',
+          id: '1',
+        },
+        {
+          title: 'title',
+          id: '1',
+        },
+        {
+          title: 'title',
+          id: '1',
+        },
+      ]
 
       const searchText = ref('')
 
-      const search = async () => {
-        try {
-          projects.value = await searchProject(searchText.value)
-        } catch (error) {
-          console.error('Error searching for projects:', error)
+      const count = ref(projects.length)
+
+      const projectText = () => {
+        if (count.value !== 1) {
+          return 'There are ' + count.value + ' projects.'
         }
+        return 'There is 1 project.'
+      }
+
+      const search = async () => {
+        const text = searchText.value
+        searchProject(text)
+          .then((response: any) => {
+          })
+          .catch((err: any) => {
+            notifier.notify({
+              title: 'Fail',
+              description: 'Can not search projects',
+              showProgressBar: true,
+              timeout: 7_000,
+              type: 'error',
+            })
+            console.error(err)
+          })
       }
 
       return {
-        count,
         search,
+        projects,
         searchText,
         projectText,
       }
