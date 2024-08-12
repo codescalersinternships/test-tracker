@@ -21,14 +21,31 @@
             </v-row>
             <!-- viewplan and viewsuite to be added later -->
             <v-row>
-                <v-col v-for="plan in testPlans" :key="plan.id" cols="12" sm="6" md="4">
-                    <v-card class="ma-2" outlined>
-                        <v-card-title @click="viewPlan(plan.id)">{{ plan.title }}</v-card-title>
-                        <v-card-subtitle>
-                            Created: {{ plan.created }}
-                            Updated: {{ plan.modified }}
-                        </v-card-subtitle>
-                    </v-card>
+                <v-col v-for="plan in testPlans" :key="plan.id" cols="12">
+                <v-card class="mx-auto" >
+                    <v-card-title class="d-flex justify-space-between align-center">
+                        {{ plan.title }}
+                        <v-menu>
+                            <template v-slot:activator="{ props }">
+                            <v-btn icon="mdi-dots-vertical" v-bind="props" flat></v-btn>
+                            </template>
+                            <v-list>
+                            <v-list-item @click="updatePlan(plan.id)" >
+                                <v-list-item-title>Update</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item @click="deletePlan(plan.id)">
+                                <v-list-item-title>Delete</v-list-item-title>
+                            </v-list-item>
+                            </v-list>
+                        </v-menu>
+                    </v-card-title>
+                    <v-card-subtitle>
+                        <br>
+                        <strong>  Created:</strong> {{ plan.created }}
+                        <span class="mx-16"></span>
+                        <strong>  Updated:</strong> {{ plan.modified }}
+                    </v-card-subtitle>
+                </v-card>
                 </v-col>
             </v-row>
 
@@ -44,10 +61,14 @@ export default{
     setup(){
         const count = ref(0);
         const searchText = ref('');
-        const testPlans = ref([]);
+        // const testPlans = ref([]);
+        const testPlans = ref([{id: '1',title: 'Plan A',created: '2024-08-01',modified: '2024-08-05'},
+        {id: '1',title: 'Plan A',created: '2024-08-01',modified: '2024-08-05'},
+        {id: '1',title: 'Plan A',created: '2024-08-01',modified: '2024-08-05'}
+        ]);
 
 
-        //PROJECCCCCT IIIIIIDDDD
+        //PROJECCCCCT IIIIIIDDDD????????????
         const SearchPlans = async () => {
             try {
                 testPlans.value=await axios.SearchPlans(projectId,searchText)
@@ -64,6 +85,18 @@ export default{
             }
         };
 
+        function updatePlan(planId){
+            //open the create pop up with the create details, allowing edits?
+        }
+
+        async function deletePlan(planId){
+            try {
+                await axios.DeletePlan(projectId,planId);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
         onMounted(() => {
         GetTestPlans();
         });
@@ -74,7 +107,9 @@ export default{
             SearchPlans,
             searchText,
             testPlans,
-            GetTestPlans
+            GetTestPlans,
+            updatePlan,
+            deletePlan
         }
     }
 }

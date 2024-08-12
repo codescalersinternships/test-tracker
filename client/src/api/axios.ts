@@ -35,4 +35,13 @@ async function SearchPlans(project_id:any,key_word:any){
   })
 }
 
-export default{ AuthClient, BaseClient,GetPlans,SearchPlans };
+async function DeletePlan(project_id:any,test_plan_id:any) {
+  await AuthClient.delete(`/test_plan/${project_id}/actions/${test_plan_id}/`)
+  .then(response=>{
+  })
+  .catch(error=>{
+    return error
+  })
+}
+
+export default{ AuthClient, BaseClient,GetPlans,SearchPlans,DeletePlan };
