@@ -1,6 +1,6 @@
 <template>
     <div class="text-center pa-4">
-        <!-- to be removed, this is just to be replaced later on with the + button on click , it opens the dialog.. -->
+        <!-- this is just to be replaced later on with the + button on click , it opens the dialog.. -->
         <v-btn @click="dialog = true">
             Open Dialog
         </v-btn>
@@ -13,11 +13,11 @@
             <v-card-subtitle>
             <div>
                 <strong>Title</strong>
-                <v-text-field v-model="title" placeholder="Enter title "></v-text-field>
+                <v-text-field v-model="details.title" placeholder="Enter title "></v-text-field>
             </div>
             <div>
                 <strong>Test Plan</strong>
-                <v-select v-model="selectedPlan" :items="plans" label="Select Plan"></v-select>
+                <v-select v-model="details.test_plan" :items="plans" label="Select Plan"></v-select>
             </div>
             </v-card-subtitle>
             <v-divider></v-divider>
@@ -30,28 +30,48 @@
     </div>
 </template>
 
-<!-- /test_plan/{project_id}/      endpoint -->
-
 <script>
+import axios from '@/api/axios';
+import { onMounted } from 'vue';
+
 
 export default{
     setup(){
         let dialog=ref(false);
-        const title = ref('');
-        const selectedPlan = ref(null);
+        const details = ref({
+        title: '',
+        test_plan: null,
+        });
 
-        const plans = ["haha"];
+        const plans = ref([]);
 
-        function createTestSuite(){
+        //from where to get the project id???
+        const fetchPlans = async () => {
+            try {
+            plans.value = await axios.GetPlans(projectId);
+            } catch (error) {
+            console.error(error);
+            }
+        };
 
+        const createTestSuite=async()=>{
+            try{
+                await axios.CreateNewTestSuite(details,projectId);
+            } catch(error){
+                console.error(error);
+            }
         }
+
+        onMounted(() => {
+        fetchPlans();
+        });
 
         return {
         dialog,
-        title,
-        selectedPlan,
+        details,
         plans,
-        createTestSuite
+        createTestSuite,
+        fetchPlans,
         };
     }
 }

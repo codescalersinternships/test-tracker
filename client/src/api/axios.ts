@@ -14,4 +14,24 @@ const BaseClient: AxiosInstance = axios.create({
   timeout: 1000,
 });
 
-export { AuthClient, BaseClient };
+
+async function GetPlans(projectId:any){
+  await AuthClient.get(`/test_plan/${projectId}/`)
+  .then(response=>{
+    return response.data
+  })
+  .catch(error=>{
+    return error
+  })
+}
+
+async function CreateNewTestSuite(testSuiteDetails: any, project_id:any){
+  await AuthClient.post(`/test_suites/${project_id}/`)
+  .then(response=>{
+  })
+  .catch(error=>{
+    return error
+  })
+}
+
+export default{ AuthClient, BaseClient,GetPlans, CreateNewTestSuite };
