@@ -18,7 +18,7 @@
 
                 <v-row class="d-flex justify-center" no-gutters>
                     <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
-                        <v-typography class="mt-2 text-h5 text-grey-darken-2" variant="h5">Sign up</v-typography>
+                        <p class="mt-2 text-h5 text-grey-darken-2" variant="h5">Sign up</p>
                     </v-col>
                 </v-row>
 
@@ -71,16 +71,10 @@
         
                 <v-row>
                 <v-col cols="6" class="d-flex justify-center">
-                    <v-btn variant="outlined" class="w-100" @click="SubmitLoginGithub">
-                    <v-icon left>mdi-github</v-icon>
-                    Github
-                    </v-btn>
+                    <LoginGithub/>
                 </v-col>
                 <v-col cols="6" class="d-flex justify-center">
-                    <v-btn variant="outlined" class="w-100">
-                    <img src="@/assets/tflogo.png" width=12px>
-                    TFT Connect
-                    </v-btn>
+                    <LoginTFT/>
                 </v-col>
                 </v-row>
         
@@ -89,38 +83,39 @@
                 <v-divider></v-divider>
                 <br>
 
-                <v-row>
-                    <v-col class="d-flex justify-center">
-                    <a class="text-caption text-decoration-none text-grey-darken-2">Already have an account? 
-                        <a
-                        class="text-caption text-decoration-none text-blue"
-                        href="#"
-                        @click.prevent="LogIn"
-                        >
-                        Sign in
-                        </a></a>
-                    </v-col>
-                </v-row>
+                <AlreadyHaveAnAccount/>
+
             </v-card>
         </v-container>
     </div> 
 </template>
 
-<style scoped>
+<style>
 .background {
-background: url('../assets/authPagesBackGround.png');
-background-size: 100% 100%;
+background-image: url('@/assets/authPagesBackGround.png');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+padding: 0px;
+margin: 0px;
+width: 100%;
+height: 100%;
 }
 </style>
 
 <script>
+import LoginGithub from '@/components/LoginGithub.vue';
 import axios from '../api/axios.ts';
-import { useRouter } from 'vue-router';
+import AlreadyHaveAnAccount from '@/components/AlreadyHaveAnAccount.vue';
+import LoginTFT from '@/components/LoginTFT.vue';
 
 export default{
+    components: {
+    AlreadyHaveAnAccount,
+    LoginGithub,
+    LoginTFT
+    },
     setup(){
-
-        const router=useRouter();
 
         const newUser=ref({
         first_name: "",
@@ -132,22 +127,15 @@ export default{
         let visible = ref(false);
 
         function RegisterNewUser(){
-            axios.SignUp(newUser.value);
+            try{
+                axios.SignUp(newUser.value);
+            }catch(error){
+                console.error(error);
+            }
         }
-
-        function SubmitLoginGithub(){
-            axios.LogInGitHub();
-        }
-
-        function LogIn(){
-            router.push(`/`);
-        }
-
 
         return{
             RegisterNewUser,
-            SubmitLoginGithub,
-            LogIn,
             visible,
             newUser,
         }

@@ -14,7 +14,6 @@ import App from './App.vue'
 // Composables
 import { createApp } from 'vue'
 import vuetify from './plugins/vuetify'
-//import Toast from 'vue-toastification';
 
 const app = createApp(App)
 

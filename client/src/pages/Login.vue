@@ -19,16 +19,16 @@
   
         <v-row class="d-flex justify-center" no-gutters>
           <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
-            <v-typography class="mt-2 text-h5 text-grey-darken-2" variant="h5">Welcome</v-typography>
+            <p class="mt-2 text-h5 text-grey-darken-2" variant="h5">Welcome</p>
           </v-col>
         </v-row>
   
         <v-row>
           <v-col class="d-flex justify-center">
-            <v-typography class="text-center grey-darken-3">
+            <p class="text-center grey-darken-3">
               Sign in with your
-              <v-typography class="font-weight-bold" >Test Tracker</v-typography> account
-            </v-typography>
+              <p class="font-weight-bold" >Test Tracker</p> account
+            </p>
           </v-col>
         </v-row>
   
@@ -82,16 +82,10 @@
   
         <v-row>
           <v-col cols="6" class="d-flex justify-center">
-            <v-btn variant="outlined" class="w-100" @click="SubmitLoginGithub">
-              <v-icon left>mdi-github</v-icon>
-              Github
-            </v-btn>
+            <LoginGithub/>
           </v-col>
           <v-col cols="6" class="d-flex justify-center">
-            <v-btn variant="outlined" class="w-100">
-              <img src="@/assets/tflogo.png" width=12px>
-              TFT Connect
-            </v-btn>
+            <LoginTFT/>
           </v-col>
         </v-row>
   
@@ -120,47 +114,57 @@
 
 <style>
 .background {
-  background: url('../assets/authPagesBackGround.png');
-  background-size: 100% 100%;
-  /* background-size: cover */
+background-image: url('@/assets/authPagesBackGround.png');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+padding: 0px;
+margin: 0px;
+width: 100%;
+height: 100%;
 }
 </style>
 
 <script>
+import LoginGithub from '@/components/LoginGithub.vue';
 import axios from '../api/axios.ts';
 import { useRouter } from 'vue-router';
+import LoginTFT from '@/components/LoginTFT.vue';
 
 export default{
-    setup(){
+  components: {
+    LoginGithub,
+    LoginTFT,
+  },
+  setup(){
 
-      const router=useRouter();
+    const router=useRouter();
 
-      const userInfo=ref({
-      email: "",
-      password: "",
-      })
+    const userInfo=ref({
+    email: "",
+    password: "",
+    })
 
-      let visible = ref(false);
+    let visible = ref(false);
 
-      function SumbitLogIn(){
-          axios.LogInUser(userInfo.value)
-      }
-  
-      function SubmitLoginGithub(){
-          axios.LogInGitHub();
-      }
-
-      function CreateAccount(){
-        router.push(`/signup`)
-      }
-
-      return{
-          SumbitLogIn,
-          SubmitLoginGithub,
-          CreateAccount,
-          userInfo,
-          visible,
+    function SumbitLogIn(){
+      try {
+        axios.LogInUser(userInfo.value)
+      } catch (error) {
+        console.error(error);
       }
     }
+
+    function CreateAccount(){
+      router.push(`/signup`)
+    }
+
+    return{
+        SumbitLogIn,
+        CreateAccount,
+        userInfo,
+        visible,
+    }
+  }
 }
 </script>
