@@ -5,14 +5,14 @@
     @submit.prevent
   >
     <v-text-field
-      v-model="email"
+      v-model="profile.email"
       :counter="10"
       disabled
       label="E-mail"
     />
 
     <v-text-field
-      v-model="state.firstName"
+      v-model="profile.first_name"
       clearable
       label="First Name"
       required
@@ -20,7 +20,7 @@
     />
 
     <v-text-field
-      v-model="state.lastName"
+      v-model="profile.last_name"
       clearable
       label="Last Name"
       required
@@ -28,7 +28,7 @@
     />
 
     <v-text-field
-      v-model="state.phoneNumber"
+      v-model="profile.phone"
       clearable
       label="Phone Number"
       :rules="phoneNumberRules"
@@ -41,7 +41,7 @@
       text="Submit"
       type="submit"
 
-      @click="putProfileSettings"
+      @click="updateProfileSettings"
     />
   </v-form>
 </template>
@@ -49,7 +49,7 @@
 <script lang="ts">
   import { ref } from 'vue'
   import { putSettings } from '@/api/userservice'
-  import { ProfileSettings } from '../../types/types'
+  import { UserProfile } from '../../types/types'
   import { nameRules, phoneNumberRules } from '@/utilities/validators'
   import { useNotifier } from 'vue3-notifier'
 
@@ -61,18 +61,22 @@
 
       const form = ref()
 
-      const state = ref<ProfileSettings>(
+      const profile = ref<Partial<UserProfile>>(
         {
-          firstName: '',
-          lastName: '',
-          phoneNumber: '',
+          email: '',
+          first_name: '',
+          last_name: '',
+          phone: '',
         }
       )
 
-      const email = ref<string>('test@test.com')
-
-      const putProfileSettings = async () => {
-        putSettings(state.value)
+      const updateProfileSettings = async () => {
+        const userProfile: Partial<UserProfile> = {
+          first_name: profile.value.first_name,
+          last_name: profile.value.last_name,
+          phone: profile.value.phone,
+        }
+        putSettings(userProfile)
           .then((response: any) => {
             notifier.notify({
               title: 'Success',
@@ -96,11 +100,10 @@
 
       return {
         form,
-        state,
-        email,
+        profile,
         nameRules,
         phoneNumberRules,
-        putProfileSettings,
+        updateProfileSettings,
       }
     },
   }

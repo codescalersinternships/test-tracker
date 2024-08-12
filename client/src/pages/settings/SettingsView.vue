@@ -1,7 +1,12 @@
 <template>
   <h1>Settings</h1>
-  <v-card>
-    <v-card-title>
+  <v-card
+    class="mx-auto"
+    width="50%"
+  >
+    <v-card-title
+      class="d-flex justify-lg-center align-md-center"
+    >
       <v-btn-toggle
         divided
         variant="outlined"
@@ -51,17 +56,6 @@ h1 {
 .main-card {
   margin: auto;
   width: 95%;
-}
-
-.v-card {
-  width: 50%;
-  margin: auto;
-}
-
-.v-card-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 </style>

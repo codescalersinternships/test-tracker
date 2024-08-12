@@ -6,9 +6,8 @@
   >
 
     <v-text-field
-      v-model="state.oldPassword"
-      :append-icon="showOld ? 'mdi-eye' : 'mdi-eye-off'"
-      clearable
+      v-model="password.old"
+      :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
       label="Old password"
       required
       :rules="passwordRules"
@@ -16,9 +15,8 @@
       @click:append="showOld = !showOld"
     />
     <v-text-field
-      v-model="state.originalPassword"
-      :append-icon="showNew ? 'mdi-eye' : 'mdi-eye-off'"
-      clearable
+      v-model="password.original"
+      :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
       label="New password"
       required
       :rules="passwordRules"
@@ -27,11 +25,11 @@
     />
 
     <v-text-field
-      v-model="state.confirmPassword"
-      :append-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+      v-model="password.confirm"
+      :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
       label="Confirm new password"
       required
-      :rules="confirmedPasswordRule(state.originalPassword)"
+      :rules="confirmedPasswordRule(password.original)"
       :type="showConfirm ? 'text' : 'password'"
       @click:append="showConfirm = !showConfirm"
     />
@@ -43,7 +41,7 @@
       text="Change Password"
       type="submit"
 
-      @click="putProfileSettings"
+      @click="updateProfileSettings"
     />
   </v-form>
 </template>
@@ -52,12 +50,13 @@
   import { ref } from 'vue'
   import { confirmedPasswordRule, passwordRules } from '@/utilities/validators'
   import { putSettings } from '@/api/userservice'
+  import { UserProfile } from '../../types/types'
   import { useNotifier } from 'vue3-notifier'
 
-  type FormState = {
-    oldPassword: string,
-    originalPassword: string,
-    confirmPassword: string,
+  type Passwords = {
+    old: string,
+    original: string,
+    confirm: string,
   }
 
   export default {
@@ -72,16 +71,17 @@
       const showNew = ref(false)
       const showConfirm = ref(false)
 
-      const state = ref<FormState>(
+      const password = ref<Passwords>(
         {
-          oldPassword: '',
-          originalPassword: '',
-          confirmPassword: '',
+          old: '',
+          original: '',
+          confirm: '',
         }
       )
 
-      const putProfileSettings = async () => {
-        putSettings(state.value.originalPassword)
+      const updateProfileSettings = async () => {
+        const userProfile: Partial<UserProfile> = { password: password.value.original }
+        putSettings(userProfile)
           .then((response: any) => {
             notifier.notify({
               title: 'Success',
@@ -105,13 +105,13 @@
 
       return {
         form,
-        state,
+        password,
         showOld,
         showNew,
         showConfirm,
         passwordRules,
         confirmedPasswordRule,
-        putProfileSettings,
+        updateProfileSettings,
       }
     },
   }

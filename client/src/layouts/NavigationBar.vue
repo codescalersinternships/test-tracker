@@ -4,7 +4,7 @@
     color="white"
     height="75"
   >
-    <div class="app-component mx-9 main-routes">
+    <div class="app-component mx-9 d-flex">
       <div class="left-nav-bar">
         <v-img
           alt="Test Tracker Logo"
@@ -209,9 +209,6 @@ a {
   font-size: 1rem;
 }
 
-.main-routes {
-  display: flex;
-}
 .left-nav-bar {
   width: 250px;
 }

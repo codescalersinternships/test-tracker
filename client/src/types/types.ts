@@ -1,5 +1,7 @@
-export type ProfileSettings = {
-    firstName: string,
-    lastName: string,
-    phoneNumber: string,
+export type UserProfile = {
+    email: string,
+    first_name: string,
+    last_name: string,
+    phone: string,
+    password: string,
 }
