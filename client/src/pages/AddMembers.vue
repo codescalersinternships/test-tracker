@@ -2,7 +2,7 @@
     <div style="margin-left: 7cm; margin-right: 7cm;">
         <v-container>
             <v-row >
-                <v-typography class="mt-2 text-h4 text-blue-darken-4" variant="h5">ALL MEMBERS</v-typography>
+                <p class="mt-2 text-h4 text-blue-darken-4" variant="h5">ALL MEMBERS</p>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" @click="addMember">
                     INVITE MEMBERS
@@ -10,7 +10,7 @@
             </v-row>
 
             <v-row>
-                <v-typography class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">There are {{ count }} members registered</v-typography>
+                <p class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">There are {{ count }} members registered</p>
             </v-row>
             <br>
 
