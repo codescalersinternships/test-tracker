@@ -10,7 +10,7 @@
             </v-row>
 
             <v-row>
-                <v-typography class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">-There are {{ count }} members registered</v-typography>
+                <v-typography class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">There are {{ count }} members registered</v-typography>
             </v-row>
             <br>
 
