@@ -62,12 +62,11 @@ export default{
         const addMember = () => {
         };
 
-
         const SearchMember = async () => {
             try {
                members.value= await axios.Search(searchText.value);
             } catch (error) {
-                console.error('Error searching for members:', error);
+                console.error(error);
             }
         };
 
