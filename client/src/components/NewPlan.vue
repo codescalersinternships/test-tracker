@@ -16,15 +16,15 @@
                 <v-text-field v-model="details.title" placeholder="Enter title "></v-text-field>
             </div>
             <div>
-                <v-radio-group>
-                <v-radio label="Create With Default Templates" value="default"  class="black--text"></v-radio>
-                <v-radio label="Create With Custom Templates" value="custom" text-black></v-radio>
+                <v-radio-group v-model="details.type">
+                <v-radio label="Create With Default Templates" value="template"></v-radio>
+                <v-radio label="Create With Custom Templates" value="blank" ></v-radio>
                 </v-radio-group>
             </div>
             </v-card-subtitle>
             <v-divider></v-divider>
             <v-card-actions>
-            <v-btn color="info" @click="dialog = false">Close</v-btn>
+            <v-btn color="primary" @click="dialog = false">Close</v-btn>
             <v-btn color="success" @click="createTestPlan">Create</v-btn>
             </v-card-actions>
         </v-card>
@@ -44,7 +44,7 @@ export default{
 
         const createTestPlan=async()=>{
             try{
-                await axios.CreateNewTestPlan(details,projectId);
+                await axios.CreateNewTestPlan(details.value,projectId);
             } catch(error){
                 console.error(error);
             }

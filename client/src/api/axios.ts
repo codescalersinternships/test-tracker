@@ -44,4 +44,13 @@ async function DeletePlan(project_id:any,test_plan_id:any) {
   })
 }
 
-export default{ AuthClient, BaseClient,GetPlans,SearchPlans,DeletePlan };
+async function UpdatePlanTitle(project_id:any,test_plan_id:any,title:any) {
+  await AuthClient.put(`/test_plan/${project_id}/${test_plan_id}/update/`,title)
+  .then(response=>{
+  })
+  .catch(error=>{
+    return error
+  })
+}
+
+export default{ AuthClient, BaseClient,GetPlans,SearchPlans,DeletePlan,UpdatePlanTitle };
