@@ -1,9 +1,8 @@
 <template>
   <div style="margin-left: 7cm; margin-right: 7cm;">
     <v-container>
-      <v-row>
+      <v-row class="mb-6">
         <v-typography class="mt-2 text-h4 text-blue" variant="h5">ALL PROJECTS</v-typography>
-        <v-spacer />
       </v-row>
 
       <v-row>
@@ -15,34 +14,71 @@
         <h4 class="mb-2">Search Projects</h4>
       </v-row>
 
-      <v-row>
+      <v-row class="mb-6">
         <v-text-field
           append-inner-icon="mdi-magnify"
           density="compact"
           hide-details
           single-line
           variant="solo"
-          @click:append-inner="search"
-        />
+          @input="search"
+        >
+          <template #append-inner>
+            <v-icon color="blue" />
+          </template>
+          <!-- I dont know why its not working, it was working with a butoon before -->
+        </v-text-field>
       </v-row>
 
-      <v-row>
-
+      <v-row class="mb-6">
         <v-col
           v-for="project in projects"
           :key="project.id"
-          cols="12"
-          md="4"
+          cols="auto"
+          md="6"
           sm="6"
         >
-          <v-card class="ma-2" outlined>
-            <v-card-subtitle>{{ project.title }}</v-card-subtitle>
-            <v-card-actions>
-              <v-btn>View Details</v-btn>
-            </v-card-actions>
+          <v-card
+            class="ma-auto"
+          >
+            <v-card-title>
+              <v-row class="pa-4">
+                <v-col
+                  cols="11"
+                >
+                  {{ project.title }}
+                </v-col>
+                <v-col
+                  cols="1"
+                >
+                  <v-btn
+                    color="white"
+                    icon="mdi-dots-vertical"
+                    size="large"
+                    variant="text"
+                  />
+                </v-col>
+              </v-row>
+            </v-card-title>
+            <v-card-text class="mx-4">{{ project.description }}</v-card-text>
+            <v-btn
+              append-icon="mdi-chevron-right"
+              block
+              color="blue"
+              text="Open Project"
+              variant="tonal"
+            />
           </v-card>
-        </v-col>
 
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-pagination
+          v-model="page"
+          color="blue"
+          :length="4"
+          rounded="circle"
+        />
       </v-row>
     </v-container>
   </div>
@@ -59,44 +95,49 @@
     setup () {
       const notifier = useNotifier('bottom')
 
-      const projects = [
-        {
-          title: 'title',
-          id: '1',
-        },
-        {
-          title: 'title',
-          id: '1',
-        },
-        {
-          title: 'title',
-          id: '1',
-        },
-        {
-          title: 'title',
-          id: '1',
-        },
-        {
-          title: 'title',
-          id: '1',
-        },
-        {
-          title: 'title',
-          id: '1',
-        },
-        {
-          title: 'title',
-          id: '1',
-        },
-        {
-          title: 'title',
-          id: '1',
-        },
-      ]
+      const projects = ref<Project[]>()
+
+      onMounted(() => {
+        projects.value = getProjects()
+      }
+      )
+
+      // [
+      //   {
+      //     title: 'title',
+      //     id: '1',
+      //     description: 'project description',
+      //   },
+      //   {
+      //     title: 'title',
+      //     id: '1',
+      //     description: 'project description',
+      //   },
+      //   {
+      //     title: 'title',
+      //     id: '1',
+      //     description: 'project description',
+      //   },
+      //   {
+      //     title: 'title',
+      //     id: '1',
+      //     description: 'project description',
+      //   },
+      //   {
+      //     title: 'title',
+      //     id: '1',
+      //     description: 'project description',
+      //   },
+      //   {
+      //     title: 'title',
+      //     id: '1',
+      //     description: 'project description',
+      //   },
+      // ]
 
       const searchText = ref('')
 
-      const count = ref(projects.length)
+      const count = ref(projects.value.length)
 
       const projectText = () => {
         if (count.value !== 1) {
@@ -132,3 +173,9 @@
 
   }
 </script>
+
+<style lang="scss" scoped>
+::v-deep .v-icon {
+  color: #2196F3 !important;
+}
+</style>
