@@ -118,8 +118,8 @@ export default{
     password2: "",
     })
 
-    let showPassword = ref(false);
-    let showRePassword = ref(false);
+    let showPassword = ref(true);
+    let showRePassword = ref(true);
 
     const username=ref("");
     const invitor=ref("");

@@ -124,7 +124,7 @@ export default{
         password:"",
         })
 
-        let visible = ref(false);
+        let visible = ref(true);
 
         function RegisterNewUser(){
             try{

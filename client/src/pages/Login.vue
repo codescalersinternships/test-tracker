@@ -26,8 +26,7 @@
         <v-row>
           <v-col class="d-flex justify-center">
             <p class="text-center grey-darken-3">
-              Sign in with your
-              <p class="font-weight-bold" >Test Tracker</p> account
+              Sign in with your <strong>Test Tracker</strong> account
             </p>
           </v-col>
         </v-row>
@@ -145,7 +144,7 @@ export default{
     password: "",
     })
 
-    let visible = ref(false);
+    let visible = ref(true);
 
     function SumbitLogIn(){
       try {
