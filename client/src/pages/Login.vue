@@ -149,7 +149,8 @@ export default{
 
     function SumbitLogIn(){
       try {
-        axios.LogInUser(userInfo.value)
+        axios.LogInUser(userInfo.value);
+        router.push(`/profile`);
       } catch (error) {
         console.error(error);
       }
