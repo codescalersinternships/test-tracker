@@ -16,8 +16,10 @@
                 <v-text-field v-model="details.title" placeholder="Enter title "></v-text-field>
             </div>
             <div>
-                <strong>Type</strong>
-                <v-select v-model="details.type" :items="plans" label=" type"></v-select>
+                <v-radio-group>
+                <v-radio label="Create With Default Templates" value="default"  class="black--text"></v-radio>
+                <v-radio label="Create With Custom Templates" value="custom" text-black></v-radio>
+                </v-radio-group>
             </div>
             </v-card-subtitle>
             <v-divider></v-divider>
@@ -47,7 +49,11 @@ export default{
                 console.error(error);
             }
         }
-
+        return{
+            dialog,
+            createTestPlan,
+            details
+        }
 
     }
 }
