@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-left: 7cm; margin-right: 7cm;">
+    <div style="margin-left: 5cm; margin-right: 5cm;">
         <v-container>
             <v-row >
                 <p class="mt-2 text-h4 text-blue-darken-4" variant="h5">Test Plans</p>
@@ -22,30 +22,32 @@
             <!-- viewplan and viewsuite to be added later -->
             <v-row>
                 <v-col v-for="plan in testPlans" :key="plan.id" cols="12">
-                <v-card class="mx-auto" >
-                    <v-card-title class="d-flex justify-space-between align-center">
-                        {{ plan.title }}
-                        <v-menu>
-                            <template v-slot:activator="{ props }">
-                            <v-btn icon="mdi-dots-vertical" v-bind="props" flat></v-btn>
-                            </template>
-                            <v-list>
-                            <v-list-item @click="updatePlan(plan.id)" >
-                                <v-list-item-title>Update</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item @click="deletePlan(plan.id)">
-                                <v-list-item-title>Delete</v-list-item-title>
-                            </v-list-item>
-                            </v-list>
-                        </v-menu>
-                    </v-card-title>
-                    <v-card-subtitle>
-                        <br>
-                        <strong>  Created:</strong> {{ plan.created }}
-                        <span class="mx-16"></span>
-                        <strong>  Updated:</strong> {{ plan.modified }}
-                    </v-card-subtitle>
-                </v-card>
+                    <v-card class="mx-auto">
+                        <v-card-item>
+                            <v-card-title class="d-flex justify-space-between align-center">
+                            {{ plan.title }}
+                            <v-menu>
+                                <template v-slot:activator="{ props }">
+                                <v-btn icon="mdi-dots-vertical" v-bind="props" flat></v-btn>
+                                </template>
+                                <v-list>
+                                <v-list-item @click="updatePlan(plan.id)" >
+                                    <v-list-item-title>Edit </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item @click="deletePlan(plan.id)">
+                                    <v-list-item-title>Delete </v-list-item-title>
+                                </v-list-item>
+                                </v-list>
+                            </v-menu>
+                            </v-card-title>
+                            <v-card-text>
+                                <br>
+                                Created:<strong> {{ plan.created }}  </strong>
+                                <span class="mx-16"></span>
+                                Updated:<strong> {{ plan.modified }}</strong>
+                            </v-card-text>
+                        </v-card-item>
+                    </v-card>
                 </v-col>
             </v-row>
 
