@@ -4,10 +4,57 @@
             <v-row >
                 <p class="mt-2 text-h4 text-blue-darken-4" variant="h5">ALL MEMBERS</p>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="addMember">
+                <v-btn color="primary" @click="addMemberDialog=true">
                     INVITE MEMBERS
                 </v-btn>
             </v-row>
+
+            <v-dialog v-model="addMemberDialog" max-width="600px">
+                <v-card>
+                    <v-card-title>
+                        <br>
+                        <v-divider></v-divider>
+                    </v-card-title>
+                    <v-card-text>
+                        <p>First Name</p>
+                        <v-text-field
+                        v-model="inviteNewMember.first_name"
+                        density="compact"
+                        placeholder="First Name"
+                        prepend-inner-icon="mdi-account-outline"
+                        variant="outlined"
+                        ></v-text-field>
+                        <p>Last Name</p>
+                        <v-text-field
+                        v-model="inviteNewMember.last_name"
+                        density="compact"
+                        placeholder="Last Name"
+                        prepend-inner-icon="mdi-account-outline"
+                        variant="outlined"
+                        ></v-text-field>
+                        <p>Email</p>
+                        <v-text-field
+                        v-model="inviteNewMember.email"
+                        density="compact"
+                        placeholder="Email"
+                        prepend-inner-icon="mdi-email-outline"
+                        variant="outlined"
+                        ></v-text-field>
+                        <p>Permission</p>
+                        <v-select
+                        label="Select"
+                        :items="['Full access', 'Admin access']"
+                        ></v-select>
+                        <v-divider></v-divider>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="info" @click="addMemberDialog = false">Close</v-btn>
+                            <v-btn color="success" @click="addMember">ADD+</v-btn>
+                        </v-card-actions>
+                    </v-card-text>
+
+                </v-card>
+            </v-dialog>
 
             <v-row>
                 <p class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">There are {{ count }} members registered</p>
@@ -43,6 +90,7 @@
 import { ref } from 'vue';
 import { defineProps } from 'vue';
 import axios from '@/api/axios';
+
 export default{
     setup(){
         const props =defineProps({
@@ -56,10 +104,18 @@ export default{
             },
         });
 
+        const inviteNewMember=ref({
+        first_name: "",
+        last_name: "",
+        email:"",
+        })
+
+        const addMemberDialog=ref(false);
 
         let searchText=ref("");
 
         const addMember = () => {
+            // take userinfo
         };
 
         const SearchMember = async () => {
@@ -73,8 +129,10 @@ export default{
         return{
             props,
             SearchMember,
-            addMember,
-            searchText
+            searchText,
+            inviteNewMember,
+            addMemberDialog,
+            addMember
         }
     }
     
