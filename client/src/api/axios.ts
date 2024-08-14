@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 const AuthClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_ENDPOINT, 
+  baseURL: 'https://server.gent02.dev.grid.tf/api', 
   timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
@@ -10,7 +10,7 @@ const AuthClient: AxiosInstance = axios.create({
 });
 
 const BaseClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_ENDPOINT,
+  baseURL: 'https://server.gent02.dev.grid.tf/api',
   timeout: 1000,
 });
 
@@ -42,6 +42,7 @@ async function LogInUser(userInfo:any) {
   })
   .catch(error=>{
     localStorage.removeItem("token");
+    console.log(error);
   })
 }
 
