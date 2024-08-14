@@ -22,12 +22,7 @@
           single-line
           variant="solo"
           @input="search"
-        >
-          <template #append-inner>
-            <v-icon color="blue" />
-          </template>
-          <!-- I dont know why its not working, it was working with a butoon before -->
-        </v-text-field>
+        />
       </v-row>
 
       <v-row class="mb-6">
@@ -53,14 +48,14 @@
                 >
                   <v-btn
                     color="white"
-                    icon="mdi-dots-vertical"
+                    icon="mdi-delete"
                     size="large"
                     variant="text"
                   />
                 </v-col>
               </v-row>
             </v-card-title>
-            <v-card-text class="mx-4">{{ project.description }}</v-card-text>
+            <v-card-text class="mx-4">{{ project.short_description }}</v-card-text>
             <v-btn
               append-icon="mdi-chevron-right"
               block
@@ -74,6 +69,7 @@
       </v-row>
       <v-row justify="center">
         <v-pagination
+          v-if="count >= 4"
           v-model="page"
           color="blue"
           :length="4"
@@ -85,9 +81,10 @@
 </template>
 
 <script lang="ts">
-  import { ref } from 'vue'
-  import { searchProject } from '@/api/userservice'
+  import { ref, watch } from 'vue'
+  import { getProjects, searchProject } from '@/api/userservice'
   import { useNotifier } from 'vue3-notifier'
+  import { Project } from '@/types/types'
 
   export default {
 
@@ -95,56 +92,61 @@
     setup () {
       const notifier = useNotifier('bottom')
 
-      const projects = ref<Project[]>()
+      const page = ref(1)
 
-      onMounted(() => {
-        projects.value = getProjects()
-      }
+      const projects = ref<Partial<Project>[]>(
+        [
+          {
+            title: 'title',
+            id: 1,
+            short_description: 'project description',
+          },
+          {
+            title: 'title',
+            id: 2,
+            short_description: 'project description',
+          },
+          {
+            title: 'title',
+            id: 3,
+            short_description: 'project description',
+          },
+          {
+            title: 'title',
+            id: 4,
+            short_description: 'project description',
+          },
+        ]
       )
 
-      // [
-      //   {
-      //     title: 'title',
-      //     id: '1',
-      //     description: 'project description',
-      //   },
-      //   {
-      //     title: 'title',
-      //     id: '1',
-      //     description: 'project description',
-      //   },
-      //   {
-      //     title: 'title',
-      //     id: '1',
-      //     description: 'project description',
-      //   },
-      //   {
-      //     title: 'title',
-      //     id: '1',
-      //     description: 'project description',
-      //   },
-      //   {
-      //     title: 'title',
-      //     id: '1',
-      //     description: 'project description',
-      //   },
-      //   {
-      //     title: 'title',
-      //     id: '1',
-      //     description: 'project description',
-      //   },
-      // ]
+      const count = ref(0)
+
+      const getProjects = async (page: number) => {
+        getProjects(page).then((response: any) => {
+          projects.value = response.body.results
+          projects.value = response.body.total_count
+        })
+          .catch((err: any) => {
+            notifier.notify({
+              title: 'Fail',
+              description: 'Can not get projects',
+              showProgressBar: true,
+              timeout: 7_000,
+              type: 'error',
+            })
+            console.error(err)
+          })
+      }
+
+      // onMounted(() => {
+      //   getProjects(page.value)
+      // })
+
+      // watch(page, (currentValue, oldValue) => {
+      //   getProjects(currentValue)
+      // })
 
       const searchText = ref('')
-
-      const count = ref(projects.value.length)
-
-      const projectText = () => {
-        if (count.value !== 1) {
-          return 'There are ' + count.value + ' projects.'
-        }
-        return 'There is 1 project.'
-      }
 
       const search = async () => {
         const text = searchText.value
@@ -163,7 +165,16 @@
           })
       }
 
+      const projectText = () => {
+        if (count.value !== 1) {
+          return 'There are ' + count.value + ' projects.'
+        }
+        return 'There is 1 project.'
+      }
+
       return {
+        page,
+        count,
         search,
         projects,
         searchText,

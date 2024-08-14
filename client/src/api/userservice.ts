@@ -16,9 +16,20 @@ const BaseClient: AxiosInstance = axios.create({
 })
 
 export async function postProject (project :Partial<Project>) {
-  console.log(project)
   return AuthClient.post('/dashboard/projects/', { project })
 }
+
+export async function getProjects (page :number) {
+  return AuthClient.get('/dashboard/projects/', {
+    params: {
+      cursor: page,
+    },
+  })
+}
+
+// export async function getProjects (page :number) {
+//   return AuthClient.get(`/dashboard/projects/?cursor=${page}`)
+// }
 
 export async function searchProject (searchInput: string) {
   await AuthClient.get(`/project/search/${searchInput}`)
