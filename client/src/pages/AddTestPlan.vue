@@ -26,20 +26,7 @@
                         <v-card-item>
                             <v-card-title >
                             <span class="text-h5 font-weight-bold text-primary mr-6">{{ plan.title }}</span>
-                            <v-icon  size="small" @click="updatePlan(plan.id)" >mdi-pencil</v-icon>
-                            <!-- <v-menu>
-                                <template v-slot:activator="{ props }">
-                                <v-btn icon="mdi-dots-vertical" v-bind="props" flat></v-btn>
-                                </template>
-                                <v-list>
-                                <v-list-item @click="updatePlan(plan.id)" class="mb-2">
-                                    <v-list-item-title class="text-h5">Edit </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item @click="deletePlan(plan.id)">
-                                    <v-list-item-title class="text-h5"> Delete</v-list-item-title>
-                                </v-list-item>
-                                </v-list>
-                            </v-menu> -->
+                            <v-icon size="small" @click="openUpdateDialog(plan)" >mdi-pencil</v-icon>
                             </v-card-title>
                             <v-card-text>
                                 <br>
@@ -58,6 +45,8 @@
                 </v-col>
             </v-row>
 
+            <!-- style="background-color: #37ADE3;" class="text-white" -->
+
             <v-dialog v-model="dialogDelete" max-width="500px">
                 <v-card>
                     <v-card-title class="headline">You are about to delete <span class="text-red-darken-1">{{ planToDelete.title }}</span></v-card-title>
@@ -67,11 +56,27 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="dialogDelete = false">Cancel</v-btn>
-                        <v-btn color="red" @click="deletePlan(planToDelete.id)">Delete</v-btn>
+                        <v-btn style="background-color: #37ADE3;" class="text-white" @click="dialogDelete = false">Cancel</v-btn>
+                        <v-btn  style="background-color: #E53935;" class="text-white" @click="deletePlan(planToDelete.id)">Delete</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
+
+            <v-dialog v-model="dialogUpdate" max-width="500px">
+                <v-card>
+                    <v-card-title class="headline">Edit Plan <span class="font-weight-bold">{{ planToUpdate.title }}</span> title</v-card-title>
+                    <v-card-text>
+                        <v-text-field v-model="title" density="compact" placeholder="Title" variant="outlined"></v-text-field>
+                        <v-divider></v-divider>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn style="background-color: #37ADE3;" class="text-white" @click="dialogUpdate = false">Cancel</v-btn>
+                        <v-btn style="background-color: #37ADE3;" class="text-white" @click="updatePlan(planToUpdate.id)">Update</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            
 
         </v-container>
     </div>
@@ -92,12 +97,20 @@ export default{
 
         const count = ref(testPlans.value.length);
         const planToDelete = ref(null);
+        const planToUpdate=ref(null);
         const dialogDelete=ref(false);
+        const dialogUpdate=ref(false);
+        const title=ref("");
 
 
         function openDeleteDialog(plan) {
             planToDelete.value = plan;
             dialogDelete.value = true;
+        }
+
+        function openUpdateDialog(plan){
+            planToUpdate.value=plan;
+            dialogUpdate.value=true;
         }
 
 
@@ -118,8 +131,12 @@ export default{
             }
         };
 
-        function updatePlan(planId){
-            //open the create pop up with the create details, allowing edits?
+        async function updatePlan(planId){
+            try{
+                await axios.UpdatePlanTitle(projectId,planId,title.value)
+            }catch(error){
+
+            }
         }
 
         async function deletePlan(planId){
@@ -145,6 +162,10 @@ export default{
             deletePlan,
             planToDelete,
             dialogDelete,
+            dialogUpdate,
+            planToUpdate,
+            title,
+            openUpdateDialog,
             openDeleteDialog,
         }
     }

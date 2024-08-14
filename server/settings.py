@@ -178,6 +178,7 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "test_tracker.User"
 
+print("config",config("CLIENT_DOMAIN_NAME"))
 CORS_ALLOWED_ORIGINS = [f'https://{config("CLIENT_DOMAIN_NAME")}', f'http://{config("CLIENT_DOMAIN_NAME")}']
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
