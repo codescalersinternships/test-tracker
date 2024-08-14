@@ -12,16 +12,16 @@
       required
       :rules="passwordRules"
       :type="showOld ? 'text' : 'password'"
-      @click:append="showOld = !showOld"
+      @click:append-inner="showOld = !showOld"
     />
     <v-text-field
-      v-model="password.original"
+      v-model="password.new"
       :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
       label="New password"
       required
-      :rules="passwordRules"
+      :rules="[passwordRules,newPasswordRule(password.old)].flat()"
       :type="showNew ? 'text' : 'password'"
-      @click:append="showNew = !showNew"
+      @click:append-inner="showNew = !showNew"
     />
 
     <v-text-field
@@ -29,9 +29,9 @@
       :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
       label="Confirm new password"
       required
-      :rules="confirmedPasswordRule(password.original)"
+      :rules="[confirmedPasswordRule(password.new),newPasswordRule(password.old)].flat()"
       :type="showConfirm ? 'text' : 'password'"
-      @click:append="showConfirm = !showConfirm"
+      @click:append-inner="showConfirm = !showConfirm"
     />
 
     <v-btn
@@ -48,16 +48,10 @@
 
 <script lang="ts">
   import { ref } from 'vue'
-  import { confirmedPasswordRule, passwordRules } from '@/utilities/validators'
+  import { confirmedPasswordRule, newPasswordRule, passwordRules } from '@/utilities/validators'
+  import { Password, UserProfile } from '../../types/types'
   import { putSettings } from '@/api/userservice'
-  import { UserProfile } from '../../types/types'
   import { useNotifier } from 'vue3-notifier'
-
-  type Passwords = {
-    old: string,
-    original: string,
-    confirm: string,
-  }
 
   export default {
 
@@ -71,16 +65,16 @@
       const showNew = ref(false)
       const showConfirm = ref(false)
 
-      const password = ref<Passwords>(
+      const password = ref<Password>(
         {
           old: '',
-          original: '',
+          new: '',
           confirm: '',
         }
       )
 
       const updateProfileSettings = async () => {
-        const userProfile: Partial<UserProfile> = { password: password.value.original }
+        const userProfile: Partial<UserProfile> = { password: password.value.new }
         putSettings(userProfile)
           .then((response: any) => {
             notifier.notify({
@@ -110,6 +104,7 @@
         showNew,
         showConfirm,
         passwordRules,
+        newPasswordRule,
         confirmedPasswordRule,
         updateProfileSettings,
       }

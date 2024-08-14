@@ -5,3 +5,9 @@ export type UserProfile = {
     phone: string,
     password: string,
 }
+
+export type Password = {
+    old: string,
+    new: string,
+    confirm: string,
+  }

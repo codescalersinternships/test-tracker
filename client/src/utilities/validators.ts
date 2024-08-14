@@ -13,14 +13,26 @@ export const passwordRules = [
   },
 ]
 
-export function confirmedPasswordRule (originalPassword: string) {
+export function confirmedPasswordRule (newPassword: string) {
   return [
     (confirmPassword: string) => {
-      if (originalPassword) {
-        if (originalPassword === confirmPassword) return true
+      if (newPassword) {
+        if (newPassword === confirmPassword) return true
         return 'Passwords does not match'
       }
-      return 'You must enter password first.'
+      return 'You must enter new password first.'
+    },
+  ]
+}
+
+export function newPasswordRule (oldPassword: string) {
+  return [
+    (newPassword: string) => {
+      if (oldPassword) {
+        if (newPassword === oldPassword) return true
+        return 'New password must be different'
+      }
+      return 'You must enter old password first.'
     },
   ]
 }
