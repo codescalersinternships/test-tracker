@@ -116,10 +116,11 @@
             id: 4,
             short_description: 'project description',
           },
+
         ]
       )
 
-      const count = ref(0)
+      const count = ref(5)
 
       const getProjects = async (page: number) => {
         getProjects(page).then((response: any) => {
