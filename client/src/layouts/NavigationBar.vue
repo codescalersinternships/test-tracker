@@ -40,13 +40,8 @@
           />
         </template>
         <v-list>
-          <v-list-item
-            v-for="(item,index) in newForms"
-            :key="index"
-          />
-          <v-btn class="mx-3  pa-3 font-weight-black text-blue">
-            {{ item.displayName }}
-          </v-btn>
+          <v-list-item />
+          <!-- to be integrated with new forms -->
         </v-list>
       </v-menu>
 

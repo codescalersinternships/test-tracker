@@ -14,23 +14,8 @@
       const routeStore = useCurrentRouteStore()
 
       function displayNavBar (routeName: string): boolean {
-        if (routeName === 'signup') {
-          return false
-        }
-
-        if (routeName === 'signupinvitation') {
-          return false
-        }
-
-        if (routeName === 'login') {
-          return false
-        }
-
-        if (routeName === 'logout') {
-          return false
-        }
-
-        return true
+        const authRoutes = ['signup', 'signup-invitation', 'login', 'logout']
+        return !authRoutes.includes(routeName)
       }
 
       return {
