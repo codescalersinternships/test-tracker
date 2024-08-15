@@ -40,7 +40,22 @@
           />
         </template>
         <v-list>
-          <v-list-item />
+          <v-list-item
+            v-for="(item,index) in newForms"
+            :key="index"
+          >
+            <v-btn>
+              {{ item.displayName }}
+
+              <v-overlay
+                activator="parent"
+                location-strategy="connected"
+                scroll-strategy="reposition"
+              >
+                <item.component />
+              </v-overlay>
+            </v-btn>
+          </v-list-item>
           <!-- to be integrated with new forms -->
         </v-list>
       </v-menu>
@@ -75,6 +90,7 @@
   import { ref } from 'vue'
   import { RouterLink } from 'vue-router'
   import { useCurrentRouteStore } from '../stores/route'
+  import ProjectForm from '@/components/projects/ProjectForm.vue'
 
   type AppRoute = {
     displayName: string,
@@ -190,7 +206,12 @@
         ]
       },
       newForms () {
-        return []
+        return [
+          {
+            displayName: 'New Project',
+            component: ProjectForm,
+          },
+        ]
       },
     },
   }
