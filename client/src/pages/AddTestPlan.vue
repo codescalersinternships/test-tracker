@@ -64,7 +64,7 @@
 
             <v-dialog v-model="dialogUpdate" max-width="500px">
                 <v-card>
-                    <v-card-title class="headline">Edit Plan <span class="font-weight-bold">{{ planToUpdate.title }}</span> title</v-card-title>
+                    <v-card-title class="headline">Edit Plan <span class="font-weight-bold text-primary">{{ planToUpdate.title }}</span> title</v-card-title>
                     <v-card-text>
                         <v-text-field v-model="title" density="compact" placeholder="Title" variant="outlined"></v-text-field>
                         <v-divider></v-divider>
@@ -87,14 +87,20 @@ import axios from '@/api/axios';
 import { onMounted } from 'vue';
 
 export default{
+    // props: {
+    //     projectId: {
+    //         type: Number,
+    //         required: true
+    //     }
+    // },
     setup(){
         const searchText = ref('');
-        // const testPlans = ref([]);
-        const testPlans = ref([{id: '1',title: 'Plan A',created: '2024-08-01',modified: '2024-08-05'},
-                            {id: '1',title: 'Plan A',created: '2024-08-01',modified: '2024-08-05'},
-                            {id: '1',title: 'Plan A',created: '2024-08-01',modified: '2024-08-05'}
-        ]);
-
+        const testPlans = ref([]);
+        // const testPlans = ref([{id: '1',title: 'Plan A',created: '2024-08-01',modified: '2024-08-05'},
+        //                     {id: '1',title: 'Plan A',created: '2024-08-01',modified: '2024-08-05'},
+        //                     {id: '1',title: 'Plan A',created: '2024-08-01',modified: '2024-08-05'}
+        // ]);
+        const projectId=ref("2");
         const count = ref(testPlans.value.length);
         const planToDelete = ref(null);
         const planToUpdate=ref(null);
@@ -117,7 +123,7 @@ export default{
         //PROJECCCCCT IIIIIIDDDD????????????
         const SearchPlans = async () => {
             try {
-                testPlans.value=await axios.SearchPlans(projectId,searchText)
+                testPlans.value=await axios.SearchPlans(projectId.value,searchText)
             } catch (error) {
                 console.error(error);
             }
@@ -125,7 +131,7 @@ export default{
 
         const GetTestPlans = async () => {
             try {
-                testPlans.value=await axios.GetPlans(projectId)
+                testPlans.value=await axios.GetPlans(projectId.value)
             } catch (error) {
                 console.error(error);
             }
@@ -141,7 +147,7 @@ export default{
 
         async function deletePlan(planId){
             try {
-                await axios.DeletePlan(projectId,planId);
+                await axios.DeletePlan(projectId.value,planId);
             } catch (error) {
                 console.error(error);
             }
@@ -167,6 +173,7 @@ export default{
             title,
             openUpdateDialog,
             openDeleteDialog,
+            projectId
         }
     }
 }
