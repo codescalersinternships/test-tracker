@@ -6,7 +6,7 @@ const AuthClient: AxiosInstance = axios.create({
   timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIzNjQ2NTY5LCJpYXQiOjE3MjM2MzcyNjksImp0aSI6ImZiOTI3MGI2NjFmMzRhZmFiNzVlZTBlZjdiMzRhNzUzIiwidXNlcl9pZCI6NCwiZW1haWwiOiJib3VkaWVAYm91ZGllLmNvbSJ9.GOW5K_gXlW2VxkQ7Hd7rnFBm4mDfd55VctxX81FLS_I', // localStorage.getItem('token'),
+    Authorization: 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIzNzEwOTAxLCJpYXQiOjE3MjM3MDE2MDEsImp0aSI6ImQwMzVkNzQxMDRkZjQ2YWZhMDEzNTQ4MDlmMDU1ZWNlIiwidXNlcl9pZCI6NCwiZW1haWwiOiJib3VkaWVAYm91ZGllLmNvbSJ9.79uxdN3zeLO5uLPGLlzynWHjpZ1mYm3VF11s_QaeFIQ', // localStorage.getItem('token'),
   },
 })
 

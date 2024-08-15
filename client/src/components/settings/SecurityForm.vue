@@ -38,6 +38,7 @@
       block
       class="me-4"
       :disabled="!form?.isValid"
+      :loading="loading"
       text="Change Password"
       type="submit"
 
@@ -57,13 +58,15 @@
 
     name: 'SecurityForm',
     setup () {
-      const notifier = useNotifier('bottom')
+      const notifier = useNotifier('top right')
 
       const form = ref()
 
       const showOld = ref(false)
       const showNew = ref(false)
       const showConfirm = ref(false)
+
+      const loading = ref(false)
 
       const password = ref<Password>(
         {
@@ -74,7 +77,12 @@
       )
 
       const updateProfileSettings = async () => {
-        const userProfile: Partial<UserProfile> = { password: password.value.new }
+        loading.value = true
+        const userProfile: Partial<UserProfile> = {
+          first_name: 'change to user.firstName',
+          last_name: 'change to user.lastName',
+          password: password.value.new,
+        }
         putSettings(userProfile)
           .then((response: any) => {
             notifier.notify({
@@ -84,6 +92,7 @@
               timeout: 7_000,
               type: 'success',
             })
+            loading.value = false
           })
           .catch((err: any) => {
             notifier.notify({
@@ -94,6 +103,7 @@
               type: 'error',
             })
             console.error(err)
+            loading.value = false
           })
       }
 
@@ -103,6 +113,7 @@
         showOld,
         showNew,
         showConfirm,
+        loading,
         passwordRules,
         newPasswordRule,
         confirmedPasswordRule,

@@ -38,6 +38,7 @@
       block
       class="me-4"
       :disabled="!form?.isValid"
+      :loading="loading"
       text="Submit"
       type="submit"
 
@@ -57,9 +58,11 @@
 
     name: 'ProfileInformationForm',
     setup () {
-      const notifier = useNotifier('bottom')
+      const notifier = useNotifier('top right')
 
       const form = ref()
+
+      const loading = ref(false)
 
       const profile = ref<Partial<UserProfile>>(
         {
@@ -71,6 +74,7 @@
       )
 
       const updateProfileSettings = async () => {
+        loading.value = true
         const userProfile: Partial<UserProfile> = {
           first_name: profile.value.first_name,
           last_name: profile.value.last_name,
@@ -85,6 +89,7 @@
               timeout: 7_000,
               type: 'success',
             })
+            loading.value = false
           })
           .catch((err: any) => {
             notifier.notify({
@@ -95,12 +100,14 @@
               type: 'error',
             })
             console.error(err)
+            loading.value = false
           })
       }
 
       return {
         form,
         profile,
+        loading,
         nameRules,
         phoneNumberRules,
         updateProfileSettings,

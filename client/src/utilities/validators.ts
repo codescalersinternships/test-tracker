@@ -29,7 +29,7 @@ export function newPasswordRule (oldPassword: string) {
   return [
     (newPassword: string) => {
       if (oldPassword) {
-        if (newPassword === oldPassword) return true
+        if (newPassword !== oldPassword) return true
         return 'New password must be different'
       }
       return 'You must enter old password first.'

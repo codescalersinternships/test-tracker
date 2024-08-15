@@ -53,9 +53,4 @@ h1 {
   margin: 55px;
 }
 
-.main-card {
-  margin: auto;
-  width: 95%;
-}
-
 </style>
