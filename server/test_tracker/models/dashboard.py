@@ -1,7 +1,7 @@
 from django.db import models
 
-from server.test_tracker.models.abstracts import TimeStampedModel
-from server.test_tracker.models.users import User
+from test_tracker.models.abstracts import TimeStampedModel
+from test_tracker.models.users import User
 
 import uuid
 

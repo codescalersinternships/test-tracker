@@ -3,20 +3,20 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from server.test_tracker.api.permission import HasProjectAccess
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.project import PLAN_CHOICES, TestPlan
-from server.test_tracker.utils.handler import TestPlanHandling
-from server.test_tracker.utils.testplan_temp import TestPlanTemp
-from server.test_tracker.utils.validations import Validator
-from server.test_tracker.services.project import update_activity
-from server.test_tracker.serializers.project import (
+from test_tracker.api.permission import HasProjectAccess
+from test_tracker.api.response import CustomResponse
+from test_tracker.models.project import PLAN_CHOICES, TestPlan
+from test_tracker.utils.handler import TestPlanHandling
+from test_tracker.utils.testplan_temp import TestPlanTemp
+from test_tracker.utils.validations import Validator
+from test_tracker.services.project import update_activity
+from test_tracker.serializers.project import (
     TestPlanDetailSerializer,
     TestPlanSerializer,
     TestPlanTempsSerializer,
     UpdateTestPlanSerializer,
 )
-from server.test_tracker.services.dashboard import (
+from test_tracker.services.dashboard import (
     get_plans_based_on_project,
     get_project_by_id,
 )

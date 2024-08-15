@@ -1,0 +1,2 @@
+exec: sh -c "/bin/bash server/scripts/config.sh"
+oneshot: true

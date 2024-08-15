@@ -1,14 +1,14 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from server.test_tracker.models.dashboard import Project
-from server.test_tracker.models.users import User
-from server.test_tracker.serializers.project import TestPlanSerializer
-from server.test_tracker.serializers.requirement import RequirementDocsSerializer
-from server.test_tracker.serializers.test_run import TestRunsSerializer
-from server.test_tracker.serializers.test_suites import TestSuitesSerializer
-from server.test_tracker.services.dashboard import my_projects
-from server.test_tracker.services.member import get_member_by_id
-from server.test_tracker.models.project import (
+from test_tracker.models.dashboard import Project
+from test_tracker.models.users import User
+from test_tracker.serializers.project import TestPlanSerializer
+from test_tracker.serializers.requirement import RequirementDocsSerializer
+from test_tracker.serializers.test_run import TestRunsSerializer
+from test_tracker.serializers.test_suites import TestSuitesSerializer
+from test_tracker.services.dashboard import my_projects
+from test_tracker.services.member import get_member_by_id
+from test_tracker.models.project import (
     TEST_RUN_STATUS_CHOICES,
     RequirementDocs,
     TestPlan,
@@ -76,7 +76,7 @@ class ProjectsSerializer(ModelSerializer):
 
     def get_teams(self, obj):
         """Return created date"""
-        from server.test_tracker.serializers.member import MemberSerializers
+        from test_tracker.serializers.member import MemberSerializers
 
         if self.context.get("profile_view"):
             return MemberSerializers(

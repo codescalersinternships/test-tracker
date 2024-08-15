@@ -1,4 +1,4 @@
-from server.settings import EMAIL_HOST_USER
+from settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
 
 

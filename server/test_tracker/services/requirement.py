@@ -1,7 +1,7 @@
 """Everything related to the project requirements"""
 
-from server.test_tracker.models.dashboard import Project
-from server.test_tracker.models.project import RequirementDocs, Requirements
+from test_tracker.models.dashboard import Project
+from test_tracker.models.project import RequirementDocs, Requirements
 
 from typing import List
 

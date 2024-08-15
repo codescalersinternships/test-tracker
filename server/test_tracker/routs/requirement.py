@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from server.test_tracker.views.requirement import (
+from test_tracker.views.requirement import (
     GetAllRequirementDocsAPIView,
     PostNewRequirementDocsAPIView,
     RequirementAPIView,

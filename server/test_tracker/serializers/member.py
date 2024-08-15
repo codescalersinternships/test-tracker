@@ -1,9 +1,9 @@
 """Everything related to Member"""
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from server.test_tracker.models.dashboard import Member, Project
-from server.test_tracker.models.project import TestRun, TestSuites
-from server.test_tracker.serializers.test_run import TestRunsSerializer
+from test_tracker.models.dashboard import Member, Project
+from test_tracker.models.project import TestRun, TestSuites
+from test_tracker.serializers.test_run import TestRunsSerializer
 
 
 class MemberSetPasswordSerializer(ModelSerializer):

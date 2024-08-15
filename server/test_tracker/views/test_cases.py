@@ -4,21 +4,21 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from django.db.models import Q
-from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
+from test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
 
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.project import Requirements, TestCases
-from server.test_tracker.serializers.requirement import RequirementsSerializer
-from server.test_tracker.serializers.test_cases import (
+from test_tracker.api.response import CustomResponse
+from test_tracker.models.project import Requirements, TestCases
+from test_tracker.serializers.requirement import RequirementsSerializer
+from test_tracker.serializers.test_cases import (
     TestCaseSerializer,
     UpdateTestCaseAfterRunSerializer,
 )
-from server.test_tracker.services.dashboard import get_project_by_id
-from server.test_tracker.services.member import get_member_by_id
-from server.test_tracker.services.project import update_activity
-from server.test_tracker.services.requirement import get_requirement_by_id
-from server.test_tracker.services.test_cases import get_test_case_by_id
-from server.test_tracker.services.test_suites import get_section_by_id, get_test_suite_by_id
+from test_tracker.services.dashboard import get_project_by_id
+from test_tracker.services.member import get_member_by_id
+from test_tracker.services.project import update_activity
+from test_tracker.services.requirement import get_requirement_by_id
+from test_tracker.services.test_cases import get_test_case_by_id
+from test_tracker.services.test_suites import get_section_by_id, get_test_suite_by_id
 
 import datetime
 
