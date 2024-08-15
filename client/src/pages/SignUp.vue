@@ -1,94 +1,160 @@
 <template>
-    <div class="background pa-0">
-        <v-container>
-            <v-card
-                class="ma-auto pa-12 pb-8"
-                elevation="8"
-                max-width="448"
-                rounded="lg">
-                <v-row class="d-flex justify-center" no-gutters>
-                    <v-col class="d-flex justify-center" style="max-width: 100px; width: 100px;">
-                        <v-img
-                        src="@/assets/logo.png"
-                        style="width: 100%; height: auto;"
-                        contain
-                        ></v-img>
-                    </v-col>
-                </v-row>
+  <div class="background pa-0">
+    <v-container>
+      <v-card
+        class="ma-auto pa-12 pb-8"
+        elevation="8"
+        max-width="448"
+        rounded="lg"
+      >
+        <v-row class="d-flex justify-center" no-gutters>
+          <v-col class="d-flex justify-center" style="max-width: 100px; width: 100px;">
+            <v-img
+              contain
+              src="@/assets/logo.png"
+              style="width: 100%; height: auto;"
+            />
+          </v-col>
+        </v-row>
 
-                <v-row class="d-flex justify-center" no-gutters>
-                    <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
-                        <p class="mt-2 text-h5 text-grey-darken-2" variant="h5">Sign up</p>
-                    </v-col>
-                </v-row>
+        <v-row class="d-flex justify-center" no-gutters>
+          <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
+            <p class="mt-2 text-h5 text-grey-darken-2" variant="h5">Sign up</p>
+          </v-col>
+        </v-row>
 
-                <v-row>
-                    <v-col>
-                        <v-text-field
-                        v-model="newUser.first_name"
-                        density="compact"
-                        placeholder="First Name"
-                        prepend-inner-icon="mdi-account-outline"
-                        variant="outlined"
-                        ></v-text-field>
-                        <v-text-field
-                        v-model="newUser.last_name"
-                        density="compact"
-                        placeholder="Last Name"
-                        prepend-inner-icon="mdi-account-outline"
-                        variant="outlined"
-                        ></v-text-field>
-                        <v-text-field
-                        v-model="newUser.email"
-                        density="compact"
-                        placeholder="Email"
-                        prepend-inner-icon="mdi-email-outline"
-                        variant="outlined"
-                        ></v-text-field>
-                        <v-text-field
-                        v-model="newUser.password"
-                        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                        :type="visible ? 'password' : 'text'"
-                        density="compact"
-                        placeholder="Password"
-                        prepend-inner-icon="mdi-lock-outline"
-                        variant="outlined"
-                        @click:append-inner="visible = !visible"
-                        ></v-text-field>
-                    </v-col>
-                </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="newUser.first_name"
+              density="compact"
+              placeholder="First Name"
+              prepend-inner-icon="mdi-account-outline"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="newUser.last_name"
+              density="compact"
+              placeholder="Last Name"
+              prepend-inner-icon="mdi-account-outline"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="newUser.email"
+              density="compact"
+              placeholder="Email"
+              prepend-inner-icon="mdi-email-outline"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="newUser.password"
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              density="compact"
+              placeholder="Password"
+              prepend-inner-icon="mdi-lock-outline"
+              :type="visible ? 'password' : 'text'"
+              variant="outlined"
+              @click:append-inner="visible = !visible"
+            />
+          </v-col>
+        </v-row>
 
-                <v-row>
-                    <v-col class="d-flex justify-center">
-                        <v-btn class="mb-8 w-100" color="primary" size="large" :loading="loading" :disabled="loading" @click="RegisterNewUser">
-                        Register
-                        </v-btn>
-                    </v-col>
-                </v-row>
+        <v-row>
+          <v-col class="d-flex justify-center">
+            <v-btn
+              class="mb-8 w-100"
+              color="primary"
+              :disabled="loading"
+              :loading="loading"
+              size="large"
+              @click="RegisterNewUser"
+            >
+              Register
+            </v-btn>
+          </v-col>
+        </v-row>
 
-                <v-divider></v-divider>
-                <br>
-        
-                <v-row>
+        <v-divider />
+        <br>
+
+        <!-- <v-row>
                 <v-col cols="6" class="d-flex justify-center">
                     <LoginGithub/>
                 </v-col>
                 <v-col cols="6" class="d-flex justify-center">
                     <LoginTFT/>
                 </v-col>
-                </v-row>
-        
+                </v-row> -->
 
-                <br>
-                <v-divider></v-divider>
-                <br>
+        <br>
+        <v-divider />
+        <br>
 
-                <AlreadyHaveAnAccount/>
+        <AlreadyHaveAnAccount />
 
-            </v-card>
-        </v-container>
-    </div> 
+      </v-card>
+    </v-container>
+  </div>
 </template>
+
+<script>
+  import LoginGithub from '@/components/LoginGithub.vue'
+  import axios from '../api/axios.ts'
+  import AlreadyHaveAnAccount from '@/components/AlreadyHaveAnAccount.vue'
+  import LoginTFT from '@/components/LoginTFT.vue'
+  import { useNotifier } from 'vue3-notifier'
+  import { useRouter } from 'vue-router'
+
+  export default {
+    components: {
+      AlreadyHaveAnAccount,
+    //   LoginGithub,
+    //   LoginTFT,
+    },
+    setup () {
+      const notifier = useNotifier('top right')
+      const router = useRouter()
+      const loading = ref(false)
+
+      const newUser = ref({
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: '',
+      })
+
+      const visible = ref(true)
+
+      async function RegisterNewUser () {
+        loading.value = true
+        try {
+          await axios.SignUp(newUser.value)
+          loading.value = false
+          router.push(`/login`)
+        } catch (error) {
+          notifier.notify({
+            title: 'Fail',
+            description: 'Invalid credentials',
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'error',
+          })
+          console.error(error)
+        } finally {
+          loading.value = false
+        }
+      }
+
+      return {
+        RegisterNewUser,
+        visible,
+        newUser,
+        notifier,
+        loading,
+      }
+    },
+  }
+</script>
 
 <style>
 .background {
@@ -102,59 +168,3 @@ width: 100%;
 height: 100%;
 }
 </style>
-
-<script>
-import LoginGithub from '@/components/LoginGithub.vue';
-import axios from '../api/axios.ts';
-import AlreadyHaveAnAccount from '@/components/AlreadyHaveAnAccount.vue';
-import LoginTFT from '@/components/LoginTFT.vue';
-import { useNotifier } from 'vue3-notifier'
-
-export default{
-    components: {
-    AlreadyHaveAnAccount,
-    LoginGithub,
-    LoginTFT
-    },
-    setup(){
-
-        const notifier = useNotifier('top right');
-
-        const loading = ref(false);
-
-        const newUser=ref({
-        first_name: "",
-        last_name: "",
-        email:"",
-        password:"",
-        })
-
-        let visible = ref(true);
-
-        async function RegisterNewUser(){
-            loading.value = true;
-            try{
-                await axios.SignUp(newUser.value);
-                loading.value = false;
-            }catch(error){
-                notifier.notify({
-              title: 'Fail',
-              description: 'Invalid credentials',
-              showProgressBar: true,
-              timeout: 7_000,
-              type: 'error',
-            })
-                console.error(error);
-            }
-        }
-
-        return{
-            RegisterNewUser,
-            visible,
-            newUser,
-            notifier,
-            loading
-        }
-    }
-}
-</script>
