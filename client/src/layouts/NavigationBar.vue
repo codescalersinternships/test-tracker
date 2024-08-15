@@ -31,7 +31,7 @@
       <v-menu transition="fab-transition">
         <template #activator="{ props }">
           <v-btn
-            v-if="displayMenuRoutes(routeStore.routeName)"
+            v-if="displayForms(routeStore.routeName)"
             class="mx-3 bg-blue"
             color="white"
             icon="mdi-plus"
@@ -49,10 +49,10 @@
 
               <v-overlay
                 activator="parent"
-                location-strategy="connected"
+                location="left"
                 scroll-strategy="reposition"
               >
-                <item.component />
+                <component :is="item.component" />
               </v-overlay>
             </v-btn>
           </v-list-item>
@@ -81,6 +81,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
+      <h1>{{ routeStore.routeName }}</h1>
     </div>
 
   </v-app-bar>
@@ -91,6 +92,10 @@
   import { RouterLink } from 'vue-router'
   import { useCurrentRouteStore } from '../stores/route'
   import ProjectForm from '@/components/projects/ProjectForm.vue'
+  import TestPlanForm from '@/components/test-plans/TestPlanForm.vue'
+  import TestRequirementForm from '@/components/test-requirements/TestRequirementForm.vue'
+  import TestSuiteForm from '@/components/test-suites/TestSuiteForm.vue'
+  import TestRunForm from '@/components/test-runs/TestRunForm.vue'
 
   type AppRoute = {
     displayName: string,
@@ -116,7 +121,7 @@
         ]
       )
 
-      function displayMenuRoutes (routeName: string): boolean {
+      function displayForms (routeName: string): boolean {
         if (routeName === 'dashboard') {
           return false
         }
@@ -131,7 +136,7 @@
       return {
         profileRoutes,
         routeStore,
-        displayMenuRoutes,
+        displayForms,
         RouterLink,
       }
     },
@@ -206,12 +211,65 @@
         ]
       },
       newForms () {
-        return [
-          {
-            displayName: 'New Project',
-            component: ProjectForm,
-          },
-        ]
+        const routeName = this.routeStore.routeName
+
+        if (routeName === 'projects') {
+          return [
+            {
+              displayName: 'New Project',
+              component: ProjectForm,
+            },
+          ]
+        } else if (routeName === 'projectDetails') {
+          return [
+            {
+              displayName: 'New Test Plan',
+              routeName: 'testPlan',
+            },
+            {
+              displayName: 'New Requirement',
+              routeName: 'testRequirement',
+            },
+            {
+              displayName: 'New Test Suite',
+              routeName: 'testSuite',
+            },
+            {
+              displayName: 'New Test Run',
+              routeName: 'testRun',
+            },
+          ]
+        } else if (routeName === 'testPlans') {
+          return [
+            {
+              displayName: 'New Test Plan',
+              component: TestPlanForm,
+            },
+          ]
+        } else if (routeName === 'testRequirements') {
+          return [
+            {
+              displayName: 'New Requirement',
+              component: TestRequirementForm,
+            },
+          ]
+        } else if (routeName === 'testSuites') {
+          return [
+            {
+              displayName: 'New Test Suite',
+              component: TestSuiteForm,
+            },
+          ]
+        } else if (routeName === 'testRuns') {
+          return [
+            {
+              displayName: 'New Test Run',
+              component: TestRunForm,
+            },
+          ]
+        } else {
+          return []
+        }
       },
     },
   }
