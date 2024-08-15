@@ -90,42 +90,18 @@
 
     name: 'ProjectsView',
     setup () {
-      const notifier = useNotifier('bottom')
+      const notifier = useNotifier('top right')
 
       const page = ref(1)
 
-      const projects = ref<Partial<Project>[]>(
-        [
-          {
-            title: 'title',
-            id: 1,
-            short_description: 'project description',
-          },
-          {
-            title: 'title',
-            id: 2,
-            short_description: 'project description',
-          },
-          {
-            title: 'title',
-            id: 3,
-            short_description: 'project description',
-          },
-          {
-            title: 'title',
-            id: 4,
-            short_description: 'project description',
-          },
-
-        ]
-      )
+      const projects = ref<Project[]>([])
 
       const count = ref(5)
 
-      const getProjects = async (page: number) => {
+      const getPage = async (page: number) => {
         getProjects(page).then((response: any) => {
-          projects.value = response.body.results
-          projects.value = response.body.total_count
+          projects.value = response.data.results
+          // count.value = response.body.total_count
         })
           .catch((err: any) => {
             notifier.notify({
@@ -139,13 +115,13 @@
           })
       }
 
-      // onMounted(() => {
-      //   getProjects(page.value)
-      // })
+      onMounted(() => {
+        getPage(page.value)
+      })
 
-      // watch(page, (currentValue, oldValue) => {
-      //   getProjects(currentValue)
-      // })
+      watch(page, (currentValue, oldValue) => {
+        getPage(currentValue)
+      })
 
       const searchText = ref('')
 

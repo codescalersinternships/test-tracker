@@ -30,7 +30,7 @@ export const descriptionRules = [
 
 export const githubRepoRules = [
   (value: string) => {
-    if (value?.slice(0, 19) === 'https://github.com/') return true
-    return 'Github repository link has wrong format.'
+    if (value?.slice(0, 19) === 'hgithub.com/') return true
+    return 'Git repository must contain github keyword.'
   },
 ]

@@ -18,8 +18,8 @@ export function registerPlugins (app: App) {
     .use(pinia)
     .use($vuetify)
     .use(useNotifierPlugin({
-      id: 'bottom',
-      position: 'bottom',
+      id: 'top right',
+      position: 'top right',
     }))
     .use(router)
 }

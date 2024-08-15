@@ -6,7 +6,9 @@
   >
     <v-text-field
       v-model="project.title"
+      base-color="blue"
       clearable
+      color="blue"
       label="Title"
       required
       :rules="titleRules"
@@ -14,13 +16,16 @@
 
     <v-text-field
       v-model="project.short_description"
+      base-color="blue"
       clearable
+      color="blue"
       label="Description"
       required
       :rules="descriptionRules"
     />
     <v-switch
       v-model="githubRepo"
+      base-color="blue"
       label="Github repository"
     />
 
@@ -28,17 +33,18 @@
       v-if="githubRepo"
       v-model="project.repo_link"
       clearable
-      label="Github repository"
+      label="Git repository"
       :rules="githubRepoRules"
     />
 
     <v-btn
       block
       class="me-4"
+      color="blue"
       :disabled="!form?.isValid"
       text="Submit"
       type="submit"
-
+      variant="tonal"
       @click="createProject"
     />
   </v-form>
@@ -55,7 +61,7 @@
 
     name: 'ProjectForm',
     setup () {
-      const notifier = useNotifier('bottom')
+      const notifier = useNotifier('top right')
 
       const githubRepo = ref<boolean>(false)
 
