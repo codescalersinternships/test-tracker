@@ -24,7 +24,6 @@
       function handleLogIn () {
         router.push(`/login`)
       }
-
       return {
         handleLogIn,
       }
