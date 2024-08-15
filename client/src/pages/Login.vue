@@ -129,6 +129,7 @@ import LoginGithub from '@/components/LoginGithub.vue';
 import axios from '../api/axios.ts';
 import { useRouter } from 'vue-router';
 import LoginTFT from '@/components/LoginTFT.vue';
+import { useNotifier } from 'vue3-notifier'
 
 export default{
   components: {
@@ -139,6 +140,8 @@ export default{
 
     const router=useRouter();
 
+    const notifier = useNotifier('top right');
+
     const userInfo=ref({
     email: "",
     password: "",
@@ -146,11 +149,21 @@ export default{
 
     let visible = ref(true);
 
-    function SumbitLogIn(){
+    async function SumbitLogIn(){
       try {
-        axios.LogInUser(userInfo.value);
-        router.push(`/profile`);
+        await axios.LogInUser(userInfo.value);
+        console.log(localStorage.getItem('token'));
+        if(localStorage.getItem('token')!=null){
+          router.push(`/profile`);
+        }
       } catch (error) {
+        notifier.notify({
+              title: 'Fail',
+              description: 'Login failed',
+              showProgressBar: true,
+              timeout: 7_000,
+              type: 'error',
+            })
         console.error(error);
       }
     }
@@ -164,6 +177,7 @@ export default{
         CreateAccount,
         userInfo,
         visible,
+        notifier,
     }
   }
 }

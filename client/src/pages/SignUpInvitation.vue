@@ -104,6 +104,7 @@ height: 100%;
 import axios from '@/api/axios';
 import { useRouter } from 'vue-router';
 import AlreadyHaveAnAccount from '@/components/AlreadyHaveAnAccount.vue';
+import { useNotifier } from 'vue3-notifier'
 
 export default{
   components: {
@@ -112,6 +113,7 @@ export default{
   setup(){
 
     const router=useRouter();
+    const notifier = useNotifier('top right');
 
     const userPassword=ref({
     password1: "",
@@ -124,8 +126,19 @@ export default{
     const username=ref("");
     const invitor=ref("");
 
-    function RegisterUser(){
-      axios.SignUpInvitation(userPassword.value)
+    async function RegisterUser(){
+      try{
+        await axios.SignUpInvitation(userPassword.value)
+      }catch(error){
+        notifier.notify({
+              title: 'Fail',
+              description: 'Cannot sign up',
+              showProgressBar: true,
+              timeout: 7_000,
+              type: 'error',
+            })
+      }
+      
     }
 
     function LogIn(){

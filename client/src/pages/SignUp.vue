@@ -60,7 +60,7 @@
 
                 <v-row>
                     <v-col class="d-flex justify-center">
-                        <v-btn class="mb-8 w-100" color="primary" size="large">
+                        <v-btn class="mb-8 w-100" color="primary" size="large" :loading="loading" :disabled="loading" @click="RegisterNewUser">
                         Register
                         </v-btn>
                     </v-col>
@@ -108,6 +108,7 @@ import LoginGithub from '@/components/LoginGithub.vue';
 import axios from '../api/axios.ts';
 import AlreadyHaveAnAccount from '@/components/AlreadyHaveAnAccount.vue';
 import LoginTFT from '@/components/LoginTFT.vue';
+import { useNotifier } from 'vue3-notifier'
 
 export default{
     components: {
@@ -116,6 +117,10 @@ export default{
     LoginTFT
     },
     setup(){
+
+        const notifier = useNotifier('top right');
+
+        const loading = ref(false);
 
         const newUser=ref({
         first_name: "",
@@ -126,10 +131,19 @@ export default{
 
         let visible = ref(true);
 
-        function RegisterNewUser(){
+        async function RegisterNewUser(){
+            loading.value = true;
             try{
-                axios.SignUp(newUser.value);
+                await axios.SignUp(newUser.value);
+                loading.value = false;
             }catch(error){
+                notifier.notify({
+              title: 'Fail',
+              description: 'Invalid credentials',
+              showProgressBar: true,
+              timeout: 7_000,
+              type: 'error',
+            })
                 console.error(error);
             }
         }
@@ -138,6 +152,8 @@ export default{
             RegisterNewUser,
             visible,
             newUser,
+            notifier,
+            loading
         }
     }
 }
