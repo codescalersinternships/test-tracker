@@ -40,9 +40,9 @@ class RegisterAPIView(GenericAPIView):
         """Method to register a new user"""
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            password = make_password(request.data["password"])
-            if len(password) < 4:
+            if len(request.data["password"]) < 4:
                 return CustomResponse.bad_request(message="Password length should be at least 4 characters/numbers.")
+            password = make_password(request.data["password"])
             serializer.save(password=password)
             return CustomResponse.success(
                 data=serializer.data,
