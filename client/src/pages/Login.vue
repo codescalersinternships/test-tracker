@@ -146,9 +146,10 @@
           await axios.LogInUser(userInfo.value)
           console.log(localStorage.getItem('token'))
           if (localStorage.getItem('token') != null) {
-            router.push(`/profile`)
+            router.push(`/`)
           }
         } catch (error) {
+          console.error(error)
           notifier.notify({
             title: 'Fail',
             description: 'Login failed',
@@ -156,7 +157,6 @@
             timeout: 7_000,
             type: 'error',
           })
-          console.error(error)
         }
       }
       const form = ref(null)

@@ -11,7 +11,6 @@ const AuthClient: AxiosInstance = axios.create({
 
 const BaseClient: AxiosInstance = axios.create({
   baseURL: 'https://server.gent02.dev.grid.tf/api',
-  timeout: 1000,
 })
 
 async function SignUp (newUser:any) {

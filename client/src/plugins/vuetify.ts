@@ -15,11 +15,11 @@ import { createVuetify } from 'vuetify'
 export default createVuetify({
   theme: {
     defaultTheme: 'light',
-        themes: {
+    themes: {
       light: {
         dark: false,
         colors: {
-          primary: "#37ADE3",
+          primary: '#37ADE3',
         },
       },
     },
