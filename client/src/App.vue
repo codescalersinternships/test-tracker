@@ -1,3 +1,12 @@
+<template>
+  <v-app>
+    <v-main>
+      <NavigationBar v-if="displayNavBar(routeStore.routeName)" />
+      <RouterView />
+    </v-main>
+  </v-app>
+</template>
+
 <script lang="ts">
   import { RouterView } from 'vue-router'
   import NavigationBar from '@/layouts/NavigationBar.vue'
@@ -26,12 +35,3 @@
   }
 
 </script>
-
-<template>
-  <v-app>
-    <v-main>
-      <NavigationBar v-if="displayNavBar(routeStore.routeName)" />
-      <RouterView />
-    </v-main>
-  </v-app>
-</template>

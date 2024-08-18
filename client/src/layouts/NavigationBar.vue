@@ -19,7 +19,7 @@
           v-for="(item,index) in mainRoutes"
           :key="index"
           class="mx-5 text-blue bg-white pa-3 rounded-lg font-weight-black"
-          :to="{ name: item.routeName}"
+          :to="{ name: item.routeName }"
         >
           {{ item.displayName }}
         </RouterLink>
@@ -81,7 +81,6 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <h1>{{ routeStore.routeName }}</h1>
     </div>
 
   </v-app-bar>
@@ -96,6 +95,7 @@
   import TestRequirementForm from '@/components/test-requirements/TestRequirementForm.vue'
   import TestSuiteForm from '@/components/test-suites/TestSuiteForm.vue'
   import TestRunForm from '@/components/test-runs/TestRunForm.vue'
+  import MemberForm from '@/components/members/MemberForm.vue'
 
   type AppRoute = {
     displayName: string,
@@ -103,8 +103,16 @@
   }
 
   export default {
-
     name: 'NavigationBar',
+
+    components: {
+      ProjectForm,
+      MemberForm,
+      TestPlanForm,
+      TestRequirementForm,
+      TestRunForm,
+      TestSuiteForm,
+    },
     setup () {
       const routeStore = useCurrentRouteStore()
 
@@ -224,19 +232,19 @@
           return [
             {
               displayName: 'New Test Plan',
-              routeName: 'testPlan',
+              component: TestPlanForm,
             },
             {
               displayName: 'New Requirement',
-              routeName: 'testRequirement',
+              component: TestRequirementForm,
             },
             {
               displayName: 'New Test Suite',
-              routeName: 'testSuite',
+              component: TestSuiteForm,
             },
             {
               displayName: 'New Test Run',
-              routeName: 'testRun',
+              component: TestRunForm,
             },
           ]
         } else if (routeName === 'testPlans') {

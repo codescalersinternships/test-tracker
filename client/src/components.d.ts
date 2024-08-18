@@ -10,6 +10,7 @@ declare module 'vue' {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     CustomNotification: typeof import('./components/notifier/CustomNotification.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    MemberForm: typeof import('./components/members/MemberForm.vue')['default']
     NavigationBar: typeof import('./components/NavigationBar.vue')['default']
     ProfileInformationForm: typeof import('./components/settings/ProfileInformationForm.vue')['default']
     ProjectForm: typeof import('./components/projects/ProjectForm.vue')['default']
