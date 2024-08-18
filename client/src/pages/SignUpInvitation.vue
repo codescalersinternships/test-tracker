@@ -7,85 +7,156 @@
         max-width="448"
         rounded="lg"
       >
-        <v-row class="d-flex justify-center" no-gutters>
-          <v-col class="d-flex justify-center" style="max-width: 100px; width: 100px;">
-            <v-img
-              src="@/assets/logo.png"
-              style="width: 100%; height: auto;"
-              contain
-            ></v-img>
-          </v-col>
-        </v-row>
-  
-        <v-row class="d-flex justify-center mb-4" no-gutters>
-          <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
-            <p class="mt-2 text-h5 text-grey-darken-2 font-weight-bold" variant="h5">Hello {{username}}</p>
-          </v-col>
-        </v-row>
+        <v-form ref="form">
+          <v-row class="d-flex justify-center" no-gutters>
+            <v-col class="d-flex justify-center" style="max-width: 100px; width: 100px;">
+              <v-img
+                contain
+                src="@/assets/logo.png"
+                style="width: 100%; height: auto;"
+              />
+            </v-col>
+          </v-row>
 
+          <v-row class="d-flex justify-center mb-4" no-gutters>
+            <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
+              <p class="mt-2 text-h5 text-grey-darken-2 font-weight-bold" variant="h5">Hello {{ username }}</p>
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <v-col class="d-flex justify-center">
-            <p>
+          <v-row>
+            <v-col class="d-flex justify-center">
               <p class="font-weight-bold text-grey-darken-3">@{{ invitor }}</p>
               <p class="text-grey-darken-3"> has invited you to join the </p>
-              <p class="font-weight-bold text-grey-darken-3" >Test Tracker App</p>
-            </p>
-          </v-col>
-        </v-row>
+              <p class="font-weight-bold text-grey-darken-3">Test Tracker App</p>
+            </v-col>
+          </v-row>
 
+          <v-row>
+            <v-col class="d-flex justify-center">
+              <p class="text-center text-grey-darken-3">
+                Write your password to confirm your registration
+              </p>
+            </v-col>
+          </v-row>
 
-  
-        <v-row>
-          <v-col class="d-flex justify-center">
-            <p class="text-center text-grey-darken-3">
-              Write your password to confirm your registration
-            </p>
-          </v-col>
-        </v-row>
-  
-        <v-row>
-          <v-col>
-            <v-text-field
-              v-model="userPassword.password1"
-              :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              :type="showPassword ? 'password' : 'text'"
-              density="compact"
-              placeholder="Password"
-              prepend-inner-icon="mdi-lock-outline"
-              variant="outlined"
-              @click:append-inner="showPassword = !showPassword"
-            ></v-text-field>
-            <v-text-field
-              v-model="userPassword.password2"
-              :append-inner-icon="showRePassword ? 'mdi-eye-off' : 'mdi-eye'"
-              :type="showRePassword ? 'password' : 'text'"
-              density="compact"
-              placeholder="Re Password"
-              prepend-inner-icon="mdi-lock-outline"
-              variant="outlined"
-              @click:append-inner="showRePassword = !showRePassword"
-            ></v-text-field>
-          </v-col>
-        </v-row>
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="userPassword.password1"
+                :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                density="compact"
+                placeholder="Password"
+                prepend-inner-icon="mdi-lock-outline"
+                :rules="passwordRules"
+                :type="showPassword ? 'password' : 'text'"
+                variant="outlined"
+                @click:append-inner="showPassword = !showPassword"
+              />
+              <v-text-field
+                v-model="userPassword.password2"
+                :append-inner-icon="showRePassword ? 'mdi-eye-off' : 'mdi-eye'"
+                density="compact"
+                placeholder="Re Password"
+                prepend-inner-icon="mdi-lock-outline"
+                :rules="confirmedPasswordRules"
+                :type="showRePassword ? 'password' : 'text'"
+                variant="outlined"
+                @click:append-inner="showRePassword = !showRePassword"
+              />
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <v-col class="d-flex justify-center">
-            <v-btn class="mb-8 w-100" color="primary" size="large" @click="RegisterUser">
-              Register
-            </v-btn>
-          </v-col>
-        </v-row>
+          <v-row>
+            <v-col class="d-flex justify-center">
+              <v-btn
+                class="mb-8 w-100"
+                color="primary"
+                :disabled="!isFormValid"
+                size="large"
+                @click="RegisterUser"
+              >
+                Register
+              </v-btn>
+            </v-col>
+          </v-row>
 
-        <v-divider></v-divider>
-        <br>
+          <v-divider />
+          <br>
 
-        <AlreadyHaveAnAccount/>
-  
+          <AlreadyHaveAnAccount />
+        </v-form>
       </v-card>
     </v-container>
-  </div> 
+  </div>
 </template>
+
+<script>
+  import axios from '@/api/axios'
+  import { useRouter } from 'vue-router'
+  import AlreadyHaveAnAccount from '@/components/AlreadyHaveAnAccount.vue'
+  import { useNotifier } from 'vue3-notifier'
+  import { confirmedPasswordRule, passwordRules } from '@/utilities/validators'
+
+  export default {
+    components: {
+      AlreadyHaveAnAccount,
+    },
+    setup () {
+      const router = useRouter()
+      const notifier = useNotifier('top right')
+
+      const userPassword = ref({
+        password1: '',
+        password2: '',
+      })
+
+      const showPassword = ref(true)
+      const showRePassword = ref(true)
+
+      const username = ref('')
+      const invitor = ref('')
+
+      async function RegisterUser () {
+        try {
+          await axios.SignUpInvitation(userPassword.value)
+        } catch (error) {
+          notifier.notify({
+            title: 'Fail',
+            description: 'Cannot sign up',
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'error',
+          })
+        }
+      }
+
+      function LogIn () {
+        router.push(`/`)
+      }
+
+      const isFormValid = computed(() => form.value ? form.value.isValid : false)
+      const confirmedPasswordRules = computed(() => confirmedPasswordRule(userPassword.value.password1))
+
+      const form = ref(null)
+
+      return {
+        userPassword,
+        showPassword,
+        showRePassword,
+        RegisterUser,
+        LogIn,
+        username,
+        invitor,
+        passwordRules,
+        confirmedPasswordRule,
+        form,
+        isFormValid,
+        confirmedPasswordRules,
+      }
+    },
+  }
+</script>
 
 <style>
 .background {
@@ -99,61 +170,3 @@ width: 100%;
 height: 100%;
 }
 </style>
-
-<script>
-import axios from '@/api/axios';
-import { useRouter } from 'vue-router';
-import AlreadyHaveAnAccount from '@/components/AlreadyHaveAnAccount.vue';
-import { useNotifier } from 'vue3-notifier'
-
-export default{
-  components: {
-    AlreadyHaveAnAccount,
-  },
-  setup(){
-
-    const router=useRouter();
-    const notifier = useNotifier('top right');
-
-    const userPassword=ref({
-    password1: "",
-    password2: "",
-    })
-
-    let showPassword = ref(true);
-    let showRePassword = ref(true);
-
-    const username=ref("");
-    const invitor=ref("");
-
-    async function RegisterUser(){
-      try{
-        await axios.SignUpInvitation(userPassword.value)
-      }catch(error){
-        notifier.notify({
-              title: 'Fail',
-              description: 'Cannot sign up',
-              showProgressBar: true,
-              timeout: 7_000,
-              type: 'error',
-            })
-      }
-      
-    }
-
-    function LogIn(){
-      router.push(`/`);
-    }
-
-    return{
-        userPassword,
-        showPassword,
-        showRePassword,
-        RegisterUser,
-        LogIn,
-        username,
-        invitor,
-    }
-  }
-}
-</script>

@@ -41,3 +41,15 @@ export const passwordRules = [
     return 'Password must be at most 128 characters.'
   },
 ]
+
+export function confirmedPasswordRule (newPassword: string) {
+  return [
+    (confirmPassword: string) => {
+      if (newPassword) {
+        if (newPassword === confirmPassword) return true
+        return 'Passwords does not match'
+      }
+      return 'You must enter new password first.'
+    },
+  ]
+}
