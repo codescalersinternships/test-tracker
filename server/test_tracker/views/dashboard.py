@@ -30,7 +30,7 @@ class ProjectsAPIView(GenericAPIView):
     """
 
     serializer_class = ProjectsSerializer
-    permission_classes = (UserIsAuthenticated,)
+    # permission_classes = (UserIsAuthenticated,)
 
     def post(self, request: Request) -> Response:
         """Create a new project"""
@@ -86,7 +86,7 @@ class MemberAPIView(GenericAPIView):
     """
 
     serializer_class = MemberSerializers
-    permission_classes = (UserIsAuthenticated,)
+    # permission_classes = (UserIsAuthenticated,)
 
     def post(self, request: Request) -> Response:
         serializer = self.get_serializer(data=request.data)
@@ -117,7 +117,7 @@ class GetProfileAPIView(GenericAPIView):
     """This class to update profile info"""
 
     serializer_class = MemberSerializers
-    permission_classes = (UserIsAuthenticated,)
+    # permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, user_id: str) -> Response:
         """Returns user profile"""
@@ -135,7 +135,7 @@ class GetProfileAPIView(GenericAPIView):
 class MyProjectsAPIView(APIView):
     """This class to get total projects"""
 
-    permission_classes = (UserIsAuthenticated,)
+    # permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request) -> Response:
         """Returns total projects"""
@@ -149,7 +149,7 @@ class MyProjectsAPIView(APIView):
 class GetRequestUserAPIView(GenericAPIView):
     """Returns user information"""
 
-    permission_classes = (UserIsAuthenticated,)
+    # permission_classes = (UserIsAuthenticated,)
     serializer_class = GetRequestUserSerializers
 
     def get(self, request: Request) -> Response:
