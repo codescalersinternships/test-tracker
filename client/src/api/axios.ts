@@ -2,7 +2,6 @@ import axios, { AxiosInstance } from 'axios'
 
 const AuthClient: AxiosInstance = axios.create({
   baseURL: 'https://server.gent02.dev.grid.tf/api',
-  timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
     Authorization: 'Bearer ' + localStorage.getItem('token'),
