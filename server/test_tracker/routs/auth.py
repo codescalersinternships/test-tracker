@@ -1,6 +1,7 @@
 from django.urls import path
 
 from test_tracker.views.auth import (
+    ChangePasswordView,
     DecodeAndVerifySignatureAPIView,
     GetUserAPIView,
     LoginByTokenAPIView,
@@ -21,4 +22,5 @@ urlpatterns = [
     path("settings/", UpdateUserSettingsAPIView.as_view()),
     path("github/access_token/", GithubAccessTokenAPIView.as_view()),
     path("github/user/", GithubUserDataAPIView.as_view()),
+    path("change-password/", ChangePasswordView.as_view()),
 ]
