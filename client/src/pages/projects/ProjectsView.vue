@@ -2,11 +2,11 @@
   <div style="margin-left: 7cm; margin-right: 7cm;">
     <v-container>
       <v-row class="mb-6">
-        <v-typography class="mt-2 text-h4 text-blue" variant="h5">ALL PROJECTS</v-typography>
+        <p class="mt-2 text-h4 text-blue" variant="h5">PROJECTS</p>
       </v-row>
 
       <v-row>
-        <v-typography class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6"> {{ projectText() }} </v-typography>
+        <p class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6"> {{ projectText() }} </p>
       </v-row>
       <br>
 
@@ -16,10 +16,10 @@
 
       <v-row class="mb-6">
         <v-text-field
+          v-model="searchText"
           append-inner-icon="mdi-magnify"
           density="compact"
           hide-details
-          single-line
           variant="solo"
           @input="search"
         />
@@ -46,12 +46,7 @@
                 <v-col
                   cols="1"
                 >
-                  <v-btn
-                    color="white"
-                    icon="mdi-delete"
-                    size="large"
-                    variant="text"
-                  />
+                  <v-icon icon="mdi-delete" style="color:red;" />
                 </v-col>
               </v-row>
             </v-card-title>
@@ -60,9 +55,15 @@
               append-icon="mdi-chevron-right"
               block
               color="blue"
-              text="Open Project"
               variant="tonal"
-            />
+            >
+              <RouterLink
+                class="mx-3 pa-3 font-weight-black text-blue"
+                :to="{ name: 'projectDetails', params: {projectId: project.id} }"
+              >
+                Open Project
+              </RouterLink>
+            </v-btn>
           </v-card>
 
         </v-col>
@@ -85,10 +86,11 @@
   import { getProjects, searchProject } from '@/api/userservice'
   import { useNotifier } from 'vue3-notifier'
   import { Project } from '@/types/types'
+  import { RouterLink } from 'vue-router'
 
   export default {
-
     name: 'ProjectsView',
+
     setup () {
       const notifier = useNotifier('top right')
 
@@ -126,8 +128,7 @@
       const searchText = ref('')
 
       const search = async () => {
-        const text = searchText.value
-        searchProject(text)
+        searchProject(searchText.value)
           .then((response: any) => {
           })
           .catch((err: any) => {
@@ -156,6 +157,7 @@
         projects,
         searchText,
         projectText,
+        RouterLink,
       }
     },
 
@@ -165,5 +167,14 @@
 <style lang="scss" scoped>
 ::v-deep .v-icon {
   color: #2196F3 !important;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+  font-size: 1rem;
+}
+.mdi-delete {
+  width: 25px;
+  height: 25px;
 }
 </style>

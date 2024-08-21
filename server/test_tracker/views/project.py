@@ -31,7 +31,7 @@ class ProjectsDetailAPIView(GenericAPIView):
     """
 
     serializer_class = ProjectsSerializer
-    permission_classes = (HasProjectAccess,)
+    # permission_classes = (HasProjectAccess,)
 
     def get(self, request: Request, project_id: str) -> Response:
         """Return a single project based on the given project id"""
@@ -130,7 +130,7 @@ class AddMemberToProjectAPIView(GenericAPIView):
     Add Member to project
     """
 
-    permission_classes = (HasProjectAccess,)
+    # permission_classes = (HasProjectAccess,)
 
     def put(self, request: Request, project_id: Project, member_id: Member) -> Response:
         """
@@ -260,7 +260,7 @@ class SearchProjectAPIView(GenericAPIView):
     """
 
     serializer_class = ProjectsSerializer
-    permission_classes = (UserIsAuthenticated,)
+    # permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, project_name: str):
         """

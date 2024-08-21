@@ -10,7 +10,8 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', component: () => import('@/pages/DashboardView.vue') }
+    { path: '/', component: () => import('@/pages/DashboardView.vue') },
+    { path: '/projects/:projectId', name: 'projectDetails', component: () => import('@/pages/projects/ProjectDetailsView.vue'), props: true },
   ],
 })
 
