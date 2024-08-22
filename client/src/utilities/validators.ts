@@ -37,6 +37,13 @@ export function newPasswordRule (oldPassword: string) {
   ]
 }
 
+export const oldPasswordRule = [
+  (value: string) => {
+    if (value === 'UnHashed password') return true
+    return 'Old password is incorrect.'
+  },
+]
+
 export const nameRules = [
   (value: string) => {
     if (value) return true

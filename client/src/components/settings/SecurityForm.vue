@@ -10,7 +10,7 @@
       :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
       label="Old password"
       required
-      :rules="passwordRules"
+      :rules="oldPasswordRule"
       :type="showOld ? 'text' : 'password'"
       @click:append-inner="showOld = !showOld"
     />
@@ -49,7 +49,7 @@
 
 <script lang="ts">
   import { ref } from 'vue'
-  import { confirmedPasswordRule, newPasswordRule, passwordRules } from '@/utilities/validators'
+  import { confirmedPasswordRule, newPasswordRule, oldPasswordRule, passwordRules } from '@/utilities/validators'
   import { Password, UserProfile } from '../../types/types'
   import { putSettings } from '@/api/userservice'
   import { useNotifier } from 'vue3-notifier'
@@ -115,6 +115,7 @@
         showConfirm,
         loading,
         passwordRules,
+        oldPasswordRule,
         newPasswordRule,
         confirmedPasswordRule,
         updateProfileSettings,
