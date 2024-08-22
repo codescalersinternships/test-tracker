@@ -49,7 +49,7 @@
 
 <script lang="ts">
   import { ref } from 'vue'
-  import { putSettings } from '@/api/userservice'
+  import { putSettings } from '@/api/userService'
   import { UserProfile } from '../../types/types'
   import { nameRules, phoneNumberRules } from '@/utilities/validators'
   import { useNotifier } from 'vue3-notifier'

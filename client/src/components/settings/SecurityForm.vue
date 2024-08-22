@@ -51,7 +51,7 @@
   import { ref } from 'vue'
   import { confirmedPasswordRule, newPasswordRule, oldPasswordRule, passwordRules } from '@/utilities/validators'
   import { Password, UserProfile } from '../../types/types'
-  import { putSettings } from '@/api/userservice'
+  import { putSettings } from '@/api/userService'
   import { useNotifier } from 'vue3-notifier'
 
   export default {
