@@ -37,7 +37,7 @@
     <v-btn
       block
       class="me-4"
-      :disabled="!form?.isValid"
+      :disabled="!form?.isValid || loading"
       :loading="loading"
       text="Change Password"
       type="submit"
