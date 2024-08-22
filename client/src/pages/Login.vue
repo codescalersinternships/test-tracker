@@ -83,14 +83,14 @@
           <v-divider />
           <br>
 
-          <!-- <v-row>
-          <v-col cols="6" class="d-flex justify-center">
-            <LoginGithub/>
-          </v-col>
-          <v-col cols="6" class="d-flex justify-center">
-            <LoginTFT/>
-          </v-col>
-        </v-row> -->
+          <v-row>
+            <v-col class="d-flex justify-center" cols="6">
+              <LoginGithub />
+            </v-col>
+            <v-col class="d-flex justify-center" cols="6">
+              <LoginTFT />
+            </v-col>
+          </v-row>
 
           <br>
           <v-divider />

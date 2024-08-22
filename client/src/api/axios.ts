@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-
+import md5 from 'md5'
 const AuthClient: AxiosInstance = axios.create({
   baseURL: 'https://server.gent02.dev.grid.tf/api',
   headers: {
@@ -35,6 +35,7 @@ async function LogInUser (userInfo:any) {
     const response = await BaseClient.post('/auth/login/', userInfo)
     const token = response.data.access_token
     localStorage.setItem('token', token)
+    localStorage.setItem('password', md5(userInfo.password))
   } catch (error:any) {
     localStorage.removeItem('token')
     throw new Error(error)
@@ -43,7 +44,7 @@ async function LogInUser (userInfo:any) {
 
 async function LogInGitHub () {
   try {
-    await BaseClient.post('/auth/github/access_token/')
+    return await BaseClient.post('/auth/github/access_token/')
   } catch (error) {
     console.error(error)
     throw error
@@ -51,3 +52,6 @@ async function LogInGitHub () {
 }
 
 export default { AuthClient, BaseClient, LogInUser, LogInGitHub, SignUp, SignUpInvitation }
+// function md5 (password: any): string {
+//   throw new Error('Function not implemented.')
+// }
