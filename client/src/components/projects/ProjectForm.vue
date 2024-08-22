@@ -52,7 +52,7 @@
 
   <script lang="ts">
   import { ref } from 'vue'
-  import { postProject } from '@/api/userservice'
+  import { postProject } from '@/api/ProjectService'
   import { Project } from '@/types/types'
   import { descriptionRules, githubRepoRules, titleRules } from '@/utilities/validators'
   import { useNotifier } from 'vue3-notifier'

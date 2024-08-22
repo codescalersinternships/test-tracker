@@ -83,7 +83,7 @@
 
 <script lang="ts">
   import { ref, watch } from 'vue'
-  import { getProjects, searchProject } from '@/api/userservice'
+  import { getProjects, searchProject } from '@/api/ProjectService'
   import { useNotifier } from 'vue3-notifier'
   import { Project } from '@/types/types'
   import { RouterLink } from 'vue-router'
