@@ -1,3 +1,6 @@
+import md5 from 'md5'
+import debounce from 'debounce'
+
 export const passwordRules = [
   (value: string) => {
     if (value) return true
@@ -37,10 +40,18 @@ export function newPasswordRule (oldPassword: string) {
   ]
 }
 
+const checkPassword = debounce((value: string) => {
+  if (md5(value) === localStorage.getItem('md5phash') || value === '') return true
+  return 'Old password is incorrect.'
+}, 1000)
+
 export const oldPasswordRule = [
   (value: string) => {
-    if (value === 'UnHashed password') return true
-    return 'Old password is incorrect.'
+    let result = checkPassword(value)
+    if (result === undefined) {
+      result = true
+    }
+    return result
   },
 ]
 

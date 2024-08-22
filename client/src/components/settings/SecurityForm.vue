@@ -53,6 +53,7 @@
   import { Password, UserProfile } from '../../types/types'
   import { putSettings } from '@/api/userService'
   import { useNotifier } from 'vue3-notifier'
+  import debounce from 'debounce'
 
   export default {
 
@@ -112,8 +113,9 @@
         password,
         showOld,
         showNew,
-        showConfirm,
         loading,
+        debounce,
+        showConfirm,
         passwordRules,
         oldPasswordRule,
         newPasswordRule,
