@@ -20,9 +20,6 @@ importers:
       vue:
         specifier: ^3.4.31
         version: 3.4.33(typescript@5.5.3)
-      vuetify:
-        specifier: ^3.6.11
-        version: 3.6.13(typescript@5.5.3)(vite-plugin-vuetify@2.0.3)(vue@3.4.33(typescript@5.5.3))
     devDependencies:
       '@babel/types':
         specifier: ^7.24.7
@@ -96,6 +93,9 @@ importers:
       vue-tsc:
         specifier: ^2.0.26
         version: 2.0.28(typescript@5.5.3)
+      vuetify:
+        specifier: ^3.6.13
+        version: 3.6.13(typescript@5.5.3)(vite-plugin-vuetify@2.0.3)(vue@3.4.33(typescript@5.5.3))
 
 packages:
 
