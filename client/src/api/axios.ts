@@ -52,6 +52,3 @@ async function LogInGitHub () {
 }
 
 export default { AuthClient, BaseClient, LogInUser, LogInGitHub, SignUp, SignUpInvitation }
-// function md5 (password: any): string {
-//   throw new Error('Function not implemented.')
-// }
