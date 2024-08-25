@@ -2,19 +2,19 @@
   <div style="margin-left: 7cm; margin-right: 7cm;">
     <v-container>
       <v-row>
-        <p class="mt-2 text-h4 text-blue-darken-4" variant="h5">ALL MEMBERS</p>
+        <p class="mt-2 text-h4 text-blue-darken-4" variant="h5">All members</p>
         <v-spacer />
         <v-btn
           color="primary"
           @click="addMemberDialog=true"
         >
-          INVITE MEMBERS
+          Invite member
         </v-btn>
       </v-row>
 
       <v-dialog v-model="addMemberDialog" max-width="600px">
         <v-card>
-          <v-form>
+          <v-form ref="form">
             <v-card-title>
               <br>
               <v-divider />
@@ -25,6 +25,7 @@
                 density="compact"
                 placeholder="First Name"
                 prepend-inner-icon="mdi-account-outline"
+                :rules="nameRules"
                 variant="outlined"
               />
               <v-text-field
@@ -32,6 +33,7 @@
                 density="compact"
                 placeholder="Last Name"
                 prepend-inner-icon="mdi-account-outline"
+                :rules="nameRules"
                 variant="outlined"
               />
               <v-text-field
@@ -39,18 +41,21 @@
                 density="compact"
                 placeholder="Email"
                 prepend-inner-icon="mdi-email-outline"
+                :rules="emailRules"
                 variant="outlined"
               />
               <p>Permission</p>
               <v-select
+                v-model="selectedPermission"
                 :items="['Full access', 'Admin access']"
-                label="Select"
+                label="Permission"
+                @change="updatePermission"
               />
               <v-divider />
               <v-card-actions>
                 <v-spacer />
                 <v-btn color="info" @click="addMemberDialog = false">Close</v-btn>
-                <v-btn color="success" :disabled="loadingAdd" :loading="loadingAdd" @click="addMember">ADD+</v-btn>
+                <v-btn color="success" :disabled="loadingAdd||!isFormValid" :loading="loadingAdd" @click="AddMember">ADD+</v-btn>
               </v-card-actions>
             </v-card-text>
           </v-form>
@@ -95,6 +100,8 @@
 <script>
   import { defineProps, ref } from 'vue'
   import axios from '@/api/axios'
+  import { emailRules, nameRules } from '@/utilities/validators'
+  import { InviteNewMember } from '@/types/types.ts'
 
   export default {
     setup () {
@@ -108,15 +115,16 @@
           required: true,
         },
         project_id: {
-          type: string,
+          type: String,
           required: true,
         },
       })
-
-      const inviteNewMember = ref({
+      const selectedPermission = ref('Full access')
+      const inviteNewMember = ref < InviteNewMember > ({
         first_name: '',
         last_name: '',
         email: '',
+        permission: 'full_access',
       })
 
       const addMemberDialog = ref(false)
@@ -125,9 +133,9 @@
 
       const loadingAdd = ref(false)
 
-      const addMember = () => {
-        loadingAdd.value = true
+      async function AddMember () {
         try {
+          await axios.addMember(inviteNewMember.value)
           notifier.notify({
             title: 'success',
             description: 'member added successfully',
@@ -148,10 +156,13 @@
           loadingAdd.value = false
         }
       }
+      const form = ref(null)
+
+      const isFormValid = computed(() => form.value ? form.value.isValid : false)
 
       const SearchMember = async () => {
         try {
-          members.value = await axios.Search(searchText.value)
+          members.value = await axios.search(searchText.value)
         } catch (error) {
           console.error(error)
           notifier.notify({
@@ -164,16 +175,24 @@
         }
       }
 
-      async function getMembers () {
+      async function GetMembers () {
         try {
-          members = await axios.getProjectMembers(project_id)
+          members = await axios.getMembers()
         } catch (error) {
           console.error(error)
         }
       }
 
+      const updatePermission = () => {
+        if (selectedPermission.value === 'Full access') {
+          inviteNewMember.value.permission = 'full_access'
+        } else if (selectedPermission.value === 'Admin access') {
+          inviteNewMember.value.permission = 'admin_access'
+        }
+      }
+
       onMounted(() => {
-        getMembers()
+        GetMembers()
       })
 
       return {
@@ -182,10 +201,16 @@
         searchText,
         inviteNewMember,
         addMemberDialog,
-        addMember,
+        AddMember,
         loadingAdd,
+        GetMembers,
+        emailRules,
+        nameRules,
+        isFormValid,
+        form,
+        selectedPermission,
+        updatePermission,
       }
     },
-
   }
 </script>

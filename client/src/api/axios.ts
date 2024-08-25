@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 
 const AuthClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_ENDPOINT,
+  baseURL: window.location.origin,
   timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
@@ -10,14 +10,34 @@ const AuthClient: AxiosInstance = axios.create({
 })
 
 const BaseClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_ENDPOINT,
+  baseURL: window.location.origin,
   timeout: 1000,
 })
 
-async function Search (searchInput:any) {
-  return await AuthClient.get(`/members/search/${searchInput}`)
+async function search (searchInput:any) {
+  try {
+    return await AuthClient.get(`/members/search/${searchInput}`)
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 }
-async function getProjectMembers (projectId:any) {
-  return await AuthClient.get(`/members/project/${projectId}/members/`)
+
+async function addMember (inviteNewMember:any) {
+  try {
+    await AuthClient.post(`/dashboard/members/`, inviteNewMember)
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 }
-export default { AuthClient, BaseClient, Search }
+async function getMembers () {
+  try {
+    return await AuthClient.get(`/api/members/all/`)
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export default { AuthClient, BaseClient, search, getMembers, addMember }
