@@ -1,36 +1,50 @@
 <template>
-  <v-card
-    class="mx-auto my-6 py-6"
-    variant="outlined"
-    width="70%"
+  <div
+    class="settings"
   >
-    <v-card-title
-      class="mx-6 px-6 justify-lg-center align-md-center"
+    <v-card
+      class="mx-auto py-6"
+      variant="outlined"
+      width="70%"
     >
-      <h1>Settings</h1>
-    </v-card-title>
-    <v-card-subtitle
-      class="d-flex justify-lg-center align-md-center"
-    >
-      <v-btn-toggle
-        base-color="black"
-        color="blue"
-        divided
-        size="x-large"
-        variant="outlined"
+      <v-card-title
+        class="mx-6 px-6 justify-lg-center align-md-center"
       >
-        <v-btn @click="profile = true">Profile Information</v-btn>
+        <h1>Settings</h1>
+      </v-card-title>
+      <v-card-subtitle
+        class="d-flex justify-lg-center align-md-center"
+      >
+        <v-tabs
+          v-model="tab"
+          base-color="black"
+          color="blue"
+          size="x-large"
+          variant="outlined"
+        >
+          <v-tab text="Profile Information" value="profile" />
 
-        <v-btn @click="profile = false">Security Information</v-btn>
-      </v-btn-toggle>
-    </v-card-subtitle>
-    <v-card-item
-      class="mx-6 px-6"
-    >
-      <ProfileInformationForm v-if="profile" />
-      <SecurityForm v-else />
-    </v-card-item>
-  </v-card>
+          <v-tab text="Security Information" value="security" />
+        </v-tabs>
+      </v-card-subtitle>
+      <v-tabs-window v-model="tab">
+        <v-tabs-window-item value="profile">
+          <v-card-item
+            class="mx-6 px-6"
+          >
+            <ProfileInformationForm />
+          </v-card-item>
+        </v-tabs-window-item>
+        <v-tabs-window-item value="security">
+          <v-card-item
+            class="mx-6 px-6"
+          >
+            <SecurityForm />
+          </v-card-item>
+        </v-tabs-window-item>
+      </v-tabs-window>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -46,12 +60,12 @@
       SecurityForm,
     },
     setup () {
-      const profile = ref<boolean>(true)
+      const tab = ref('profile')
 
       return {
         ProfileInformationForm,
         SecurityForm,
-        profile,
+        tab,
       }
     },
   }
@@ -61,6 +75,13 @@
 
 h1 {
   font-size: 1.7rem;
+}
+
+.settings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 </style>

@@ -81,6 +81,10 @@ export const phoneNumberRules = [
     return 'You must enter a phone number.'
   },
   (value: string) => {
+    if (value?.length > 10) return true
+    return 'Phone number must be at least 11 digits.'
+  },
+  (value: string) => {
     if (value?.length < 19) return true
     return 'Phone number must be at most 20 digits.'
   },

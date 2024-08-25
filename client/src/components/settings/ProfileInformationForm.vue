@@ -34,16 +34,19 @@
       :rules="phoneNumberRules"
     />
 
-    <v-btn
-      block
-      class="me-4"
-      :disabled="!form?.isValid || loading"
-      :loading="loading"
-      text="Submit"
-      type="submit"
+    <v-col class="text-right">
+      <v-btn
+        class="me-4"
+        color="blue"
+        :disabled="!form?.isValid || loading"
+        :loading="loading"
+        size="large"
+        text="Submit"
+        type="submit"
 
-      @click="updateProfileSettings"
-    />
+        @click="updateProfileSettings"
+      />
+    </v-col>
   </v-form>
 </template>
 

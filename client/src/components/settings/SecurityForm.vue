@@ -34,16 +34,20 @@
       @click:append-inner="showConfirm = !showConfirm"
     />
 
-    <v-btn
-      block
-      class="me-4"
-      :disabled="!form?.isValid || loading"
-      :loading="loading"
-      text="Change Password"
-      type="submit"
+    <v-col class="text-right">
+      <v-btn
 
-      @click="updateProfileSettings"
-    />
+        class="me-4"
+        color="blue"
+        :disabled="!form?.isValid || loading"
+        :loading="loading"
+        size="large"
+        text="Change Password"
+        type="submit"
+
+        @click="updateProfileSettings"
+      />
+    </v-col>
   </v-form>
 </template>
 

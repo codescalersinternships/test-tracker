@@ -6,12 +6,16 @@
   >
     <div class="app-component mx-9 d-flex">
       <div class="left-nav-bar">
-        <v-img
-          alt="Test Tracker Logo"
-          contain
-          src="/navbarlogo.png"
-          style="width: 188.5px; height: 50px;"
-        />
+        <RouterLink
+          :to="{ name: 'dashboard' }"
+        >
+          <v-img
+            alt="Test Tracker Logo"
+            contain
+            src="/navbarlogo.png"
+            style="width: 188.5px; height: 50px;"
+          />
+        </RouterLink>
       </div>
 
       <div class="right-nav-bar">
