@@ -6,7 +6,7 @@
   >
 
     <v-text-field
-      v-model="password.old"
+      v-model="password.old_password"
       :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
       label="Old password"
       required
@@ -15,21 +15,21 @@
       @click:append-inner="showOld = !showOld"
     />
     <v-text-field
-      v-model="password.new"
+      v-model="password.new_password"
       :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
       label="New password"
       required
-      :rules="[passwordRules,newPasswordRule(password.old)].flat()"
+      :rules="[passwordRules,newPasswordRule(password.old_password)].flat()"
       :type="showNew ? 'text' : 'password'"
       @click:append-inner="showNew = !showNew"
     />
 
     <v-text-field
-      v-model="password.confirm"
+      v-model="password.confirm_password"
       :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
       label="Confirm new password"
       required
-      :rules="[confirmedPasswordRule(password.new),newPasswordRule(password.old)].flat()"
+      :rules="[confirmedPasswordRule(password.new_password),newPasswordRule(password.old_password)].flat()"
       :type="showConfirm ? 'text' : 'password'"
       @click:append-inner="showConfirm = !showConfirm"
     />
@@ -45,7 +45,7 @@
         text="Change Password"
         type="submit"
 
-        @click="updateProfileSettings"
+        @click="updatePassword"
       />
     </v-col>
   </v-form>
@@ -54,8 +54,8 @@
 <script lang="ts">
   import { ref } from 'vue'
   import { confirmedPasswordRule, newPasswordRule, oldPasswordRule, passwordRules } from '@/utilities/validators'
-  import { Password, UserProfile } from '../../types/types'
-  import { putSettings } from '@/api/userService'
+  import { Password } from '../../types/types'
+  import { putPassword } from '@/api/userService'
   import { useNotifier } from 'vue3-notifier'
   import debounce from 'debounce'
 
@@ -75,40 +75,40 @@
 
       const password = ref<Password>(
         {
-          old: '',
-          new: '',
-          confirm: '',
+          old_password: '',
+          new_password: '',
+          confirm_password: '',
         }
       )
 
-      const updateProfileSettings = async () => {
+      const updatePassword = async () => {
         loading.value = true
-        const userProfile: Partial<UserProfile> = {
-          first_name: 'change to user.firstName',
-          last_name: 'change to user.lastName',
-          password: password.value.new,
+        const passwords: Partial<Password> = {
+          old_password: password.value.old_password,
+          new_password: password.value.new_password,
         }
-        putSettings(userProfile)
+        putPassword(passwords)
           .then((response: any) => {
             notifier.notify({
               title: 'Success',
-              description: 'Password changed Successfully',
+              description: response.data.message,
               showProgressBar: true,
               timeout: 7_000,
               type: 'success',
             })
-            loading.value = false
           })
           .catch((err: any) => {
+            let description = 'Can not update password'
+            if (err.response) {
+              description = err.response.data.detail
+            }
             notifier.notify({
               title: 'Fail',
-              description: 'Can not change password',
+              description,
               showProgressBar: true,
               timeout: 7_000,
               type: 'error',
             })
-            console.error(err)
-            loading.value = false
           })
       }
 
@@ -124,7 +124,7 @@
         oldPasswordRule,
         newPasswordRule,
         confirmedPasswordRule,
-        updateProfileSettings,
+        updatePassword,
       }
     },
   }

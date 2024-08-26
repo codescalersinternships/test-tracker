@@ -87,23 +87,24 @@
           .then((response: any) => {
             notifier.notify({
               title: 'Success',
-              description: 'Profile changed Successfully',
+              description: response.data.message,
               showProgressBar: true,
               timeout: 7_000,
               type: 'success',
             })
-            loading.value = false
           })
           .catch((err: any) => {
+            let description = 'Can not update profile settings'
+            if (err.response) {
+              description = err.response.data.detail
+            }
             notifier.notify({
               title: 'Fail',
-              description: 'Can not change profile',
+              description,
               showProgressBar: true,
               timeout: 7_000,
               type: 'error',
             })
-            console.error(err)
-            loading.value = false
           })
       }
 

@@ -7,7 +7,7 @@ export type UserProfile = {
 }
 
 export type Password = {
-    old: string,
-    new: string,
-    confirm: string,
+    old_password: string,
+    new_password: string,
+    confirm_password: string,
   }
