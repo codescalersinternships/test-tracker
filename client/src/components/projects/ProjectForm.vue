@@ -90,21 +90,24 @@
           .then((response: any) => {
             notifier.notify({
               title: 'Success',
-              description: 'Project created Successfully',
+              description: response.data.message,
               showProgressBar: true,
               timeout: 7_000,
               type: 'success',
             })
           })
           .catch((err: any) => {
+            let description = 'Can not create project'
+            if (err.response) {
+              description = err.response.data.detail
+            }
             notifier.notify({
               title: 'Fail',
-              description: 'Can not create project',
+              description,
               showProgressBar: true,
               timeout: 7_000,
               type: 'error',
             })
-            console.error(err)
           })
       }
 

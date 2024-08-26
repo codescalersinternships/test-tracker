@@ -1,4 +1,4 @@
-import { AuthClient } from './clients'
+import { AuthClient } from './axios'
 import { Project } from '@/types/types'
 
 export async function postProject (project :Partial<Project>) {
@@ -8,7 +8,7 @@ export async function postProject (project :Partial<Project>) {
 export async function getProjects (page :number) {
   return AuthClient.get('/dashboard/projects/', {
     params: {
-      cursor: page,
+      page,
     },
   })
 }

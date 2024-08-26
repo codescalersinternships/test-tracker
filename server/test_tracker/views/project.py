@@ -31,7 +31,7 @@ class ProjectsDetailAPIView(GenericAPIView):
     """
 
     serializer_class = ProjectsSerializer
-    # permission_classes = (HasProjectAccess,)
+    # 
 
     def get(self, request: Request, project_id: str) -> Response:
         """Return a single project based on the given project id"""
@@ -130,7 +130,7 @@ class AddMemberToProjectAPIView(GenericAPIView):
     Add Member to project
     """
 
-    # permission_classes = (HasProjectAccess,)
+    # 
 
     def put(self, request: Request, project_id: Project, member_id: Member) -> Response:
         """
@@ -288,7 +288,7 @@ class AccountMembersNotInProjectAPIView(GenericAPIView):
     Class to get all account members where members not in project
     """
 
-    permission_classes = (HasProjectAccess,)
+    
     serializer_class = ProjectTeamSerializer
 
     def get(self, request: Request, project_id: str):
@@ -318,7 +318,7 @@ class AccountMembersNotInProjectAPIView(GenericAPIView):
 
 class TestSuitesSectionAPIView(GenericAPIView):
     serializer_class = TestSuiteSectionSerializer
-    permission_classes = (HasProjectAccess,)
+    
     
     def post(self, request: Request, project_id: str):
         """Post new section, required fields is [Title,]"""
@@ -333,7 +333,7 @@ class TestSuitesSectionAPIView(GenericAPIView):
 
 class GetTestSuitesSectionsAPIView(GenericAPIView):
     serializer_class = GetTestSuiteSectionSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str, test_suite: str) -> Response:
         """Get all project test suite sections"""
@@ -351,7 +351,7 @@ class GetTestSuitesSectionsAPIView(GenericAPIView):
 
 class DeleteTestSuiteSectionAPIView(GenericAPIView):
     """Delete a test suite section by its id."""
-    permission_classes = (HasProjectAccess,)
+    
 
     def delete(self, request: Request, project_id: str, section_id: str) -> Response:
         """Delete a section with given id"""
@@ -370,7 +370,7 @@ class DeleteTestSuiteSectionAPIView(GenericAPIView):
         
 class AddTestCaseToTestSuiteSectionAPIView(GenericAPIView):
     """Add a test case to test suite section"""
-    permission_classes = (HasProjectAccess,)
+    
     # serializer_class = AddTestCaseToTestSuiteSectionSerializers
     
     def put(self, request: Request, project_id: str):

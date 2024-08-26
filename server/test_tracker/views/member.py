@@ -186,7 +186,7 @@ class ProjectMembersAPIView(GenericAPIView):
     """This class to return all project members"""
 
     serializer_class = ProjectTeamSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str) -> Response:
         """Use this endpoint to get all project members"""

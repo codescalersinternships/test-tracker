@@ -103,17 +103,20 @@
       const getPage = async (page: number) => {
         getProjects(page).then((response: any) => {
           projects.value = response.data.results
-          // count.value = response.body.total_count
+          count.value = response.data.total_count
         })
           .catch((err: any) => {
+            let description = 'Can not get projects'
+            if (err.response) {
+              description = err.response.data.detail
+            }
             notifier.notify({
               title: 'Fail',
-              description: 'Can not get projects',
+              description,
               showProgressBar: true,
               timeout: 7_000,
               type: 'error',
             })
-            console.error(err)
           })
       }
 
@@ -132,14 +135,17 @@
           .then((response: any) => {
           })
           .catch((err: any) => {
+            let description = 'Can not search for projects'
+            if (err.response) {
+              description = err.response.data.detail
+            }
             notifier.notify({
               title: 'Fail',
-              description: 'Can not search projects',
+              description,
               showProgressBar: true,
               timeout: 7_000,
               type: 'error',
             })
-            console.error(err)
           })
       }
 

@@ -32,7 +32,7 @@ class PostNewRequirementDocsAPIView(GenericAPIView):
     """class project requirement view"""
 
     serializer_class = RequirementDocsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def post(self, request: Request, project_id: str) -> Response:
         """post a new requirement"""
@@ -70,7 +70,7 @@ class GetAllRequirementDocsAPIView(GenericAPIView):
     """class project requirement view"""
 
     serializer_class = RequirementDocsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str) -> Response:
         """
@@ -96,7 +96,7 @@ class SearchRequirementDocssAPIView(GenericAPIView):
     """
 
     serializer_class = RequirementDocsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str, key_word: str) -> Response:
         """get all requirements for a project"""
@@ -121,7 +121,7 @@ class RequirementDocsDetailsAPIView(GenericAPIView):
     """
 
     serializer_class = RequirementDocsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str, requirement_id: str) -> Response:
         """Use this endpoint to get requirement detail and sub requirements"""
@@ -190,7 +190,7 @@ class RequirementAPIView(GenericAPIView):
     """This class is a sub requirement for project requirements"""
 
     serializer_class = RequirementsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def post(self, request: Request, project_id: str, requirements_id: str) -> Response:
         """
@@ -269,7 +269,7 @@ class RequirementsDetailAPIView(GenericAPIView):
     """
 
     serializer_class = RequirementsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(
         self,
@@ -371,7 +371,7 @@ class SearchRequirementsInRequirementDocssAPIView(APIView):
     Use this endpoint to filter any requirement based on title or description
     """
 
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str, key_word: str):
         """
