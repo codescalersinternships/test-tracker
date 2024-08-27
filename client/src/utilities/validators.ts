@@ -61,16 +61,16 @@ export const nameRules = [
     return 'You must enter a name.'
   },
   (value: string) => {
-    if (value?.length > 4) return true
-    return 'Name must be at least 5 character.'
+    if (value?.length > 1) return true
+    return 'Name must be at least 2 character.'
   },
   (value: string) => {
     if (value?.length < 49) return true
     return 'Name must be at most 50 characters.'
   },
   (value: string) => {
-    if (/[^0-9]/.test(value)) return true
-    return 'Name can not contain digits.'
+    if (/[^A-Za-z] /.test(value)) return 'Name can not contain digits or symbols.'
+    return true
   },
 ]
 
