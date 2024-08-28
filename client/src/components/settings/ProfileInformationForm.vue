@@ -129,3 +129,11 @@
     },
   }
 </script>
+
+<style lang="scss" scoped>
+
+  .vue3-notifier-container {
+    top: 90px;
+  }
+
+</style>
