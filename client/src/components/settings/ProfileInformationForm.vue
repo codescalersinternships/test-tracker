@@ -92,6 +92,7 @@
               timeout: 7_000,
               type: 'success',
             })
+            loading.value = false
           })
           .catch((err: any) => {
             let description = 'Can not update profile settings'
@@ -105,6 +106,7 @@
               timeout: 7_000,
               type: 'error',
             })
+            loading.value = false
           })
       }
 

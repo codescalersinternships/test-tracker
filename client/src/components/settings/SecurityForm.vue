@@ -96,6 +96,7 @@
               timeout: 7_000,
               type: 'success',
             })
+            loading.value = false
           })
           .catch((err: any) => {
             let description = 'Can not update password'
@@ -109,6 +110,7 @@
               timeout: 7_000,
               type: 'error',
             })
+            loading.value = false
           })
       }
 
