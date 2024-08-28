@@ -43,7 +43,7 @@
           <v-row>
             <v-col>
               <v-text-field
-                v-model="userPassword.password1"
+                v-model="userPassword.password"
                 :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                 density="compact"
                 placeholder="Password"
@@ -105,7 +105,7 @@
       const notifier = useNotifier('top right')
 
       const userPassword = ref({
-        password1: '',
+        password: '',
         password2: '',
       })
 
@@ -117,7 +117,7 @@
 
       async function RegisterUser () {
         try {
-          await axios.SignUpInvitation(userPassword.value)
+          await axios.SignUpInvitation(userPassword.value.password)
           notifier.notify({
             title: 'Success',
             description: 'successful sign up',
@@ -141,7 +141,7 @@
       }
 
       const isFormValid = computed(() => form.value ? form.value.isValid : false)
-      const confirmedPasswordRules = computed(() => confirmedPasswordRule(userPassword.value.password1))
+      const confirmedPasswordRules = computed(() => confirmedPasswordRule(userPassword.value.password))
 
       const form = ref(null)
 

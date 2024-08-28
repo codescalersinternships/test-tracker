@@ -73,7 +73,7 @@
             :disabled="!isFormValid"
             size="large"
             variant="outlined"
-            @click="SumbitLogIn"
+            @click="SubmitLogIn"
           >
             Log In
           </v-btn>
@@ -111,12 +111,12 @@
   </div>
 </template>
 
-<script>
-  import axios from '../api/axios.ts'
+<script lang="ts">
+  import axios from '../api/axios'
   import { useRouter } from 'vue-router'
   import { useNotifier } from 'vue3-notifier'
   import { emailRules, passwordRules } from '@/utilities/validators'
-  import { logInInfo } from '@/types/types.ts'
+  import type { logInInfo } from '@/types/types.ts'
   // import LoginGithub from '@/components/LoginGithub.vue'
   // import TFLogin from '@/components/TFLogin.vue'
 
@@ -130,39 +130,44 @@
 
       const notifier = useNotifier('top right')
 
-      const userInfo = ref < logInInfo > ({
+      const userInfo = ref<logInInfo>({
         email: '',
         password: '',
       })
 
       const passwordVisible = ref(true)
 
-      async function SumbitLogIn () {
+      async function SubmitLogIn () {
         try {
+          localStorage.removeItem('TEST_TRACKER_REFRESH_TOKEN')
           await axios.LogInUser(userInfo.value)
           if (localStorage.getItem('TEST_TRACKER_REFRESH_TOKEN') != null) {
             router.push(`/`)
           }
         } catch (error) {
-          notifier.notify({
-            title: 'Fail',
-            description: error.detail,
-            showProgressBar: true,
-            timeout: 7_000,
-            type: 'error',
-          })
+          console.log('here', error)
+          // to be resolved
+          // notifier.notify({
+          //   title: 'Fail',
+          //   description: error,
+          //   showProgressBar: true,
+          //   timeout: 7_000,
+          //   type: 'error',
+          // })
         }
       }
+
       const form = ref(null)
 
-      const isFormValid = computed(() => form.value ? form.value.isValid : false)
+      const isFormValid = computed(() => form.value ? (form.value as any).isValid : false)
+      // const isFormValid = computed(() => form.value ? form.value.isValid : false)
 
       function CreateAccount () {
         router.push(`/signup`)
       }
 
       return {
-        SumbitLogIn,
+        SubmitLogIn,
         CreateAccount,
         userInfo,
         passwordVisible,

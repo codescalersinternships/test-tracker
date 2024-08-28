@@ -100,12 +100,13 @@
   </div>
 </template>
 
-<script>
-  import axios from '../api/axios.ts'
+<script lang="ts">
+  import axios from '../api/axios'
   import { useNotifier } from 'vue3-notifier'
   import { useRouter } from 'vue-router'
   import { emailRules, nameRules, passwordRules } from '@/utilities/validators'
   import Login from '@/components/Login.vue'
+  import { signUpInfo } from '@/types/types'
   // import LoginGithub from '@/components/LoginGithub.vue'
   // import TFLogin from '@/components/TFLogin.vue'
 
@@ -120,7 +121,7 @@
       const router = useRouter()
       const loading = ref(false)
 
-      const newUser = ref({
+      const newUser = ref<signUpInfo>({
         first_name: '',
         last_name: '',
         email: '',
@@ -143,20 +144,20 @@
           })
           router.push(`/login`)
         } catch (error) {
-          notifier.notify({
-            title: 'Fail',
-            description: error.message,
-            showProgressBar: true,
-            timeout: 7_000,
-            type: 'error',
-          })
+          // notifier.notify({
+          //   title: 'Fail',
+          //   description: error.message,
+          //   showProgressBar: true,
+          //   timeout: 7_000,
+          //   type: 'error',
+          // })
           console.error(error)
         } finally {
           loading.value = false
         }
       }
       const form = ref(null)
-      const isFormValid = computed(() => form.value ? form.value.isValid : false)
+      const isFormValid = computed(() => form.value ? (form.value as any).isValid : false)
 
       return {
         RegisterNewUser,
