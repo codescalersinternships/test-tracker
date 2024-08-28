@@ -80,23 +80,19 @@
             </v-col>
           </v-row>
 
-          <v-divider />
-          <br>
+          <v-divider class="my-4" />
 
-          <!-- <v-row>
-                <v-col cols="6" class="d-flex justify-center">
-                    <LoginGithub/>
-                </v-col>
-                <v-col cols="6" class="d-flex justify-center">
-                    <LoginTFT/>
-                </v-col>
-                </v-row> -->
+          <v-row>
+            <v-col class="d-flex justify-center" cols="6">
+              <!-- <LoginGithub /> -->
+            </v-col>
+            <v-col class="d-flex justify-center" cols="6">
+              <!-- <TFLogin /> -->
+            </v-col>
+          </v-row>
 
-          <br>
-          <v-divider />
-          <br>
-
-          <AlreadyHaveAnAccount />
+          <v-divider class="my-4" />
+          <Login />
         </v-form>
 
       </v-card>
@@ -105,19 +101,19 @@
 </template>
 
 <script>
-  // import LoginGithub from '@/components/LoginGithub.vue'
   import axios from '../api/axios.ts'
-  import AlreadyHaveAnAccount from '@/components/AlreadyHaveAnAccount.vue'
-  // import LoginTFT from '@/components/LoginTFT.vue'
   import { useNotifier } from 'vue3-notifier'
   import { useRouter } from 'vue-router'
   import { emailRules, nameRules, passwordRules } from '@/utilities/validators'
+  import Login from '@/components/Login.vue'
+  // import LoginGithub from '@/components/LoginGithub.vue'
+  // import TFLogin from '@/components/TFLogin.vue'
 
   export default {
     components: {
-      AlreadyHaveAnAccount,
-    //   LoginGithub,
-    //   LoginTFT,
+      Login,
+      // LoginGithub,
+      // TFLogin,
     },
     setup () {
       const notifier = useNotifier('top right')
@@ -138,11 +134,18 @@
         try {
           await axios.SignUp(newUser.value)
           loading.value = false
+          notifier.notify({
+            title: 'Success',
+            description: 'successful sign up',
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'success',
+          })
           router.push(`/login`)
         } catch (error) {
           notifier.notify({
             title: 'Fail',
-            description: 'Invalid credentials',
+            description: error.message,
             showProgressBar: true,
             timeout: 7_000,
             type: 'error',

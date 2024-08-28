@@ -44,25 +44,23 @@
               />
               <v-text-field
                 v-model="userInfo.password"
-                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
                 density="compact"
                 placeholder="Password"
                 prepend-inner-icon="mdi-lock-outline"
                 :rules="passwordRules"
-                :type="visible ? 'password' : 'text'"
+                :type="passwordVisible ? 'password' : 'text'"
                 variant="outlined"
-                @click:append-inner="visible = !visible"
+                @click:append-inner="passwordVisible = !passwordVisible"
               />
               <v-row>
                 <v-col class="d-flex justify-end">
-                  <a
+                  <!-- <router-link
                     class="text-caption text-decoration-none text-grey-darken-2"
-                    href="#"
-                    rel="noopener noreferrer"
-                    target="_blank"
+                    to="/forgot-password"
                   >
                     Forgot Password?
-                  </a>
+                  </router-link> -->
                 </v-col>
               </v-row>
             </v-col>
@@ -80,21 +78,18 @@
             Log In
           </v-btn>
 
-          <v-divider />
-          <br>
+          <v-divider class="my-4" />
 
           <v-row>
             <v-col class="d-flex justify-center" cols="6">
-              <LoginGithub />
+              <!-- <LoginGithub /> -->
             </v-col>
             <v-col class="d-flex justify-center" cols="6">
-              <LoginTFT />
+              <!-- <TFLogin /> -->
             </v-col>
           </v-row>
 
-          <br>
-          <v-divider />
-          <br>
+          <v-divider class="my-4" />
 
           <v-row>
             <v-col class="d-flex justify-center">
@@ -117,42 +112,41 @@
 </template>
 
 <script>
-  // import LoginGithub from '@/components/LoginGithub.vue'
   import axios from '../api/axios.ts'
   import { useRouter } from 'vue-router'
-  // import LoginTFT from '@/components/LoginTFT.vue'
   import { useNotifier } from 'vue3-notifier'
   import { emailRules, passwordRules } from '@/utilities/validators'
+  import { logInInfo } from '@/types/types.ts'
+  // import LoginGithub from '@/components/LoginGithub.vue'
+  // import TFLogin from '@/components/TFLogin.vue'
 
   export default {
     components: {
       // LoginGithub,
-      // LoginTFT,
+      // TFLogin,
     },
     setup () {
       const router = useRouter()
 
       const notifier = useNotifier('top right')
 
-      const userInfo = ref({
+      const userInfo = ref < logInInfo > ({
         email: '',
         password: '',
       })
 
-      const visible = ref(true)
+      const passwordVisible = ref(true)
 
       async function SumbitLogIn () {
         try {
           await axios.LogInUser(userInfo.value)
-          console.log(localStorage.getItem('token'))
-          if (localStorage.getItem('token') != null) {
+          if (localStorage.getItem('TEST_TRACKER_REFRESH_TOKEN') != null) {
             router.push(`/`)
           }
         } catch (error) {
-          console.error(error)
           notifier.notify({
             title: 'Fail',
-            description: 'Login failed',
+            description: error.detail,
             showProgressBar: true,
             timeout: 7_000,
             type: 'error',
@@ -171,7 +165,7 @@
         SumbitLogIn,
         CreateAccount,
         userInfo,
-        visible,
+        passwordVisible,
         notifier,
         isFormValid,
         emailRules,

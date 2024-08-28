@@ -20,7 +20,7 @@
 
           <v-row class="d-flex justify-center mb-4" no-gutters>
             <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
-              <p class="mt-2 text-h5 text-grey-darken-2 font-weight-bold" variant="h5">Hello {{ username }}</p>
+              <p class="mt-2 text-h5 text-grey-darken-2 font-weight-bold" variant="h5">Hello {{ firstName }}</p>
             </v-col>
           </v-row>
 
@@ -35,7 +35,7 @@
           <v-row>
             <v-col class="d-flex justify-center">
               <p class="text-center text-grey-darken-3">
-                Write your password to confirm your registration
+                Write your password to confirm the registration
               </p>
             </v-col>
           </v-row>
@@ -81,10 +81,8 @@
             </v-col>
           </v-row>
 
-          <v-divider />
-          <br>
-
-          <AlreadyHaveAnAccount />
+          <v-divider class="my-4" />
+          <Login />
         </v-form>
       </v-card>
     </v-container>
@@ -94,13 +92,13 @@
 <script>
   import axios from '@/api/axios'
   import { useRouter } from 'vue-router'
-  import AlreadyHaveAnAccount from '@/components/AlreadyHaveAnAccount.vue'
   import { useNotifier } from 'vue3-notifier'
   import { confirmedPasswordRule, passwordRules } from '@/utilities/validators'
+  import Login from '@/components/Login.vue'
 
   export default {
     components: {
-      AlreadyHaveAnAccount,
+      Login,
     },
     setup () {
       const router = useRouter()
@@ -114,16 +112,23 @@
       const showPassword = ref(true)
       const showRePassword = ref(true)
 
-      const username = ref('')
+      const firstName = ref('')
       const invitor = ref('')
 
       async function RegisterUser () {
         try {
           await axios.SignUpInvitation(userPassword.value)
+          notifier.notify({
+            title: 'Success',
+            description: 'successful sign up',
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'success',
+          })
         } catch (error) {
           notifier.notify({
             title: 'Fail',
-            description: 'Cannot sign up',
+            description: error.message,
             showProgressBar: true,
             timeout: 7_000,
             type: 'error',
@@ -146,7 +151,7 @@
         showRePassword,
         RegisterUser,
         LogIn,
-        username,
+        firstName,
         invitor,
         passwordRules,
         confirmedPasswordRule,

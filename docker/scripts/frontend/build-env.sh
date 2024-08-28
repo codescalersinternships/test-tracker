@@ -4,6 +4,9 @@ set -ex
 values="
 window.env = {
   SERVER_DOMAIN_NAME_API: '$SERVER_DOMAIN_NAME_API',
+  GITHUB_CLIENT_ID: '$GITHUB_CLIENT_ID',
+  GITHUB_CLIENT_SECRET: '$GITHUB_CLIENT_SECRET',
+
 };
 "
 # decide the config file path

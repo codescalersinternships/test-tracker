@@ -1,17 +1,17 @@
 import axios from '../api/axios'
 
-const clientId = 'Ov23lix4FAZvEzpWD76J'
-const clientSecret = 'a625c62adbd77c4d1d161a40f0b7baf72c3cfacf '
-
 export async function getToken (code:any) {
   try {
-    const _getToken = await axios.BaseClient.post('/auth/github/access_token/', {
-      client_id: clientId,
-      client_secret: clientSecret,
+    const response = await axios.BaseClient.post('/auth/github/access_token/', {
+      client_id: window.env.GITHUB_CLIENT_ID,
+      client_secret: window.env.GITHUB_CLIENT_SECRET,
       code,
     })
-    console.log(_getToken)
-    return _getToken.data.results.access_token
+    const token = response.data.access_token
+    // const refreshtoken = response.data.refresh_token
+    localStorage.setItem('TEST_TRACKER_ACCESS_TOKEN', token)
+    return response.data.access_tokens
+    // localStorage.setItem('TEST_TRACKER_REFRESH_TOKEN', refreshtoken)
   } catch (error) {
     console.error(error)
   }
@@ -19,11 +19,10 @@ export async function getToken (code:any) {
 
 export async function getUser (accessToken:any) {
   try {
-    console.log(accessToken)
     const user = await axios.BaseClient.post('/auth/github/user/', {
-      access_token: accessToken,
+      access_token: getToken(null),
     })
-    return user
+    return user.data
   } catch (error) {
     console.error(error)
   }

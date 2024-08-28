@@ -3,6 +3,8 @@ FROM node:18.18.2 as build-stage
 WORKDIR /client
 
 ENV SERVER_DOMAIN_NAME_API=$SERVER_DOMAIN_NAME_API
+ENV GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID
+ENV GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET
 
 # Copy package.json and package-lock.json separately to leverage Docker cache
 COPY ./client/package.json /client
@@ -18,6 +20,8 @@ FROM nginx:stable-alpine as production-stage
 COPY ./nginx/prod.conf /temp/prod.conf
 
 RUN envsubst '$SERVER_DOMAIN_NAME_API' < /temp/prod.conf > /etc/nginx/conf.d/default.conf
+RUN envsubst '$GITHUB_CLIENT_ID' < /temp/prod.conf > /etc/nginx/conf.d/default.conf
+RUN envsubst '$GITHUB_CLIENT_SECRET' < /temp/prod.conf > /etc/nginx/conf.d/default.conf
 
 # Copy the build artifacts and build-env.sh from the build-stage
 COPY --from=build-stage /client/dist /usr/share/nginx/html

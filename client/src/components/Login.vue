@@ -1,16 +1,15 @@
 <template>
   <v-row>
     <v-col class="d-flex justify-center">
-      <a class="text-caption text-decoration-none text-grey-darken-2">
+      <p class="text-caption text-decoration-none text-grey-darken-2">
         Already have an account?
-        <a
+        <router-link
           class="text-caption text-decoration-none text-blue"
-          href="#"
-          @click.prevent="handleLogIn"
+          to="/login"
         >
           Sign in
-        </a>
-      </a>
+        </router-link>
+      </p>
     </v-col>
   </v-row>
 </template>

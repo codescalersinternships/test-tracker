@@ -44,7 +44,7 @@ endif
 install:
 	$(server) && poetry install
 	$(server) && poetry check
-	$(client) && yarn
+	$(client) && pnpm install
 runserver:
 	$(server) && $(CMD) python3 manage.py runserver
 runclient:
