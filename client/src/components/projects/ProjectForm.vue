@@ -37,16 +37,18 @@
       :rules="githubRepoRules"
     />
 
-    <v-btn
-      block
-      class="me-4"
-      color="blue"
-      :disabled="!form?.isValid"
-      text="Submit"
-      type="submit"
-      variant="tonal"
-      @click="createProject"
-    />
+    <v-col class="text-right">
+      <v-btn
+        class="me-4"
+        color="blue"
+        :disabled="!form?.isValid || loading"
+        :loading="loading"
+        size="large"
+        text="Submit"
+        type="submit"
+        @click="createProject"
+      />
+    </v-col>
   </v-form>
 </template>
 
@@ -67,6 +69,8 @@
 
       const form = ref()
 
+      const loading = ref(false)
+
       const project = ref<Partial<Project>>(
         {
           title: '',
@@ -76,6 +80,7 @@
       )
 
       const createProject = async () => {
+        loading.value = true
         let projectObject: Partial<Project> = {
           title: project.value.title,
           short_description: project.value.short_description,
@@ -95,6 +100,7 @@
               timeout: 7_000,
               type: 'success',
             })
+            loading.value = false
           })
           .catch((err: any) => {
             let description = 'Can not create project'
@@ -108,11 +114,13 @@
               timeout: 7_000,
               type: 'error',
             })
+            loading.value = false
           })
       }
 
       return {
         form,
+        loading,
         project,
         githubRepo,
         titleRules,

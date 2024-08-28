@@ -1,7 +1,7 @@
 <template>
-  <ProjectsView />
+  <ProjectForm />
 </template>
 
 <script lang="ts" setup>
-  import ProjectsView from './pages/projects/ProjectsView.vue'
+  import ProjectForm from './components/projects/ProjectForm.vue'
 </script>
