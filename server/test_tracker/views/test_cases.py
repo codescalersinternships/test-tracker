@@ -180,7 +180,7 @@ class SearchTestCaseAPIView(GenericAPIView):
     """
 
     serializer_class = TestCaseSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str, key_word: str):
         """
@@ -201,7 +201,7 @@ class GetAllProjectRequirementsAPIView(GenericAPIView):
     """Get all of test cases"""
 
     serializer_class = RequirementsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str) -> Response:
         """Method get to get all of test cases based on the test suite"""
@@ -221,7 +221,7 @@ class UpdateTestCaseAfterRunAPIView(GenericAPIView):
     """This class to update the test case by pass bool field"""
 
     serializer_class = UpdateTestCaseAfterRunSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def put(self, request: Request, project_id: str, test_case_id: str) -> Response:
         """Method put to update the test case by pass bool field"""

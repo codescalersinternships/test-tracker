@@ -28,7 +28,7 @@ class TestRunAPIView(GenericAPIView):
     """Class TestRunAPIView to handle test runs endpoints"""
 
     serializer_class = TestRunsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def post(self, request: Request, project_id: str) -> Response:
         serializer = self.serializer_class(data=request.data)
@@ -89,7 +89,7 @@ class TestRunDetailAPIView(GenericAPIView):
     """Class TestRunAPIView to handle test runs endpoints"""
 
     serializer_class = TestRunsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str, test_run_id: str) -> Response:
         """
@@ -142,7 +142,7 @@ class SearchOnTestRunAPIView(GenericAPIView):
     """
 
     serializer_class = TestRunsSerializer
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str) -> Response:
         """
@@ -176,7 +176,7 @@ class SearchOnTestRunAPIView(GenericAPIView):
 
 
 class LastWeekTestRunReportSheetAPIView(GenericAPIView):
-    permission_classes = (HasProjectAccess,)
+    
 
     def get(self, request: Request, project_id: str) -> Response:
         """
@@ -227,7 +227,7 @@ class LastWeekTestRunReportSheetAPIView(GenericAPIView):
 
 
 class RunAllTestCasesAPIView(GenericAPIView):
-    permission_classes = (HasProjectAccess,)
+    
     serializer_class = TestCaseSerializer
 
     def get(self, request: Request, project_id: str, test_run_id: str) -> Response:
@@ -286,7 +286,7 @@ class RunAllTestCasesAPIView(GenericAPIView):
 
 
 class SetAssignedUserTestRunAPIView(GenericAPIView):
-    permission_classes = (HasProjectAccess,)
+    
     serializer_class = TestRunsSerializer
 
     def put(self, request: Request, project_id: str, test_run_id: str) -> Response:
@@ -334,7 +334,7 @@ class ReportMonthTestRunAPIView(GenericAPIView):
 class CompleteTestRunAPIView(GenericAPIView):
     """Complete test run after run all test cases."""
 
-    permission_classes = (HasProjectAccess,)
+    
 
     def put(self, request: Request, project_id: str, test_run_id: str) -> Response:
         """We will use this endpoint to complete the test run after running all test cases"""

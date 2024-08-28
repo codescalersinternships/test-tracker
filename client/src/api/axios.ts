@@ -1,17 +1,15 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from 'axios'
 
-const AuthClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_ENDPOINT, 
+export const AuthClient: AxiosInstance = axios.create({
+  baseURL: window.env.SERVER_DOMAIN_NAME_API,
   timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+    Authorization: localStorage.getItem('token'),
   },
-});
+})
 
-const BaseClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_ENDPOINT,
+export const BaseClient: AxiosInstance = axios.create({
+  baseURL: window.env.SERVER_DOMAIN_NAME_API,
   timeout: 1000,
-});
-
-export { AuthClient, BaseClient };
+})

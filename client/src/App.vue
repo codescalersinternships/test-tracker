@@ -1,11 +1,7 @@
 <template>
-  <v-app>
-    <v-main>
-      <router-view />
-    </v-main>
-  </v-app>
+  <ProjectForm />
 </template>
 
 <script lang="ts" setup>
-  //
+  import ProjectForm from './components/projects/ProjectForm.vue'
 </script>

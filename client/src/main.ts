@@ -3,6 +3,8 @@
  *
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
+// Styles
+import 'vue3-notifier/style.css'
 
 // Plugins
 import { registerPlugins } from '@/plugins'
