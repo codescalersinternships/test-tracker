@@ -8,6 +8,8 @@
     <v-text-field
       v-model="password.old_password"
       :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+      base-color="blue"
+      color="blue"
       label="Old password"
       required
       :rules="oldPasswordRule"
@@ -17,6 +19,8 @@
     <v-text-field
       v-model="password.new_password"
       :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+      base-color="blue"
+      color="blue"
       label="New password"
       required
       :rules="[passwordRules,newPasswordRule(password.old_password)].flat()"
@@ -27,6 +31,8 @@
     <v-text-field
       v-model="password.confirm_password"
       :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+      base-color="blue"
+      color="blue"
       label="Confirm new password"
       required
       :rules="[confirmedPasswordRule(password.new_password),newPasswordRule(password.old_password)].flat()"

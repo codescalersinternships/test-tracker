@@ -6,6 +6,8 @@
   >
     <v-text-field
       v-model="profile.email"
+      base-color="blue"
+      color="blue"
       :counter="10"
       disabled
       label="E-mail"
@@ -13,7 +15,9 @@
 
     <v-text-field
       v-model="profile.first_name"
+      base-color="blue"
       clearable
+      color="blue"
       label="First Name"
       required
       :rules="nameRules"
@@ -21,7 +25,9 @@
 
     <v-text-field
       v-model="profile.last_name"
+      base-color="blue"
       clearable
+      color="blue"
       label="Last Name"
       required
       :rules="nameRules"
@@ -29,7 +35,9 @@
 
     <v-text-field
       v-model="profile.phone"
+      base-color="blue"
       clearable
+      color="blue"
       label="Phone Number"
       :rules="phoneNumberRules"
     />
