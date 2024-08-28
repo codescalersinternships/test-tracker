@@ -1,17 +1,9 @@
-import axios, { AxiosInstance } from 'axios';
+import axiosClient from 'axios'
 
-const AuthClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_ENDPOINT, 
-  timeout: 1000,
+const accessToken = localStorage.getItem('TESTTRACKER_ACCESS_TOKEN')
+export const axios = axiosClient.create({
+  baseURL: window.env.SERVER_DOMAIN_NAME_API,
   headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+    Authorization: `Bearer ${accessToken}`,
   },
-});
-
-const BaseClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_ENDPOINT,
-  timeout: 1000,
-});
-
-export { AuthClient, BaseClient };
+})
