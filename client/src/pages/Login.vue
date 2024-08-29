@@ -141,16 +141,16 @@
           if (localStorage.getItem('TEST_TRACKER_REFRESH_TOKEN') != null) {
             router.push(`/`)
           }
-        } catch (error) {
+        } catch (error:any) {
           console.log('here', error)
-          // to be resolved
-          // notifier.notify({
-          //   title: 'Fail',
-          //   description: error,
-          //   showProgressBar: true,
-          //   timeout: 7_000,
-          //   type: 'error',
-          // })
+          const errorDetail = error.response?.data?.detail
+          notifier.notify({
+            title: 'Fail',
+            description: errorDetail,
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'error',
+          })
         }
       }
 

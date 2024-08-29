@@ -28,9 +28,9 @@ async function logInUser (userInfo: logInInfo) {
     localStorage.setItem('TEST_TRACKER_ACCESS_TOKEN', token)
     localStorage.setItem('TTPHASH', md5(userInfo.password))
     localStorage.setItem('TEST_TRACKER_REFRESH_TOKEN', refreshtoken)
-  } catch (error:any) {
+  } catch (error) {
     localStorage.removeItem('TEST_TRACKER_ACCESS_TOKEN')
-    throw new Error(error)
+    throw error
   }
 }
 

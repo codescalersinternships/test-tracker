@@ -140,14 +140,15 @@
             type: 'success',
           })
           router.push(`/login`)
-        } catch (error) {
-          // notifier.notify({
-          //   title: 'Fail',
-          //   description: error.message,
-          //   showProgressBar: true,
-          //   timeout: 7_000,
-          //   type: 'error',
-          // })
+        } catch (error:any) {
+          const errorDetail = error.response?.data?.detail
+          notifier.notify({
+            title: 'Fail',
+            description: errorDetail,
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'error',
+          })
           console.error(error)
         } finally {
           loading.value = false

@@ -14,8 +14,8 @@
     "md5": "^2.3.0",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
-    "vue3-notifier": "^1.0.3",
-    "vuetify": "^3.6.11"
+    "vuetify": "^3.6.11",
+    "vue3-notifier": "1.0.3"
   },
   "devDependencies": {
     "@babel/types": "^7.24.7",

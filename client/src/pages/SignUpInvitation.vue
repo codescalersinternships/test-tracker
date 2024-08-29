@@ -126,9 +126,10 @@
             type: 'success',
           })
         } catch (error) {
+          const errorDetail = error.response?.data?.detail
           notifier.notify({
             title: 'Fail',
-            description: error.message,
+            description: errorDetail,
             showProgressBar: true,
             timeout: 7_000,
             type: 'error',
