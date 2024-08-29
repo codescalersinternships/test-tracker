@@ -1,22 +1,16 @@
-import axios, { AxiosInstance } from 'axios'
+import axiosClient from 'axios'
 
-const AuthClient: AxiosInstance = axios.create({
-  baseURL: window.location.origin,
-  timeout: 1000,
+const accessToken = localStorage.getItem('TESTTRACKER_ACCESS_TOKEN')
+export const axios = axiosClient.create({
+  baseURL: 'https://server.gent02.dev.grid.tf/api',
   headers: {
-    'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + localStorage.getItem('token'),
+    Authorization: `Bearer ${accessToken}`,
   },
-})
-
-const BaseClient: AxiosInstance = axios.create({
-  baseURL: window.location.origin,
-  timeout: 1000,
 })
 
 async function search (searchInput:any) {
   try {
-    return await AuthClient.get(`/members/search/${searchInput}`)
+    return await axios.get(`/members/search/${searchInput}`)
   } catch (error) {
     console.error(error)
     throw error
@@ -25,7 +19,7 @@ async function search (searchInput:any) {
 
 async function addMember (inviteNewMember:any) {
   try {
-    await AuthClient.post(`/dashboard/members/`, inviteNewMember)
+    await axios.post(`/dashboard/members/`, inviteNewMember)
   } catch (error) {
     console.error(error)
     throw error
@@ -33,11 +27,11 @@ async function addMember (inviteNewMember:any) {
 }
 async function getMembers () {
   try {
-    return await AuthClient.get(`/api/members/all/`)
+    return await axios.get(`/api/members/all/`)
   } catch (error) {
     console.error(error)
     throw error
   }
 }
 
-export default { AuthClient, BaseClient, search, getMembers, addMember }
+export default { search, getMembers, addMember }

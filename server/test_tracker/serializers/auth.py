@@ -115,3 +115,7 @@ class GitHubRequestToGetAccessTokenSerializers(Serializer):
 
 class GitHubUserDataSerializers(Serializer):
     access_token = CharField()
+
+class ChangePasswordSerializer(Serializer):
+    old_password = CharField()
+    new_password = CharField()
