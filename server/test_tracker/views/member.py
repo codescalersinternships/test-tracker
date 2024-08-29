@@ -39,7 +39,7 @@ class GetMemberApiView(GenericAPIView):
     """
 
     serializer_class = MemberSerializers
-    # permission_classes = (IsHost,)
+    permission_classes = (IsHost,)
 
     def get(self, request: Request) -> Response:
         """Use this method to get all of member based on request user"""
@@ -94,7 +94,7 @@ class MemberDetailAPIView(GenericAPIView):
     """
 
     serializer_class = MemberSerializers
-    # permission_classes = (UserIsAuthenticated,)
+    permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request, member_id: str) -> Response:
         """Return a single member based on the request user, member_email"""
@@ -139,7 +139,7 @@ class FULLACCESSPermissionAPIView(GenericAPIView):
     """
 
     serializer_class = MemberSerializers
-    # permission_classes = (UserIsAuthenticated,)
+    permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request) -> Response:
         member = get_full_access_permission_based_on_user(request.user)
@@ -155,7 +155,7 @@ class ADMINACCESSPermissionAPIView(GenericAPIView):
     """
 
     serializer_class = MemberSerializers
-    # permission_classes = (UserIsAuthenticated,)
+    permission_classes = (UserIsAuthenticated,)
 
     def get(self, request: Request) -> Response:
         member = get_admin_access_permission_based_on_user(request.user)
@@ -186,7 +186,7 @@ class ProjectMembersAPIView(GenericAPIView):
     """This class to return all project members"""
 
     serializer_class = ProjectTeamSerializer
-    # permission_classes = (HasProjectAccess,)
+    permission_classes = (HasProjectAccess,)
 
     def get(self, request: Request, project_id: str) -> Response:
         """Use this endpoint to get all project members"""

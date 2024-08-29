@@ -1,4 +1,4 @@
-export interface InviteNewMember {
+export interface inviteNewMember {
     first_name: string;
     last_name: string;
     email: string;

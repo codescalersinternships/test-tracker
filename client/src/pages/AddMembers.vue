@@ -21,7 +21,7 @@
             </v-card-title>
             <v-card-text>
               <v-text-field
-                v-model="inviteNewMember.first_name"
+                v-model="inviteMember.first_name"
                 density="compact"
                 placeholder="First Name"
                 prepend-inner-icon="mdi-account-outline"
@@ -29,7 +29,7 @@
                 variant="outlined"
               />
               <v-text-field
-                v-model="inviteNewMember.last_name"
+                v-model="inviteMember.last_name"
                 density="compact"
                 placeholder="Last Name"
                 prepend-inner-icon="mdi-account-outline"
@@ -37,7 +37,7 @@
                 variant="outlined"
               />
               <v-text-field
-                v-model="inviteNewMember.email"
+                v-model="inviteMember.email"
                 density="compact"
                 placeholder="Email"
                 prepend-inner-icon="mdi-email-outline"
@@ -63,7 +63,7 @@
       </v-dialog>
 
       <v-row>
-        <p class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">There are {{ count }} members registered</p>
+        <p class="mt-2 text-h6 text-grey-darken-2 mb-8" variant="h6">There are {{ MembersCount }} members registered</p>
       </v-row>
       <br>
 
@@ -85,7 +85,7 @@
           sm="6"
         >
           <v-card class="ma-2" outlined>
-            <!-- implement viewMember -->
+            <!-- implement viewMember and the display -->
             <v-card-subtitle>{{ member.full_name }}</v-card-subtitle>
             <v-card-actions>
               <v-btn @click="viewMember(member.id)">View Details</v-btn>
@@ -97,30 +97,26 @@
   </div>
 </template>
 
-<script>
-  import { defineProps, ref } from 'vue'
-  import axios from '@/api/axios'
+<script lang="ts">
+  import { ref } from 'vue'
+  import api from '@/api/members'
   import { emailRules, nameRules } from '@/utilities/validators'
-  import { InviteNewMember } from '@/types/types.ts'
+  import { inviteNewMember } from '@/types/types'
 
   export default {
     setup () {
-      const props = defineProps({
-        count: {
-          type: Number,
-          required: true,
-        },
-        members: {
-          type: Array,
-          required: true,
-        },
-        project_id: {
-          type: String,
-          required: true,
-        },
-      })
-      const selectedPermission = ref('Full access')
-      const inviteNewMember = ref < InviteNewMember > ({
+      // const props = defineProps({
+      //   count: {
+      //     type: Number,
+      //     required: true,
+      //   },
+      //   members: {
+      //     type: Array,
+      //     required: true,
+      //   },
+      // })
+      const selectedPermission = ref < string >('Full access')
+      const inviteMember = ref < inviteNewMember >({
         first_name: '',
         last_name: '',
         email: '',
@@ -129,66 +125,70 @@
 
       const addMemberDialog = ref(false)
 
+      const members = ref([])
+      const MembersCount = computed(() => members.value.length)
+
       const searchText = ref('')
 
       const loadingAdd = ref(false)
 
       async function AddMember () {
         try {
-          await axios.addMember(inviteNewMember.value)
-          notifier.notify({
-            title: 'success',
-            description: 'member added successfully',
-            showProgressBar: true,
-            timeout: 7_000,
-            type: 'success',
-          })
+          await api.addMember(inviteMember.value)
+          // description from the backend
+          // notifier.notify({
+          //   title: 'success',
+          //   description: 'member added successfully',
+          //   showProgressBar: true,
+          //   timeout: 7_000,
+          //   type: 'success',
+          // })
         } catch (error) {
           console.error(error)
-          notifier.notify({
-            title: 'Fail',
-            description: 'cannot add member',
-            showProgressBar: true,
-            timeout: 7_000,
-            type: 'error',
-          })
+          // description from the backend
+          // notifier.notify({
+          //   title: 'Fail',
+          //   description: 'cannot add member',
+          //   showProgressBar: true,
+          //   timeout: 7_000,
+          //   type: 'error',
+          // })
         } finally {
           loadingAdd.value = false
         }
       }
       const form = ref(null)
 
-      const isFormValid = computed(() => form.value ? form.value.isValid : false)
+      const isFormValid = computed(() => form.value ? (form.value as any).isValid : false)
 
       const SearchMember = async () => {
         try {
-          members.value = await axios.search(searchText.value)
+          const response = await api.search(searchText.value)
+          members.value = response.data
         } catch (error) {
           console.error(error)
-          notifier.notify({
-            title: 'Fail',
-            description: 'no member found',
-            showProgressBar: true,
-            timeout: 7_000,
-            type: 'error',
-          })
+          // description from the backend
+          // notifier.notify({
+          //   title: 'Fail',
+          //   description: 'no member found',
+          //   showProgressBar: true,
+          //   timeout: 7_000,
+          //   type: 'error',
+          // })
         }
       }
 
       async function GetMembers () {
         try {
-          members = await axios.getMembers()
+          const response = await api.getMembers()
+          members.value = response.data
         } catch (error) {
           console.error(error)
         }
       }
 
       const updatePermission = () => {
-        if (selectedPermission.value === 'Full access') {
-          inviteNewMember.value.permission = 'full_access'
-        } else if (selectedPermission.value === 'Admin access') {
-          inviteNewMember.value.permission = 'admin_access'
-        }
+        inviteMember.value.permission = selectedPermission.value === 'Full access' ? 'full_access' : 'admin_access'
       }
 
       onMounted(() => {
@@ -196,10 +196,9 @@
       })
 
       return {
-        props,
         SearchMember,
         searchText,
-        inviteNewMember,
+        inviteMember,
         addMemberDialog,
         AddMember,
         loadingAdd,
@@ -210,6 +209,8 @@
         form,
         selectedPermission,
         updatePermission,
+        MembersCount,
+        members,
       }
     },
   }
