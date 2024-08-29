@@ -112,7 +112,7 @@
 </template>
 
 <script lang="ts">
-  import api from '@/api/users'
+  import api from '@/api/auth'
   import { useRouter } from 'vue-router'
   import { useNotifier } from 'vue3-notifier'
   import { emailRules, passwordRules } from '@/utilities/validators'
