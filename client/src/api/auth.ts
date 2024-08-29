@@ -1,7 +1,8 @@
 import { axios } from './axios'
 import md5 from 'md5'
+import { logInInfo, signUpInfo } from '../types/types'
 
-async function signUp (newUser:any) {
+async function signUp (newUser:signUpInfo) {
   try {
     await axios.post('/auth/signup/', newUser)
   } catch (error) {
@@ -10,16 +11,16 @@ async function signUp (newUser:any) {
   }
 }
 
-async function signUpInvitation (passwords:any) {
+async function signUpInvitation (password:string) {
   try {
-    await axios.put('/members/set_password/', passwords)
+    await axios.put('/members/set_password/', password)
   } catch (error) {
     console.error(error)
     throw error
   }
 }
 
-export async function logInUser (userInfo: any): Promise<void> {
+async function logInUser (userInfo: logInInfo) {
   try {
     const response = await axios.post('/auth/login/', userInfo)
     const token = response.data.access_token
