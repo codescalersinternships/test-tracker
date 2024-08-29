@@ -82,7 +82,7 @@
           </v-row>
 
           <v-divider class="my-4" />
-          <Login />
+          <LoginHintComponent />
         </v-form>
       </v-card>
     </v-container>
@@ -90,15 +90,15 @@
 </template>
 
 <script>
-  import axios from '@/api/axios'
+  import api from '@/api/users'
   import { useRouter } from 'vue-router'
   import { useNotifier } from 'vue3-notifier'
   import { confirmedPasswordRule, passwordRules } from '@/utilities/validators'
-  import Login from '@/components/Login.vue'
+  import LoginHintComponent from '@/components/LoginHintComponent.vue'
 
   export default {
     components: {
-      Login,
+      LoginHintComponent,
     },
     setup () {
       const router = useRouter()
@@ -117,7 +117,7 @@
 
       async function RegisterUser () {
         try {
-          await axios.SignUpInvitation(userPassword.value.password)
+          await api.signUpInvitation(userPassword.value.password)
           notifier.notify({
             title: 'Success',
             description: 'successful sign up',

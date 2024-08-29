@@ -18,7 +18,7 @@ export const nameRules = [
     return 'Name must be at least 5 character.'
   },
   (value: string) => {
-    if (value?.length < 49) return true
+    if (value?.length <= 50) return true
     return 'Name must be at most 50 characters.'
   },
   (value: string) => {
@@ -30,15 +30,15 @@ export const nameRules = [
 export const passwordRules = [
   (value: string) => {
     if (value) return true
-    return 'You must enter a password.'
+    return 'The password is required.'
   },
   (value: string) => {
     if (value?.length > 3) return true
-    return 'Password must be at least 4 character.'
+    return 'The password min length is 4 characters.'
   },
   (value: string) => {
-    if (value?.length < 127) return true
-    return 'Password must be at most 128 characters.'
+    if (value?.length <= 50) return true
+    return 'The password max length is  50 characters.'
   },
 ]
 

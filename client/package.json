@@ -12,7 +12,6 @@
     "axios": "^1.7.5",
     "core-js": "^3.37.1",
     "md5": "^2.3.0",
-    "passport-github2": "^0.1.12",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
     "vue3-notifier": "^1.0.3",

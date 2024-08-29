@@ -112,18 +112,14 @@
 </template>
 
 <script lang="ts">
-  import axios from '../api/axios'
+  import api from '@/api/users'
   import { useRouter } from 'vue-router'
   import { useNotifier } from 'vue3-notifier'
   import { emailRules, passwordRules } from '@/utilities/validators'
   import type { logInInfo } from '@/types/types.ts'
-  // import LoginGithub from '@/components/LoginGithub.vue'
-  // import TFLogin from '@/components/TFLogin.vue'
 
   export default {
     components: {
-      // LoginGithub,
-      // TFLogin,
     },
     setup () {
       const router = useRouter()
@@ -140,7 +136,7 @@
       async function SubmitLogIn () {
         try {
           localStorage.removeItem('TEST_TRACKER_REFRESH_TOKEN')
-          await axios.LogInUser(userInfo.value)
+          await api.logInUser(userInfo.value)
           if (localStorage.getItem('TEST_TRACKER_REFRESH_TOKEN') != null) {
             router.push(`/`)
           }
@@ -160,7 +156,6 @@
       const form = ref(null)
 
       const isFormValid = computed(() => form.value ? (form.value as any).isValid : false)
-      // const isFormValid = computed(() => form.value ? form.value.isValid : false)
 
       function CreateAccount () {
         router.push(`/signup`)

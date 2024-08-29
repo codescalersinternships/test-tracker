@@ -92,7 +92,7 @@
           </v-row>
 
           <v-divider class="my-4" />
-          <Login />
+          <LoginHintComponent />
         </v-form>
 
       </v-card>
@@ -101,20 +101,16 @@
 </template>
 
 <script lang="ts">
-  import axios from '../api/axios'
+  import api from '@/api/users'
   import { useNotifier } from 'vue3-notifier'
   import { useRouter } from 'vue-router'
   import { emailRules, nameRules, passwordRules } from '@/utilities/validators'
-  import Login from '@/components/Login.vue'
+  import LoginHintComponent from '@/components/LoginHintComponent.vue'
   import { signUpInfo } from '@/types/types'
-  // import LoginGithub from '@/components/LoginGithub.vue'
-  // import TFLogin from '@/components/TFLogin.vue'
 
   export default {
     components: {
-      Login,
-      // LoginGithub,
-      // TFLogin,
+      LoginHintComponent,
     },
     setup () {
       const notifier = useNotifier('top right')
@@ -133,7 +129,7 @@
       async function RegisterNewUser () {
         loading.value = true
         try {
-          await axios.SignUp(newUser.value)
+          await api.signUp(newUser.value)
           loading.value = false
           notifier.notify({
             title: 'Success',
