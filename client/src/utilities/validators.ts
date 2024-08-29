@@ -93,3 +93,15 @@ export const phoneNumberRules = [
     return true
   },
 ]
+
+export const emailRules = [
+  (value: string) => {
+    if (value) return true
+    return 'You must enter an email.'
+  },
+  (value: string) => {
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return true
+    return 'Email must be a valid email address.'
+  },
+]
+
