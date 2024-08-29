@@ -3,20 +3,20 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
-from server.test_tracker.models.dashboard import Member, Project
-from server.test_tracker.serializers.dashboard import ProjectsSerializer
-from server.test_tracker.serializers.member import ProjectTeamSerializer
-from server.test_tracker.serializers.project import GetTestSuiteSectionSerializer, TestSuiteSectionSerializer
-from server.test_tracker.serializers.test_cases import TestCaseSerializer
-from server.test_tracker.services.test_cases import get_test_case_by_id
-from server.test_tracker.services.test_suites import filter_sections_based_on_test_suite, get_section_by_id, get_test_suite_by_id
-from server.test_tracker.utils.validations import Validator
+from test_tracker.api.response import CustomResponse
+from test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
+from test_tracker.models.dashboard import Member, Project
+from test_tracker.serializers.dashboard import ProjectsSerializer
+from test_tracker.serializers.member import ProjectTeamSerializer
+from test_tracker.serializers.project import GetTestSuiteSectionSerializer, TestSuiteSectionSerializer
+from test_tracker.serializers.test_cases import TestCaseSerializer
+from test_tracker.services.test_cases import get_test_case_by_id
+from test_tracker.services.test_suites import filter_sections_based_on_test_suite, get_section_by_id, get_test_suite_by_id
+from test_tracker.utils.validations import Validator
 
-from server.test_tracker.services.dashboard import is_success_project, get_project_by_id
-from server.test_tracker.services.member import get_member_by_id
-from server.test_tracker.services.project import (
+from test_tracker.services.dashboard import is_success_project, get_project_by_id
+from test_tracker.services.member import get_member_by_id
+from test_tracker.services.project import (
     project_member_validation,
     update_activity,
 )

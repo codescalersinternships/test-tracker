@@ -1,10 +1,10 @@
 """Everything related to TestSuites"""
 
 
-from server.test_tracker.models.project import TestCases, TestSuites
+from test_tracker.models.project import TestCases, TestSuites
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from server.test_tracker.serializers.test_cases import TestCaseSerializer
+from test_tracker.serializers.test_cases import TestCaseSerializer
 
 
 class TestSuitesSerializer(ModelSerializer):

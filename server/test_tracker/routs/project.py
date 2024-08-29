@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from server.test_tracker.views.project import (
+from test_tracker.views.project import (
     AccountMembersNotInProjectAPIView,
     AddMemberToProjectAPIView,
     GetRecentProjectsActivityAPIView,

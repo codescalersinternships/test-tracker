@@ -1,7 +1,7 @@
 """Here will be any url for the dashboard."""
 from django.urls import path
 
-from server.test_tracker.views.member import (
+from test_tracker.views.member import (
     ADMINACCESSPermissionAPIView,
     FULLACCESSPermissionAPIView,
     GetMemberApiView,

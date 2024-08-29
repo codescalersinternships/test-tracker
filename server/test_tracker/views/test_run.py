@@ -4,21 +4,21 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from server.test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.project import (
+from test_tracker.api.permission import HasProjectAccess, UserIsAuthenticated
+from test_tracker.api.response import CustomResponse
+from test_tracker.models.project import (
     TEST_RUN_STATUS_CHOICES,
     TestCases,
     TestPlan,
     TestRun,
     TestSuites,
 )
-from server.test_tracker.serializers.test_cases import TestCaseSerializer
-from server.test_tracker.serializers.test_run import TestRunsSerializer
-from server.test_tracker.services.dashboard import get_project_by_id
-from server.test_tracker.services.member import get_member_by_id
-from server.test_tracker.services.project import get_test_run_by_id, update_activity
-from server.test_tracker.services.test_cases import (
+from test_tracker.serializers.test_cases import TestCaseSerializer
+from test_tracker.serializers.test_run import TestRunsSerializer
+from test_tracker.services.dashboard import get_project_by_id
+from test_tracker.services.member import get_member_by_id
+from test_tracker.services.project import get_test_run_by_id, update_activity
+from test_tracker.services.test_cases import (
     filter_test_cases_by_test_suite,
     month_filter_test_cases_based_on_test_suites,
 )

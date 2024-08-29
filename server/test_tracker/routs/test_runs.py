@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from server.test_tracker.views.test_run import (
+from test_tracker.views.test_run import (
     CompleteTestRunAPIView,
     LastWeekTestRunReportSheetAPIView,
     ReportMonthTestRunAPIView,

@@ -7,10 +7,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from server.test_tracker.api.permission import UserIsAuthenticated
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.users import User
-from server.test_tracker.serializers.auth import (
+from test_tracker.api.permission import UserIsAuthenticated
+from test_tracker.api.response import CustomResponse
+from test_tracker.models.users import User
+from test_tracker.serializers.auth import (
+    ChangePasswordSerializer,
     GitHubRequestToGetAccessTokenSerializers,
     GitHubUserDataSerializers,
     MyTokenObtainPairSerializer,
@@ -19,13 +20,15 @@ from server.test_tracker.serializers.auth import (
     UpdateUserSettingsSerializer,
     UserSerializer,
 )
-from server.test_tracker.services.dashboard import get_signature
-from server.test_tracker.services.users import get_user_by_id, get_user_or_member
+from test_tracker.services.dashboard import get_signature
+from test_tracker.services.users import get_user_by_id, get_user_or_member
 from urllib import parse
 import requests
-from server.components import config
+from components import config
 
-from server.test_tracker.utils.generate_password import generate_password
+from test_tracker.utils.generate_password import generate_password
+from django.contrib.auth.hashers import check_password
+
 
 
 class RegisterAPIView(GenericAPIView):
@@ -37,7 +40,10 @@ class RegisterAPIView(GenericAPIView):
         """Method to register a new user"""
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            if len(request.data["password"]) < 4:
+                return CustomResponse.bad_request(message="Password length should be at least 4 characters/numbers.")
+            password = make_password(request.data["password"])
+            serializer.save(password=password)
             return CustomResponse.success(
                 data=serializer.data,
                 message="User created successfully",
@@ -109,6 +115,34 @@ class GetUserAPIView(GenericAPIView):
             message="User not found",
         )
 
+class ChangePasswordView(GenericAPIView):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [
+        UserIsAuthenticated,
+    ]
+
+    def put(self, request: Request) -> Response:
+        """Class change password to change user password."""
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user_password: str = request.user.password
+
+            new_password = make_password(serializer.validated_data.get("new_password"))
+            checked_password: bool = check_password(
+                serializer.validated_data.get("old_password"), user_password
+            )
+
+            if checked_password:
+                request.user.password = new_password
+                request.user.save()
+                return CustomResponse.success(message="Success updated password")
+            return CustomResponse.unauthorized(
+                message="Incorrect password. Please ensure that the password provided is accurate."
+            )
+        return CustomResponse.bad_request(
+            message="Please make sure that you entered a valid data.",
+            error=serializer.errors,
+        )
 
 class UpdateUserSettingsAPIView(GenericAPIView):
     """This class to update profile info"""
@@ -120,10 +154,10 @@ class UpdateUserSettingsAPIView(GenericAPIView):
         """Update user settings"""
         user = get_user_by_id(request.user.id)
         serializer = self.get_serializer(user, data=request.data)
-        if not request.data.get("password"):
-            request.data["password"] = user.password
-        else:
-            request.data["password"] = make_password(request.data["password"])
+        # if not request.data.get("password"):
+        #     request.data["password"] = user.password
+        # else:
+        #     request.data["password"] = make_password(request.data["password"])
         if serializer.is_valid():
             serializer.save()
             return CustomResponse.success(
@@ -183,7 +217,7 @@ class GithubUserDataAPIView(GenericAPIView):
                 "password" : sys_user.github_token
             }
             login_response = requests.post(
-                f"{config('SERVER_URL')}/api/auth/login/",
+                f"http://{config('SERVER_DOMAIN_NAME')}/api/auth/login/",
                 data=json.dumps(cerds),
                 headers={
                     "Content-Type": "application/json"

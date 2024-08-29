@@ -5,27 +5,27 @@ from django.db.models import Q
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from server.test_tracker.api.permission import (
+from test_tracker.api.permission import (
     HasProjectAccess,
     IsHost,
     UserIsAuthenticated,
 )
 
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.models.dashboard import Member
-from server.test_tracker.serializers.member import (
+from test_tracker.api.response import CustomResponse
+from test_tracker.models.dashboard import Member
+from test_tracker.serializers.member import (
     MemberSerializers,
     ProjectTeamSerializer,
 )
-from server.test_tracker.serializers.member import MemberSetPasswordSerializer
-from server.test_tracker.services.dashboard import (
+from test_tracker.serializers.member import MemberSetPasswordSerializer
+from test_tracker.services.dashboard import (
     get_admin_access_permission_based_on_user,
     get_full_access_permission_based_on_user,
     get_member_based_on_user,
     get_project_by_id,
     get_signature,
 )
-from server.test_tracker.services.member import (
+from test_tracker.services.member import (
     filter_members_by_project,
     get_member_by_id,
 )

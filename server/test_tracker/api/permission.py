@@ -3,8 +3,8 @@ from django.core.exceptions import PermissionDenied
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from server.test_tracker.services.dashboard import get_project_by_id
-from server.test_tracker.services.member import get_member_by_id
+from test_tracker.services.dashboard import get_project_by_id
+from test_tracker.services.member import get_member_by_id
 
 
 class UserIsAuthenticated(permissions.BasePermission):

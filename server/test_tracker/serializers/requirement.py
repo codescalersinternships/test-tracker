@@ -1,7 +1,7 @@
 """Everything related to requirements"""
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from server.test_tracker.models.project import Requirements, RequirementDocs
+from test_tracker.models.project import Requirements, RequirementDocs
 
 
 class RequirementDocsSerializer(ModelSerializer):

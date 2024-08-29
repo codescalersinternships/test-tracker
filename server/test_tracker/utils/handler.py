@@ -1,7 +1,7 @@
-from server.test_tracker.api.response import CustomResponse
-from server.test_tracker.services.dashboard import get_project_by_id
-from server.test_tracker.services.project import get_test_plan_by_id
-from server.test_tracker.services.requirement import (
+from test_tracker.api.response import CustomResponse
+from test_tracker.services.dashboard import get_project_by_id
+from test_tracker.services.project import get_test_plan_by_id
+from test_tracker.services.requirement import (
     get_project_requirement_by_id,
     get_requirement_by_id,
 )
