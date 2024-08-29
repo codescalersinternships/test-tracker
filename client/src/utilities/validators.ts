@@ -14,8 +14,8 @@ export const nameRules = [
     return 'You must enter a name.'
   },
   (value: string) => {
-    if (value?.length > 4) return true
-    return 'Name must be at least 5 character.'
+    if (value?.length > 0) return true
+    return 'Name must be at least 1 character.'
   },
   (value: string) => {
     if (value?.length <= 50) return true

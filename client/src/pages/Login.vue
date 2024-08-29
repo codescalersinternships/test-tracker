@@ -40,6 +40,7 @@
                 placeholder="Email"
                 prepend-inner-icon="mdi-email-outline"
                 :rules="emailRules"
+                type="email"
                 variant="outlined"
               />
               <v-text-field
@@ -78,7 +79,7 @@
             Log In
           </v-btn>
 
-          <v-divider class="my-4" />
+          <!-- <v-divider class="my-4" /> -->
 
           <v-row>
             <v-col class="d-flex justify-center" cols="6">
@@ -89,7 +90,7 @@
             </v-col>
           </v-row>
 
-          <v-divider class="my-4" />
+          <!-- <v-divider class="my-4" /> -->
 
           <v-row>
             <v-col class="d-flex justify-center">
