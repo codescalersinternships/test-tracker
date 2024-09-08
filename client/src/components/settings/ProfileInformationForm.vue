@@ -120,7 +120,7 @@
           .catch((err: any) => {
             let description = 'Can not update profile settings'
             if (err.response) {
-              description = err.response.data.detail
+              description = err.response.data.message
             }
             notifier.notify({
               title: 'Fail',

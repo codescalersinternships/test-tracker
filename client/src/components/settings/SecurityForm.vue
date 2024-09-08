@@ -107,7 +107,7 @@
           .catch((err: any) => {
             let description = 'Can not update password'
             if (err.response) {
-              description = err.response.data.detail
+              description = err.response.data.message
             }
             notifier.notify({
               title: 'Fail',

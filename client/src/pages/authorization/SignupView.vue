@@ -102,12 +102,12 @@
 </template>
 
 <script lang="ts">
-  import api from '@/api/authService'
+  import { signUp } from '@/api/authService'
   import { useNotifier } from 'vue3-notifier'
   import { useRouter } from 'vue-router'
   import { emailRules, nameRules, passwordRules } from '@/utilities/validators'
   import LoginHintComponent from '@/components/LoginHintComponent.vue'
-  import { signUpInfo } from '@/types/types'
+  import { UserProfile } from '../../types/types'
 
   export default {
     name: 'SignupView',
@@ -119,7 +119,7 @@
       const router = useRouter()
       const loading = ref(false)
 
-      const newUser = ref<signUpInfo>({
+      const newUser = ref<Partial<UserProfile>>({
         first_name: '',
         last_name: '',
         email: '',
@@ -131,7 +131,7 @@
       async function RegisterNewUser () {
         loading.value = true
         try {
-          await api.signUp(newUser.value)
+          await signUp(newUser.value)
           loading.value = false
           notifier.notify({
             title: 'Success',

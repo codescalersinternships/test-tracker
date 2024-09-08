@@ -35,10 +35,18 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach((to, from, next) => {
   const routeStore = useCurrentRouteStore()
+  const authRoutes = ['signup', 'signup-invitation', 'login']
+  const routeName = to.name
 
-  routeStore.changeCurrentRoute(to.name)
+  if (!localStorage.getItem('TEST_TRACKER_ACCESS_TOKEN') && !authRoutes.includes(routeName)) {
+    routeStore.changeCurrentRoute('login')
+    next({ name: 'login' })
+  } else {
+    routeStore.changeCurrentRoute(routeName)
+    next()
+  }
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804

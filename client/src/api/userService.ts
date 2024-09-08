@@ -7,6 +7,6 @@ export async function putSettings (settings :Partial<UserProfile>) {
 }
 
 export async function putPassword (passwords :Partial<Password>) {
-  localStorage.setItem('TTPHASH', md5(passwords.new_password))
+  // localStorage.setItem('TTPHASH', md5(passwords.new_password!)) // only apply when the request succeeds
   return axios.put('/auth/change-password/', passwords)
 }

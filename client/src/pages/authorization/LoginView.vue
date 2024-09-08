@@ -113,11 +113,11 @@
 </template>
 
 <script lang="ts">
-  import api from '@/api/authService'
+  import { logInUser } from '@/api/authService'
   import { useRouter } from 'vue-router'
   import { useNotifier } from 'vue3-notifier'
   import { emailRules, passwordRules } from '@/utilities/validators'
-  import type { logInInfo } from '@/types/types.ts'
+  import { UserProfile } from '../../types/types'
 
   export default {
     name: 'LoginView',
@@ -126,7 +126,7 @@
 
       const notifier = useNotifier('top right')
 
-      const userInfo = ref<logInInfo>({
+      const userInfo = ref<Partial<UserProfile>>({
         email: '',
         password: '',
       })
@@ -136,7 +136,7 @@
       async function SubmitLogIn () {
         try {
           localStorage.removeItem('TEST_TRACKER_REFRESH_TOKEN')
-          await api.logInUser(userInfo.value)
+          await logInUser(userInfo.value)
           if (localStorage.getItem('TEST_TRACKER_REFRESH_TOKEN') != null) {
             router.push(`/`)
           }
