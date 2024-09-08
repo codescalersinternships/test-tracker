@@ -41,7 +41,7 @@ export function newPasswordRule (oldPassword: string) {
 }
 
 const checkPassword = debounce((value: string) => {
-  if (md5(value) === localStorage.getItem('md5phash') || value === '') return true
+  if (md5(value) === localStorage.getItem('TTPHASH') || value === '') return true
   return 'Old password is incorrect.'
 }, 1000)
 
@@ -104,4 +104,3 @@ export const emailRules = [
     return 'Email must be a valid email address.'
   },
 ]
-

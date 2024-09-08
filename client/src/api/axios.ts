@@ -1,15 +1,10 @@
-import axios, { AxiosInstance } from 'axios'
+import axiosClient from 'axios'
 
-export const AuthClient: AxiosInstance = axios.create({
+export const axios = axiosClient.create({
   baseURL: window.env.SERVER_DOMAIN_NAME_API,
   timeout: 1000,
   headers: {
-    Authorization: accessToken ? `Bearer ${accessToken}` : '',
     'Content-Type': 'application/json',
+    Authorization: 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI1NzkzNDY0LCJpYXQiOjE3MjU3ODQxNjQsImp0aSI6ImI0Nzk5NTE3NmJlODQ5NDRhODA2MmI5NTUxYWI4OWNmIiwidXNlcl9pZCI6NSwiZW1haWwiOiJib3VkaWUyMDAzQGdtYWlsLmNvbSJ9.LG02kVuoHWFycqcVtATITE6qe7LYvaGHUgwjWm8OqYo',
   },
-})
-
-export const BaseClient: AxiosInstance = axios.create({
-  baseURL: window.env.SERVER_DOMAIN_NAME_API,
-  timeout: 1000,
 })

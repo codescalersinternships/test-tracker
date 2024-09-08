@@ -7,7 +7,7 @@
 
     <v-text-field
       v-model="password.old_password"
-      :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+      :append-inner-icon="showOld ? 'mdi-eye' : 'mdi-eye-off'"
       base-color="blue"
       color="blue"
       label="Old password"
@@ -18,7 +18,7 @@
     />
     <v-text-field
       v-model="password.new_password"
-      :append-inner-icon="showConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+      :append-inner-icon="showNew ? 'mdi-eye' : 'mdi-eye-off'"
       base-color="blue"
       color="blue"
       label="New password"

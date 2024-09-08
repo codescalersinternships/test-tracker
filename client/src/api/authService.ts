@@ -2,7 +2,7 @@ import { axios } from './axios'
 import md5 from 'md5'
 import { logInInfo, signUpInfo } from '../types/types'
 
-async function signUp (newUser:signUpInfo) {
+export async function signUp (newUser:signUpInfo) {
   try {
     await axios.post('/auth/signup/', newUser)
   } catch (error) {
@@ -11,7 +11,7 @@ async function signUp (newUser:signUpInfo) {
   }
 }
 
-async function signUpInvitation (password:string) {
+export async function signUpInvitation (password:string) {
   try {
     await axios.put('/members/set_password/', password)
   } catch (error) {
@@ -20,7 +20,7 @@ async function signUpInvitation (password:string) {
   }
 }
 
-async function logInUser (userInfo: logInInfo) {
+export async function logInUser (userInfo: logInInfo) {
   try {
     const response = await axios.post('/auth/login/', userInfo)
     const token = response.data.access_token
@@ -33,5 +33,3 @@ async function logInUser (userInfo: logInInfo) {
     throw error
   }
 }
-
-export default { logInUser, signUp, signUpInvitation }

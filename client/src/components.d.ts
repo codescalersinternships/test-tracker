@@ -7,8 +7,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    LoginHintComponent: typeof import('./components/LoginHintComponent.vue')['default']
     CustomNotification: typeof import('./components/notifier/CustomNotification.vue')['default']
+    LoginHintComponent: typeof import('./components/LoginHintComponent.vue')['default']
     MemberForm: typeof import('./components/members/MemberForm.vue')['default']
     NavigationBar: typeof import('./components/NavigationBar.vue')['default']
     ProfileInformationForm: typeof import('./components/settings/ProfileInformationForm.vue')['default']
