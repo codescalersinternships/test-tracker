@@ -1,104 +1,102 @@
 <template>
-  <div class="background pa-0">
-    <v-container>
-      <v-card
-        class="ma-auto pa-12 pb-8"
-        elevation="8"
-        max-width="448"
-        rounded="lg"
-      >
-        <v-form ref="form">
-          <v-row class="d-flex justify-center" no-gutters>
-            <v-col class="d-flex justify-center" style="max-width: 100px; width: 100px;">
-              <v-img
-                contain
-                src="@/assets/logo.png"
-                style="width: 100%; height: auto;"
-              />
-            </v-col>
-          </v-row>
+  <v-container>
+    <v-card
+      class="ma-auto pa-12 pb-8"
+      elevation="8"
+      max-width="448"
+      rounded="lg"
+    >
+      <v-form ref="form">
+        <v-row class="d-flex justify-center" no-gutters>
+          <v-col class="d-flex justify-center" style="max-width: 100px; width: 100px;">
+            <v-img
+              contain
+              src="/testtrackerfavicon.png"
+              style="width: 100%; height: auto;"
+            />
+          </v-col>
+        </v-row>
 
-          <v-row class="d-flex justify-center" no-gutters>
-            <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
-              <p class="mt-2 text-h5 text-grey-darken-2" variant="h5">Sign up</p>
-            </v-col>
-          </v-row>
+        <v-row class="d-flex justify-center" no-gutters>
+          <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
+            <p class="mt-2 text-h5 text-grey-darken-2" variant="h5">Sign up</p>
+          </v-col>
+        </v-row>
 
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="newUser.first_name"
-                density="compact"
-                placeholder="First Name"
-                prepend-inner-icon="mdi-account-outline"
-                :rules="nameRules"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="newUser.last_name"
-                density="compact"
-                placeholder="Last Name"
-                prepend-inner-icon="mdi-account-outline"
-                :rules="nameRules"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="newUser.email"
-                density="compact"
-                placeholder="Email"
-                prepend-inner-icon="mdi-email-outline"
-                :rules="emailRules"
-                type="email"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="newUser.password"
-                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                density="compact"
-                placeholder="Password"
-                prepend-inner-icon="mdi-lock-outline"
-                :rules="passwordRules"
-                :type="visible ? 'password' : 'text'"
-                variant="outlined"
-                @click:append-inner="visible = !visible"
-              />
-            </v-col>
-          </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="newUser.first_name"
+              density="compact"
+              placeholder="First Name"
+              prepend-inner-icon="mdi-account-outline"
+              :rules="nameRules"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="newUser.last_name"
+              density="compact"
+              placeholder="Last Name"
+              prepend-inner-icon="mdi-account-outline"
+              :rules="nameRules"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="newUser.email"
+              density="compact"
+              placeholder="Email"
+              prepend-inner-icon="mdi-email-outline"
+              :rules="emailRules"
+              type="email"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="newUser.password"
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              density="compact"
+              placeholder="Password"
+              prepend-inner-icon="mdi-lock-outline"
+              :rules="passwordRules"
+              :type="visible ? 'password' : 'text'"
+              variant="outlined"
+              @click:append-inner="visible = !visible"
+            />
+          </v-col>
+        </v-row>
 
-          <v-row>
-            <v-col class="d-flex justify-center">
-              <v-btn
-                block
-                class="mb-8 w-100"
-                color="primary"
-                :disabled="!isFormValid"
-                :loading="loading"
-                size="large"
-                @click="RegisterNewUser"
-              >
-                Register
-              </v-btn>
-            </v-col>
-          </v-row>
+        <v-row>
+          <v-col class="d-flex justify-center">
+            <v-btn
+              block
+              class="mb-8 w-100"
+              color="primary"
+              :disabled="!isFormValid"
+              :loading="loading"
+              size="large"
+              @click="RegisterNewUser"
+            >
+              Register
+            </v-btn>
+          </v-col>
+        </v-row>
 
-          <!-- <v-divider class="my-4" /> -->
+        <!-- <v-divider class="my-4" /> -->
 
-          <v-row>
-            <v-col class="d-flex justify-center" cols="6">
-              <!-- <LoginGithub /> -->
-            </v-col>
-            <v-col class="d-flex justify-center" cols="6">
-              <!-- <TFLogin /> -->
-            </v-col>
-          </v-row>
+        <v-row>
+          <v-col class="d-flex justify-center" cols="6">
+            <!-- <LoginGithub /> -->
+          </v-col>
+          <v-col class="d-flex justify-center" cols="6">
+            <!-- <TFLogin /> -->
+          </v-col>
+        </v-row>
 
-          <!-- <v-divider class="my-4" /> -->
-          <LoginHintComponent />
-        </v-form>
+        <!-- <v-divider class="my-4" /> -->
+        <LoginHintComponent />
+      </v-form>
 
-      </v-card>
-    </v-container>
-  </div>
+    </v-card>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -173,16 +171,3 @@
     },
   }
 </script>
-
-<style>
-.background {
-background-image: url('@/assets/authPagesBackGround.png');
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
-padding: 0px;
-margin: 0px;
-width: 100%;
-height: 100%;
-}
-</style>

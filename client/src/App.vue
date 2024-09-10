@@ -1,8 +1,10 @@
 <template>
   <v-app>
     <v-main>
-      <NavigationBar v-if="displayNavBar(routeStore.routeName)" />
-      <RouterView />
+      <div class="background pa-0">
+        <NavigationBar v-if="displayNavBar(routeStore.routeName)" />
+        <RouterView />
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -35,3 +37,16 @@
   }
 
 </script>
+
+<style lang="scss">
+  .background {
+    background-image: url('/testtrackerbackground.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+  }
+</style>

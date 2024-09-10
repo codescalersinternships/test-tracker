@@ -12,7 +12,7 @@
           <v-img
             alt="Test Tracker Logo"
             contain
-            src="/navbarlogo.png"
+            src="/testtrackerlogo.png"
             style="width: 188.5px; height: 50px;"
           />
         </RouterLink>
