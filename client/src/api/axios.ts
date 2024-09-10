@@ -5,6 +5,6 @@ export const axios = axiosClient.create({
   timeout: 1000,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + localStorage.getItem('TEST_TRACKER_ACCESS_TOKEN'),
+    Authorization: localStorage.getItem('TEST_TRACKER_ACCESS_TOKEN') ? 'Bearer ' + localStorage.getItem('TEST_TRACKER_ACCESS_TOKEN') : '',
   },
 })
