@@ -19,7 +19,7 @@
 
         <v-row class="d-flex justify-center" no-gutters>
           <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
-            <p class="mt-2 text-h5 text-grey-darken-2" variant="h5">Sign up</p>
+            <p class="mt-2 text-h5 text-grey-darken-3" variant="h5">Sign up</p>
           </v-col>
         </v-row>
 

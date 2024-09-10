@@ -19,7 +19,7 @@
 
         <v-row class="d-flex justify-center mb-4" no-gutters>
           <v-col class="d-flex justify-center" style="max-width: 80px; width: 80px;">
-            <p class="mt-2 text-h5 text-grey-darken-2 font-weight-bold" variant="h5">Hello {{ firstName }}</p>
+            <p class="mt-2 text-h5 text-grey-darken-3 font-weight-bold" variant="h5">Hello {{ firstName }}</p>
           </v-col>
         </v-row>
 

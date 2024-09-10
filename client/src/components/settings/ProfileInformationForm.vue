@@ -5,17 +5,6 @@
     @submit.prevent
   >
     <v-text-field
-      v-model="profile.password"
-      :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-      base-color="blue"
-      color="blue"
-      label="Old password"
-      required
-      :rules="oldPasswordRule"
-      :type="showPassword ? 'text' : 'password'"
-      @click:append-inner="showPassword = !showPassword"
-    />
-    <v-text-field
       v-model="profile.email"
       base-color="blue"
       color="blue"
@@ -73,7 +62,7 @@
   import { ref } from 'vue'
   import { putSettings } from '@/api/userService'
   import { UserProfile } from '../../types/types'
-  import { nameRules, oldPasswordRule, phoneNumberRules } from '@/utilities/validators'
+  import { nameRules, phoneNumberRules } from '@/utilities/validators'
   import { useNotifier } from 'vue3-notifier'
 
   export default {
@@ -86,17 +75,14 @@
 
       const loading = ref(false)
 
-      const profile = ref<UserProfile>(
+      const profile = ref<Partial<UserProfile>>(
         {
           email: '',
           first_name: '',
           last_name: '',
           phone: '',
-          password: '',
         }
       )
-
-      const showPassword = ref(false)
 
       const updateProfileSettings = async () => {
         loading.value = true
@@ -104,7 +90,6 @@
           first_name: profile.value.first_name,
           last_name: profile.value.last_name,
           phone: profile.value.phone,
-          password: profile.value.password,
         }
 
         try {
@@ -139,8 +124,6 @@
         profile,
         loading,
         nameRules,
-        showPassword,
-        oldPasswordRule,
         phoneNumberRules,
         updateProfileSettings,
       }

@@ -4,11 +4,12 @@
   >
     <v-card
       class="mx-auto py-6"
-      variant="outlined"
+      elevation="8"
+      rounded="lg"
       width="70%"
     >
       <v-card-title
-        class="mx-6 px-6 justify-lg-center align-md-center"
+        class="mx-6 px-6 justify-lg-center align-md-center text-grey-darken-3"
       >
         <h1>Settings</h1>
       </v-card-title>
