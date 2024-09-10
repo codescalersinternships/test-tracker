@@ -93,31 +93,31 @@
           old_password: password.value.old_password,
           new_password: password.value.new_password,
         }
-        putPassword(passwords)
-          .then((response: any) => {
-            notifier.notify({
-              title: 'Success',
-              description: response.data.message,
-              showProgressBar: true,
-              timeout: 7_000,
-              type: 'success',
-            })
-            loading.value = false
+
+        try {
+          const response = await putPassword(passwords)
+          notifier.notify({
+            title: 'Success',
+            description: response.data.message,
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'success',
           })
-          .catch((err: any) => {
-            let description = 'Can not update password'
-            if (err.response) {
-              description = err.response.data.message
-            }
-            notifier.notify({
-              title: 'Fail',
-              description,
-              showProgressBar: true,
-              timeout: 7_000,
-              type: 'error',
-            })
-            loading.value = false
+        } catch (err: any) {
+          let description = 'Can not update password'
+          if (err.response) {
+            description = err.response.data.message
+          }
+          notifier.notify({
+            title: 'Fail',
+            description,
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'error',
           })
+        } finally {
+          loading.value = false
+        }
       }
 
       return {

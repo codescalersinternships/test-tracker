@@ -20,16 +20,23 @@ export async function signUpInvitation (password:string) {
   }
 }
 
-export async function logInUser (userInfo: Partial<UserProfile>) {
+export async function login (userInfo: Partial<UserProfile>) {
   try {
     const response = await axios.post('/auth/login/', userInfo)
-    const token = response.data.access_token
-    const refreshtoken = response.data.refresh_token
-    localStorage.setItem('TEST_TRACKER_ACCESS_TOKEN', token)
+
+    localStorage.setItem('TEST_TRACKER_ACCESS_TOKEN', response.data.access_token)
     localStorage.setItem('TTPHASH', md5(userInfo.password!))
-    localStorage.setItem('TEST_TRACKER_REFRESH_TOKEN', refreshtoken)
+    localStorage.setItem('TEST_TRACKER_REFRESH_TOKEN', response.data.refresh_token)
   } catch (error) {
     localStorage.removeItem('TEST_TRACKER_ACCESS_TOKEN')
+    localStorage.removeItem('TTPHASH')
+    localStorage.removeItem('TEST_TRACKER_REFRESH_TOKEN')
+
+    console.error(error)
     throw error
   }
+}
+
+export async function logout () {
+
 }

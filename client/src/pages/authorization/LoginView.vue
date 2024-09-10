@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts">
-  import { logInUser } from '@/api/authService'
+  import { login } from '@/api/authService'
   import { useRouter } from 'vue-router'
   import { useNotifier } from 'vue3-notifier'
   import { emailRules, passwordRules } from '@/utilities/validators'
@@ -136,7 +136,7 @@
       async function SubmitLogIn () {
         try {
           localStorage.removeItem('TEST_TRACKER_REFRESH_TOKEN')
-          await logInUser(userInfo.value)
+          await login(userInfo.value)
           if (localStorage.getItem('TEST_TRACKER_REFRESH_TOKEN') != null) {
             router.push(`/`)
           }

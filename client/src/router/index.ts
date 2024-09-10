@@ -39,7 +39,6 @@ router.beforeEach((to, from, next) => {
   const routeStore = useCurrentRouteStore()
   const authRoutes = ['signup', 'signup-invitation', 'login']
   const routeName = to.name
-  console.log('to', routeName)
 
   if (!localStorage.getItem('TEST_TRACKER_ACCESS_TOKEN') && !authRoutes.includes(routeName)) {
     routeStore.changeCurrentRoute('login')
