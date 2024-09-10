@@ -106,31 +106,32 @@
           phone: profile.value.phone,
           password: profile.value.password,
         }
-        putSettings(userProfile)
-          .then((response: any) => {
-            notifier.notify({
-              title: 'Success',
-              description: response.data.message,
-              showProgressBar: true,
-              timeout: 7_000,
-              type: 'success',
-            })
-            loading.value = false
+
+        try {
+          const response = await putSettings(userProfile)
+          notifier.notify({
+            title: 'Success',
+            description: response.data.message,
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'success',
           })
-          .catch((err: any) => {
-            let description = 'Can not update profile settings'
-            if (err.response) {
-              description = err.response.data.message
-            }
-            notifier.notify({
-              title: 'Fail',
-              description,
-              showProgressBar: true,
-              timeout: 7_000,
-              type: 'error',
-            })
-            loading.value = false
+        } catch (err: any) {
+          let description = 'Can not update profile settings'
+          if (err.response) {
+            description = err.response.data.message
+          }
+          notifier.notify({
+            title: 'Fail',
+            description,
+            showProgressBar: true,
+            timeout: 7_000,
+            type: 'error',
           })
+        } finally {
+          form.value.reset()
+          loading.value = false
+        }
       }
 
       return {

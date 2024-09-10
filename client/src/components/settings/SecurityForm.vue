@@ -116,6 +116,7 @@
             type: 'error',
           })
         } finally {
+          form.value.reset()
           loading.value = false
         }
       }
