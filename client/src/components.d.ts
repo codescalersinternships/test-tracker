@@ -7,9 +7,19 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CustomNotification: typeof import('./components/notifier/CustomNotification.vue')['default']
     LoginHintComponent: typeof import('./components/LoginHintComponent.vue')['default']
+    MemberForm: typeof import('./components/members/MemberForm.vue')['default']
+    NavigationBar: typeof import('./components/NavigationBar.vue')['default']
+    ProfileInformationForm: typeof import('./components/settings/ProfileInformationForm.vue')['default']
+    ProjectForm: typeof import('./components/projects/ProjectForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SecurityForm: typeof import('./components/settings/SecurityForm.vue')['default']
     Test: typeof import('./components/test.vue')['default']
+    TestPlanForm: typeof import('./components/test-plans/TestPlanForm.vue')['default']
+    TestRequirementForm: typeof import('./components/test-requirements/TestRequirementForm.vue')['default']
+    TestRunForm: typeof import('./components/test-runs/TestRunForm.vue')['default']
+    TestSuiteForm: typeof import('./components/test-suites/TestSuiteForm.vue')['default']
   }
 }

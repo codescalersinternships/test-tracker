@@ -1,9 +1,10 @@
 import axiosClient from 'axios'
 
-const accessToken = localStorage.getItem('TESTTRACKER_ACCESS_TOKEN')
 export const axios = axiosClient.create({
   baseURL: window.env.SERVER_DOMAIN_NAME_API,
+  timeout: 1000,
   headers: {
-    Authorization: accessToken ? `Bearer ${accessToken}` : '',
+    'Content-Type': 'application/json',
+    Authorization: localStorage.getItem('TEST_TRACKER_ACCESS_TOKEN') ? 'Bearer ' + localStorage.getItem('TEST_TRACKER_ACCESS_TOKEN') : '',
   },
 })

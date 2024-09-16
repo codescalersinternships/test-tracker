@@ -11,10 +11,11 @@
     "@mdi/font": "7.4.47",
     "axios": "^1.7.5",
     "core-js": "^3.37.1",
-    "md5": "^2.3.0",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
     "vuetify": "^3.6.11",
+    "debounce":"2.1.0",
+    "md5":"2.3.0",
     "vue3-notifier": "1.0.3"
   },
   "devDependencies": {
