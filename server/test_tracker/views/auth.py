@@ -154,10 +154,6 @@ class UpdateUserSettingsAPIView(GenericAPIView):
         """Update user settings"""
         user = get_user_by_id(request.user.id)
         serializer = self.get_serializer(user, data=request.data)
-        # if not request.data.get("password"):
-        #     request.data["password"] = user.password
-        # else:
-        #     request.data["password"] = make_password(request.data["password"])
         if serializer.is_valid():
             serializer.save()
             return CustomResponse.success(
