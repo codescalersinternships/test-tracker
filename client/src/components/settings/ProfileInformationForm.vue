@@ -77,7 +77,7 @@
 
       const profile = ref<Partial<UserProfile>>(
         {
-          email: '',
+          email: localStorage.getItem('TTEHASH') || '',
           first_name: '',
           last_name: '',
           phone: '',

@@ -25,10 +25,12 @@ export async function login (userInfo: Partial<UserProfile>) {
     const response = await axios.post('/auth/login/', userInfo)
 
     localStorage.setItem('TEST_TRACKER_ACCESS_TOKEN', response.data.access_token)
+    localStorage.setItem('TTEHASH', response.data.email)
     localStorage.setItem('TTPHASH', md5(userInfo.password!))
     localStorage.setItem('TEST_TRACKER_REFRESH_TOKEN', response.data.refresh_token)
   } catch (error) {
     localStorage.removeItem('TEST_TRACKER_ACCESS_TOKEN')
+    localStorage.removeItem('TTEHASH')
     localStorage.removeItem('TTPHASH')
     localStorage.removeItem('TEST_TRACKER_REFRESH_TOKEN')
 

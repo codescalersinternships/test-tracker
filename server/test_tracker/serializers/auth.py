@@ -106,7 +106,7 @@ class UpdateUserSettingsSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "phone", "password"]
+        fields = ["first_name", "last_name", "phone"]
 
 class GitHubRequestToGetAccessTokenSerializers(Serializer):
     client_id = CharField()
